@@ -1,4 +1,4 @@
-/* DiffPixel — Content Script v1.2
+/* DiffPixel — Content Script v1.3
  * • Overlay layer rendering
  * • Floating control panel (Shadow DOM, fully isolated)
  * • Cross-tab sync via chrome.storage.local
@@ -9,18 +9,57 @@
 
   const I18N = {
     en: {
-      sectionLayers: 'LAYERS', sectionControls: 'CONTROLS', addLayerTitle: 'Add layer - click, drop, or paste image',
-      emptyState: 'Drop, paste, or click + to start', labelOpacity: 'Opacity', labelX: 'X', labelY: 'Y',
+      sectionLayers: 'LAYERS', sectionControls: 'CONTROLS', addLayerTitle: 'Add layer - click, drop, or paste image from clipboard',
+      emptyState: 'Drop, paste from clipboard, or click + to start', labelOpacity: 'Opacity', labelX: 'X', labelY: 'Y',
       labelScale: 'Scale', labelLayerName: 'Name', labelBlend: 'Blend', blendNormal: 'Normal', blendDifference: 'Difference',
       blendMultiply: 'Multiply', blendScreen: 'Screen', blendOverlay: 'Overlay', blendHardLight: 'Hard Light',
-      blendExclusion: 'Exclusion', btnInvert: 'Invert', btnLock: 'Lock', btnRemove: 'Remove',
-      btnReset: 'Reset', btnCenter: 'Center', btnFitW: 'Fit W', btnGrid: 'Grid', btnAddLayer: 'Add',
+      blendExclusion: 'Exclusion', blendInvert: 'Invert', btnLock: 'Lock', btnRemove: 'Remove',
+      btnReset: 'Reset', btnCenter: 'Center', btnFitW: 'Fit W', btnGrid: 'Grid', btnAddLayer: 'Add', btnPasteLayer: 'Paste from clipboard',
+      btnScaleHalf: 'Scale 0.5x', btnScaleDouble: 'Scale 2x',
       visShow: 'Show layer', visHide: 'Hide layer', dropHint: 'Drop image to add layer',
       layerDefault: 'Layer', layerNamePlaceholder: 'Layer name', toggleTheme: 'Toggle light / dark theme',
       clipboardLayerName: 'Clipboard image',
       themeLight: 'Switch to light theme', themeDark: 'Switch to dark theme',
       toggleOverlay: 'Enable / disable overlay', overlayLabel: 'Overlay', languageTitle: 'Language', languageAuto: 'Lang: Auto',
       languageEnglish: 'Lang: EN', languageJapanese: 'Lang: JA',
+      collapsePanel: 'Collapse panel', expandPanel: 'Expand panel',
+      moveLayerUp: 'Move layer up', moveLayerDown: 'Move layer down',
+      xDecrementTitle: 'X -1px (Arrow Left)/ X -10px (Shift + Arrow Left)', xIncrementTitle: 'X +1px (Arrow Right)/ X +10px (Shift + Arrow Right)',
+      yDecrementTitle: 'Y -1px (Arrow Up)/ Y -10px (Shift + Arrow Up)', yIncrementTitle: 'Y +1px (Arrow Down)/ Y +10px (Shift + Arrow Down)',
+      scaleDecreaseTitle: 'Scale -0.1 (Alt + -)', scaleIncreaseTitle: 'Scale +0.1 (Alt + ;)',
+      scaleHalfTitle: 'Set scale to 0.5x (Alt + [)', scaleDoubleTitle: 'Set scale to 2x (Alt + ])',
+      gridTitle: 'Grid (Alt + G)', gridSizeLabel: 'Grid size',
+      shortcutMove: 'Move 1px: Arrow keys; 10px: Shift + Arrow keys',
+      shortcutBlend: 'Blend: hold Alt + B, press Up / Down',
+      shortcutAlpha: 'Opacity: hold Alt + A, press Left / Right',
+      shortcutScaleNudge: 'Scale +0.1 / -0.1: Alt + ; / Alt + -',
+    },
+    ja: {
+      sectionLayers: 'レイヤー', sectionControls: '調整', addLayerTitle: 'レイヤーを追加 - クリック、ドロップ、またはクリップボードから貼り付け',
+      emptyState: '画像をドロップ、クリップボードから貼り付け、または + で開始', labelOpacity: '不透明度', labelX: 'X', labelY: 'Y',
+      labelScale: 'スケール', labelLayerName: '名前', labelBlend: '合成', blendNormal: '通常', blendDifference: '差の絶対値',
+      blendMultiply: '乗算', blendScreen: 'スクリーン', blendOverlay: 'オーバーレイ', blendHardLight: 'ハードライト',
+      blendExclusion: '除外', blendInvert: '反転', btnLock: '固定', btnRemove: '削除',
+      btnReset: 'リセット', btnCenter: '中央', btnFitW: '幅に合わせる', btnGrid: 'グリッド',
+      btnAddLayer: '追加', btnPasteLayer: 'クリップボードから貼り付け',
+      btnScaleHalf: '0.5倍', btnScaleDouble: '2倍',
+      visShow: 'レイヤーを表示', visHide: 'レイヤーを非表示', dropHint: '画像をドロップして追加',
+      layerDefault: 'レイヤー', layerNamePlaceholder: 'レイヤー名', toggleTheme: 'ライト / ダークテーマを切り替え',
+      clipboardLayerName: 'クリップボード画像',
+      themeLight: 'ライトテーマに切り替え', themeDark: 'ダークテーマに切り替え',
+      toggleOverlay: 'オーバーレイを有効 / 無効にする', overlayLabel: 'オーバーレイ', languageTitle: '表示言語',
+      languageAuto: '言語: 自動', languageEnglish: '言語: EN', languageJapanese: '言語: JA',
+      collapsePanel: 'パネルを折りたたむ', expandPanel: 'パネルを展開する',
+      moveLayerUp: 'レイヤーを上に移動', moveLayerDown: 'レイヤーを下に移動',
+      xDecrementTitle: 'X -1px（←）/ X -10px（Shift + ←）', xIncrementTitle: 'X +1px（→）/ X +10px（Shift + →）',
+      yDecrementTitle: 'Y -1px（↑）/ Y -10px（Shift + ↑）', yIncrementTitle: 'Y +1px（↓）/ Y +10px（Shift + ↓）',
+      scaleDecreaseTitle: 'スケール -0.1 (Alt + -)', scaleIncreaseTitle: 'スケール +0.1 (Alt + ;)',
+      scaleHalfTitle: 'スケールを0.5倍に設定 (Alt + [)', scaleDoubleTitle: 'スケールを2倍に設定 (Alt + ])',
+      gridTitle: 'グリッド (Alt + G)', gridSizeLabel: 'グリッドサイズ',
+      shortcutMove: '1px移動: 矢印キー / 10px移動: Shift + 矢印キー',
+      shortcutBlend: '合成: Alt + B を押しながら ↑ / ↓',
+      shortcutAlpha: '不透明度: Alt + A を押しながら ← / →',
+      shortcutScaleNudge: 'スケール +0.1 / -0.1: Alt + ; / Alt + -',
     },
   };
   const LANG_VALUES = new Set(['auto', 'en', 'ja']);
@@ -124,7 +163,7 @@
   };
   const BASE_CSS = `
     html > #dp-root {
-      position: absolute !important;
+      position: fixed !important;
       top: 0 !important;
       left: 0 !important;
       width: 0 !important;
@@ -144,6 +183,7 @@
       transform-origin: top left !important;
       will-change: auto !important;
       pointer-events: auto;
+      touch-action: none !important;
       isolation: auto !important;
       backface-visibility: hidden !important;
     }
@@ -175,7 +215,8 @@
   };
 
   /* ── Security helpers ───────────────────── */
-  const VALID_BLEND   = new Set(['normal','difference','multiply','screen','overlay','hard-light','exclusion']);
+  const BLEND_ORDER   = ['normal','invert','difference','multiply','screen','overlay','hard-light','exclusion'];
+  const VALID_BLEND   = new Set(BLEND_ORDER);
   const VALID_COLOR_RE = /^rgba?\(\s*\d{1,3}(?:\.\d+)?\s*,\s*\d{1,3}(?:\.\d+)?\s*,\s*\d{1,3}(?:\.\d+)?(?:\s*,\s*[\d.]+)?\s*\)$/;
   const VALID_ID_RE   = /^dp-[a-zA-Z0-9]+$/;
 
@@ -238,6 +279,9 @@
   }
 
   function sanitizeMeta(m) {
+    const blendMode = m.invert === true && (!m.blendMode || m.blendMode === 'normal')
+      ? 'invert'
+      : (VALID_BLEND.has(m.blendMode) ? m.blendMode : 'normal');
     return {
       id:        (typeof m.id === 'string' && VALID_ID_RE.test(m.id)) ? m.id : genId(),
       name:      typeof m.name === 'string' ? m.name.slice(0, 32) : t('layerDefault'),
@@ -245,9 +289,9 @@
       x:         typeof m.x === 'number' ? Math.trunc(m.x) : 0,
       y:         typeof m.y === 'number' ? Math.trunc(m.y) : 0,
       scale:     typeof m.scale === 'number' ? normalizeScale(m.scale) : 1,
-      blendMode: VALID_BLEND.has(m.blendMode) ? m.blendMode : 'normal',
+      blendMode,
       visible:   typeof m.visible === 'boolean' ? m.visible : true,
-      invert:    typeof m.invert === 'boolean' ? m.invert : false,
+      invert:    false,
       locked:    typeof m.locked === 'boolean' ? m.locked : false,
     };
   }
@@ -265,6 +309,7 @@
   let globalEnabled = false;
   let activeLayerId = null;
   let gridConfig    = { enabled: false, size: 8, color: 'rgba(0,212,255,0.25)' };
+  let layerDefaults = { opacity: 0.5, blendMode: 'normal' };
   let currentTheme  = 'dark';
   let layerMeta     = [];          // ordered metadata (no imageData)
   const imageData   = new Map();   // layerId → data URL
@@ -272,6 +317,8 @@
   let containerEl   = null;
   let gridEl        = null;
   let panel         = null;
+  let hasStoredState = false;
+  let activeShortcutMode = null;
 
   function normalizeTheme(theme) {
     if (theme === true) return 'light';
@@ -310,17 +357,18 @@
     applyStyle(meta) {
       if (!this.el || !meta) return;
       const blendMode = VALID_BLEND.has(meta.blendMode) ? meta.blendMode : 'normal';
+      const cssBlendMode = blendMode === 'invert' ? 'normal' : blendMode;
       this.el.style.display      = (meta.visible && globalEnabled) ? 'block' : 'none';
       this.el.style.zIndex       = '2147483645';
       this.el.style.opacity      = '1';
       this.el.style.transform    = `translate(${meta.x}px, ${meta.y}px) scale(${meta.scale})`;
-      this.el.style.mixBlendMode = blendMode;
+      this.el.style.mixBlendMode = cssBlendMode;
       this.el.style.pointerEvents= meta.locked ? 'none' : 'auto';
       this.el.style.filter       = 'none';
       if (this.img) {
         this.img.style.opacity = String(meta.opacity);
         this.img.style.setProperty('mix-blend-mode', 'normal', 'important');
-        this.img.style.filter = meta.invert ? 'invert(1)' : 'none';
+        this.img.style.filter = (blendMode === 'invert' || meta.invert) ? 'invert(1)' : 'none';
       }
     }
 
@@ -334,8 +382,8 @@
         this._raf = requestAnimationFrame(() => {
           const m = getMeta(this.id);
           if (m) {
-            m.x = ox + e.pageX - sx;
-            m.y = oy + e.pageY - sy;
+            m.x = ox + e.clientX - sx;
+            m.y = oy + e.clientY - sy;
             this.el.style.transform = `translate(${m.x}px, ${m.y}px) scale(${m.scale})`;
           }
           pending = false;
@@ -344,26 +392,26 @@
 
       const onUp = () => {
         this.el.classList.remove('dp-dragging');
-        document.removeEventListener('mousemove', onMove, { capture: true });
-        document.removeEventListener('mouseup',   onUp,   { capture: true });
+        document.removeEventListener('pointermove', onMove, { capture: true });
+        document.removeEventListener('pointerup',   onUp,   { capture: true });
         this._dragCleanup = null;
         panel?.renderControls();
         panel?.renderLayers();
         debounceSave();
       };
 
-      this.el.addEventListener('mousedown', e => {
+      this.el.addEventListener('pointerdown', e => {
         const m = getMeta(this.id);
         if (!m || m.locked || e.button !== 0) return;
         e.preventDefault(); e.stopPropagation();
-        sx = e.pageX; sy = e.pageY; ox = m.x; oy = m.y;
+        sx = e.clientX; sy = e.clientY; ox = m.x; oy = m.y;
         this.el.classList.add('dp-dragging');
         this._dragCleanup = () => {
-          document.removeEventListener('mousemove', onMove, { capture: true });
-          document.removeEventListener('mouseup',   onUp,   { capture: true });
+          document.removeEventListener('pointermove', onMove, { capture: true });
+          document.removeEventListener('pointerup',   onUp,   { capture: true });
         };
-        document.addEventListener('mousemove', onMove, { capture: true, passive: true });
-        document.addEventListener('mouseup',   onUp,   { capture: true });
+        document.addEventListener('pointermove', onMove, { capture: true, passive: true });
+        document.addEventListener('pointerup',   onUp,   { capture: true });
       });
     }
 
@@ -373,9 +421,16 @@
   /* ── Meta helpers ────────────────────────── */
   const getMeta       = id => layerMeta.find(m => m.id === id);
   const getActiveMeta = ()  => getMeta(activeLayerId);
-  const pageLeft      = ()  => window.scrollX || document.documentElement.scrollLeft || 0;
-  const pageTop       = ()  => window.scrollY || document.documentElement.scrollTop || 0;
 
+  function moveLayerInStack(id, delta) {
+    const from = layerMeta.findIndex(meta => meta.id === id);
+    if (from < 0) return false;
+    const to = Math.min(layerMeta.length - 1, Math.max(0, from + delta));
+    if (to === from) return false;
+    const [meta] = layerMeta.splice(from, 1);
+    layerMeta.splice(to, 0, meta);
+    return true;
+  }
   /* ── DOM setup ───────────────────────────── */
   function ensureBaseStyles() {
     let styleEl = document.getElementById(BASE_STYLE_ID);
@@ -417,6 +472,115 @@
     });
     /* Sync image src */
     layerDOM.forEach(l => l.updateImage());
+    if (containerEl) {
+      layerMeta.forEach(meta => {
+        const layer = layerDOM.get(meta.id);
+        if (layer?.el) containerEl.appendChild(layer.el);
+      });
+    }
+  }
+
+  function scaleNudgeFromKey(event) {
+    if (!event.altKey) return 0;
+    if (event.key === '-' || event.code === 'Minus') return -SCALE_STEP;
+    if (event.key === ';' || event.key === '+' || event.key === '=' || event.code === 'Semicolon' || event.code === 'Equal') return SCALE_STEP;
+    return 0;
+  }
+
+  function arrowDelta(event) {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') return -1;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') return 1;
+    return 0;
+  }
+
+  function updateShortcutMode(event) {
+    if (!event.altKey) return;
+    const key = event.key.toLowerCase();
+    if (key === 'b') {
+      activeShortcutMode = 'blend';
+      event.preventDefault();
+      event.stopPropagation();
+    } else if (key === 'a') {
+      activeShortcutMode = 'alpha';
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  function releaseShortcutMode(event) {
+    const key = event.key.toLowerCase();
+    if (key === 'alt' || key === 'b' || key === 'a') activeShortcutMode = null;
+  }
+
+  function handleLayerShortcut(event) {
+    if (!globalEnabled || !activeLayerId) return false;
+    const meta = getActiveMeta();
+    if (!meta) return false;
+
+    updateShortcutMode(event);
+    if (activeShortcutMode && event.altKey) {
+      const delta = arrowDelta(event);
+      if (delta) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (activeShortcutMode === 'blend' && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+          const currentIndex = Math.max(0, BLEND_ORDER.indexOf(meta.blendMode));
+          meta.blendMode = BLEND_ORDER[(currentIndex + delta + BLEND_ORDER.length) % BLEND_ORDER.length];
+          meta.invert = false;
+          layerDefaults.blendMode = meta.blendMode;
+        } else if (activeShortcutMode === 'alpha' && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+          const step = event.shiftKey ? 0.1 : 0.01;
+          meta.opacity = Math.min(1, Math.max(0, meta.opacity + delta * step));
+          layerDefaults.opacity = meta.opacity;
+        } else {
+          return true;
+        }
+        layerDOM.get(meta.id)?.applyStyle(meta);
+        panel?.renderControls(); panel?.renderLayers(); debounceSave();
+        return true;
+      }
+      return event.key.toLowerCase() === 'b' || event.key.toLowerCase() === 'a';
+    }
+
+    const scaleDelta = scaleNudgeFromKey(event);
+    if (scaleDelta) {
+      event.preventDefault();
+      event.stopPropagation();
+      meta.scale = normalizeScale(meta.scale + scaleDelta, meta.scale);
+      layerDOM.get(meta.id)?.applyStyle(meta);
+      panel?.renderControls(); panel?.renderLayers(); debounceSave();
+      return true;
+    }
+
+    if (event.altKey && event.key.toLowerCase() === 'g') {
+      event.preventDefault();
+      event.stopPropagation();
+      gridConfig.enabled = !gridConfig.enabled;
+      applyGrid(gridConfig); panel?.renderGrid(); debounceSave();
+      return true;
+    }
+    if (event.altKey && event.key.toLowerCase() === 'v') {
+      event.preventDefault();
+      event.stopPropagation();
+      meta.visible = !meta.visible;
+      layerDOM.get(meta.id)?.applyStyle(meta); panel?.renderLayers(); debounceSave();
+      return true;
+    }
+    if (event.altKey && event.key.toLowerCase() === 'l') {
+      event.preventDefault();
+      event.stopPropagation();
+      meta.locked = !meta.locked;
+      layerDOM.get(meta.id)?.applyStyle(meta); panel?.renderControls(); panel?.renderLayers(); debounceSave();
+      return true;
+    }
+    if (event.altKey && (event.key === '[' || event.key === ']')) {
+      event.preventDefault();
+      event.stopPropagation();
+      meta.scale = normalizeScale(meta.scale * (event.key === '[' ? 0.5 : 2), meta.scale);
+      layerDOM.get(meta.id)?.applyStyle(meta); panel?.renderControls(); panel?.renderLayers(); debounceSave();
+      return true;
+    }
+    return false;
   }
 
   function setEnabled(v) {
@@ -451,7 +615,7 @@
     const imgs = {};
     layerMeta.forEach(m => { const d = imageData.get(m.id); if (d) imgs[m.id] = d; });
     await safeStorageSet({
-      [K.STATE]:  { enabled: globalEnabled, activeLayerId, grid: gridConfig, layers: layerMeta },
+      [K.STATE]:  { enabled: globalEnabled, activeLayerId, grid: gridConfig, layerDefaults, layers: layerMeta },
       [K.IMAGES]: imgs,
     });
   }
@@ -463,11 +627,16 @@
     updateActiveLang();
     currentTheme = normalizeTheme(res[K.THEME] ?? preferredTheme());
     if (res[K.IMAGES]) Object.entries(res[K.IMAGES]).forEach(([id, d]) => imageData.set(id, d));
+    hasStoredState = !!res[K.STATE];
     if (res[K.STATE]) {
       const s = res[K.STATE];
       globalEnabled = s.enabled ?? false;
       activeLayerId = s.activeLayerId ?? null;
       if (s.grid) Object.assign(gridConfig, sanitizeGrid(s.grid));
+      if (s.layerDefaults && typeof s.layerDefaults === 'object') {
+        layerDefaults.opacity = typeof s.layerDefaults.opacity === 'number' ? Math.min(1, Math.max(0, s.layerDefaults.opacity)) : layerDefaults.opacity;
+        layerDefaults.blendMode = VALID_BLEND.has(s.layerDefaults.blendMode) ? s.layerDefaults.blendMode : layerDefaults.blendMode;
+      }
       layerMeta = (s.layers ?? []).filter(m => m && typeof m.id === 'string').map(sanitizeMeta);
     }
     return res[K.PANEL_POS] ?? null;
@@ -476,7 +645,7 @@
   /* ── Utility helpers ───────────────────── */
   function getFullState() {
     return {
-      enabled: globalEnabled, activeLayerId, grid: gridConfig,
+      enabled: globalEnabled, activeLayerId, grid: gridConfig, layerDefaults,
       layers: layerMeta.map(m => ({ ...m, imageData: imageData.get(m.id) ?? '' })),
     };
   }
@@ -503,7 +672,7 @@
       --mono: 'SFMono-Regular',Consolas,'Liberation Mono',monospace;
       color-scheme: dark;
 
-      position: fixed; width: ${PANEL_WIDTH}px;
+      position: fixed; width: min(${PANEL_WIDTH}px, calc(100vw - 16px));
       background: var(--bg);
       border: 1px solid var(--brd);
       border-radius: var(--r);
@@ -530,7 +699,7 @@
       display: flex; align-items: center; justify-content: flex-start; gap: 16px;
       padding: 0 11px 0 14px; height: 40px;
       background: var(--surf); border-bottom: 1px solid var(--brd);
-      cursor: grab; flex-shrink: 0;
+      cursor: grab; flex-shrink: 0; touch-action: none;
     }
     .dp-header:active { cursor: grabbing; }
     .dp-logo {
@@ -566,6 +735,7 @@
       outline: none; cursor: pointer;
     }
     .dp-lang:hover, .dp-lang:focus { border-color: var(--brd-hi); color: var(--tx); }
+    .dp-lang option, .dp-sel option { background: var(--surf); color: var(--tx); }
     .dp-p :where(button, select, input, .dp-addbtn, .dp-li):focus-visible {
       outline: 2px solid var(--active-brd);
       outline-offset: 2px;
@@ -629,6 +799,7 @@
     .dp-sec:last-child { border-bottom: none; }
     .dp-shead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
     .dp-slabel { font-size: 9px; font-weight: 700; letter-spacing: .1em; color: var(--tx3); text-transform: uppercase; }
+    .dp-layer-tools { display: flex; align-items: center; gap: 5px; }
 
     /* Add button */
     .dp-addbtn {
@@ -645,6 +816,8 @@
       opacity: 0; pointer-events: none;
     }
     .dp-add-plus { font-size: 15px; font-weight: 800; line-height: 1; }
+    .dp-pastebtn { min-width: 0; padding: 0 7px; background: var(--surf2); color: var(--tx2); border-color: var(--brd); }
+    .dp-pastebtn:hover { color: var(--acc); }
 
     /* Layer list */
     .dp-ll { display: flex; flex-direction: column; gap: 2px; }
@@ -672,13 +845,33 @@
     .dp-lname { font-size: 11px; font-weight: 500; color: var(--tx); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .dp-lmeta { font-size: 9.5px; color: var(--tx3); font-family: var(--mono); }
 
-    .dp-visbtn {
-      background: none; border: none; cursor: pointer; color: var(--tx2);
-      width: 24px; height: 24px; padding: 0; border-radius: 3px; display: flex; align-items: center; justify-content: center;
-      opacity: .6; transition: opacity .12s, color .12s; flex-shrink: 0;
+    .dp-reorder { display: grid; grid-template-rows: 1fr 1fr; gap: 2px; flex-shrink: 0; }
+    .dp-orderbtn {
+      width: 20px; height: 13px; display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--brd); border-radius: 3px; background: var(--surf2);
+      color: var(--tx2); cursor: pointer; font-size: 8px; line-height: 1; padding: 0;
+      transition: background .12s, color .12s, border-color .12s, opacity .12s;
     }
-    .dp-visbtn:hover { opacity: 1; color: var(--acc); }
-    .dp-visbtn.hid { opacity: .2; }
+    .dp-orderbtn:hover { background: var(--surf3); color: var(--acc); border-color: var(--brd-hi); }
+    .dp-orderbtn:disabled { cursor: default; opacity: .34; color: var(--tx3); }
+
+    .dp-layer-actions { display: flex; align-items: center; gap: 3px; flex-shrink: 0; }
+    .dp-visbtn, .dp-list-lock, .dp-list-del {
+      border: 1px solid transparent; cursor: pointer;
+      width: 28px; height: 28px; padding: 0; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+      transition: opacity .12s, color .12s, background .12s, border-color .12s; flex-shrink: 0;
+    }
+    .dp-visbtn { background: var(--surf2); color: var(--tx2); opacity: .78; }
+    .dp-visbtn:hover { opacity: 1; color: var(--acc); border-color: var(--brd-hi); }
+    .dp-visbtn.hid { opacity: .45; }
+    .dp-list-lock { background: var(--surf2); color: var(--tx2); }
+    .dp-list-lock:hover { color: var(--acc); border-color: var(--brd-hi); }
+    .dp-list-lock.on {
+      background: var(--active-soft); border-color: var(--active-brd); color: var(--acc);
+      box-shadow: inset 0 0 0 1px var(--active-brd);
+    }
+    .dp-list-del { background: var(--dng-d); color: var(--dng); }
+    .dp-list-del:hover { background: var(--dng); border-color: var(--dng); color: #fff; }
 
     /* Empty */
     .dp-empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 8px; text-align: center; color: var(--tx3); font-size: 10.5px; }
@@ -716,6 +909,7 @@
     .dp-sb { display: flex; align-items: center; justify-content: center; min-width: 24px; height: 24px; background: var(--surf2); border: 1px solid var(--brd); border-radius: 3px; color: var(--tx2); cursor: pointer; padding: 0; font-size: 8px; flex-shrink: 0; transition: all .1s; line-height: 1; }
     .dp-sb:hover { background: var(--surf3); color: var(--acc); border-color: var(--brd-hi); }
     .dp-sb:active { transform: scale(.93); }
+    .dp-scale-preset { min-width: 46px; padding: 0 5px; font-family: var(--mono); font-size: 9.5px; }
 
     /* Quick-action */
     .dp-qa { gap: 4px; }
@@ -736,28 +930,6 @@
       font-weight: 700; padding-right: 20px;
       box-shadow: inset 0 0 0 1px var(--active-brd), 0 0 0 2px var(--active-ring);
     }
-
-    /* Flag buttons */
-    .dp-frow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 42px; gap: 6px; align-items: stretch; margin-top: 2px; }
-    .dp-fbtn { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; min-height: 28px; background: var(--surf2); border: 1px solid var(--brd); border-radius: 5px; color: var(--tx2); cursor: pointer; font-family: var(--sans); font-size: 10.5px; padding: 5px 8px; transition: all .12s; white-space: nowrap; }
-    .dp-fbtn:hover { background: var(--surf3); border-color: var(--brd-hi); color: var(--acc); }
-    .dp-fbtn.on  {
-      background: var(--active-soft) !important; border-color: var(--active-brd); color: var(--acc) !important; font-weight: 700;
-      box-shadow: inset 0 0 0 1px var(--active-brd), 0 0 0 2px var(--active-ring);
-    }
-    .dp-p[data-theme="light"] .dp-fbtn.on,
-    .dp-p.dp-light .dp-fbtn.on {
-      background: var(--active-soft) !important;
-      color: #0055cc !important;
-    }
-    .dp-fbtn.on::before {
-      content: none; display: none;
-    }
-    .dp-fbtn.dng {
-      width: 42px; min-width: 42px; padding: 0; background: rgba(255,77,106,.18); border-color: rgba(255,77,106,.55);
-      color: var(--dng); font-weight: 700;
-    }
-    .dp-fbtn.dng:hover { background: var(--dng); border-color: var(--dng); color: #fff; }
 
     /* Tool buttons */
     .dp-trow { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 6px; }
@@ -783,10 +955,34 @@
     }
     .dp-p.dp-light .dp-dropzone { background: rgba(0,85,204,0.06); }
     .dp-dropzone.active { display: flex; }
+
+    @media (max-width: 380px) {
+      .dp-header { gap: 8px; padding: 0 8px; }
+      .dp-logo { gap: 5px; padding-right: 8px; }
+      .dp-logo-tx { font-size: 12px; }
+      .dp-hbtns { gap: 5px; }
+      .dp-settings { gap: 4px; padding-right: 5px; }
+      .dp-overlay-actions { gap: 3px; }
+      .dp-lang { width: 78px; font-size: 9.5px; }
+    }
   `;
 
   /* ── Panel HTML ──────────────────────────── */
-  function buildPanelHTML() {
+  function buildPanelHTML(collapsed = false) {
+    const moveShortcutTitle = t('shortcutMove');
+    const blendShortcutTitle = t('shortcutBlend');
+    const alphaShortcutTitle = t('shortcutAlpha');
+    const scaleNudgeTitle = t('shortcutScaleNudge');
+    const collapseTitle = t(collapsed ? 'expandPanel' : 'collapsePanel');
+    const scaleDownTitle = t('scaleDecreaseTitle');
+    const scaleUpTitle = t('scaleIncreaseTitle');
+    const scaleHalfTitle = t('scaleHalfTitle');
+    const scaleDoubleTitle = t('scaleDoubleTitle');
+    const gridTitle = t('gridTitle');
+    const xLeftTitle = t('xDecrementTitle');
+    const xRightTitle = t('xIncrementTitle');
+    const yUpTitle = t('yDecrementTitle');
+    const yDownTitle = t('yIncrementTitle');
     const logoURL = extensionAsset('icons/icon32.png');
     const logoFallback = `<svg class="dp-logo-fallback" viewBox="0 0 22 22" fill="none" aria-hidden="true">
       <rect x="1" y="1" width="9" height="9" rx="2" fill="var(--acc)" stroke="#04121a" stroke-width="1.3"/>
@@ -817,7 +1013,7 @@
           </div>
           <div class="dp-overlay-actions" aria-label="${t('overlayLabel')}">
           <label class="dp-tog" title="${t('toggleOverlay')}" aria-label="${t('toggleOverlay')}"><input type="checkbox" id="dp-en" aria-label="${t('toggleOverlay')}"/><span class="dp-track"><span class="dp-thumb"></span></span></label>
-          <button type="button" class="dp-ibtn" id="dp-col" title="Collapse" aria-label="Collapse"><span class="dp-chev">▲</span></button>
+          <button type="button" class="dp-ibtn" id="dp-col" title="${collapseTitle}" aria-label="${collapseTitle}"><span class="dp-chev">▲</span></button>
           </div>
         </div>
       </div>
@@ -832,10 +1028,15 @@
         <div class="dp-sec">
           <div class="dp-shead">
             <span class="dp-slabel">${t('sectionLayers')}</span>
-            <label class="dp-addbtn" id="dp-add" role="button" tabindex="0" title="${t('addLayerTitle')}" aria-label="${t('addLayerTitle')}">
-              <span class="dp-add-plus">+</span><span>${t('btnAddLayer')}</span>
-              <input type="file" id="dp-file" accept="image/*" multiple tabindex="-1" aria-label="${t('addLayerTitle')}"/>
-            </label>
+            <div class="dp-layer-tools">
+              <button type="button" class="dp-addbtn dp-pastebtn" id="dp-paste" title="${t('btnPasteLayer')}" aria-label="${t('btnPasteLayer')}">
+                <span>${t('btnPasteLayer')}</span>
+              </button>
+              <label class="dp-addbtn" id="dp-add" role="button" tabindex="0" title="${t('addLayerTitle')}" aria-label="${t('addLayerTitle')}">
+                <span class="dp-add-plus">+</span><span>${t('btnAddLayer')}</span>
+                <input type="file" id="dp-file" accept="image/*" multiple tabindex="-1" aria-label="${t('addLayerTitle')}"/>
+              </label>
+            </div>
           </div>
           <div class="dp-ll" id="dp-ll" role="listbox" aria-label="${t('sectionLayers')}">
             <div class="dp-empty" id="dp-empty">
@@ -852,8 +1053,9 @@
           </div>
           <div class="dp-row dp-blend-row" id="dp-blend-row">
             <span class="dp-cl">${t('labelBlend')}</span>
-            <div class="dp-selw"><select id="dp-blend" class="dp-sel" aria-label="${t('labelBlend')}">
+            <div class="dp-selw"><select id="dp-blend" class="dp-sel" title="${blendShortcutTitle}" aria-label="${t('labelBlend')}">
               <option value="normal">${t('blendNormal')}</option>
+              <option value="invert">${t('blendInvert')}</option>
               <option value="difference">${t('blendDifference')}</option>
               <option value="multiply">${t('blendMultiply')}</option>
               <option value="screen">${t('blendScreen')}</option>
@@ -864,50 +1066,39 @@
           </div>
           <div class="dp-row">
             <span class="dp-cl">${t('labelOpacity')}</span>
-            <div class="dp-sw"><input type="range" id="dp-osl" class="dp-sl" min="0" max="100" step="1" value="50" aria-label="${t('labelOpacity')}"/></div>
-            <div class="dp-nw"><input type="number" id="dp-onum" class="dp-num dp-onum-w" min="0" max="100" value="50" aria-label="${t('labelOpacity')}"/><span class="dp-unit">%</span></div>
+            <div class="dp-sw"><input type="range" id="dp-osl" class="dp-sl" min="0" max="100" step="1" value="50" title="${alphaShortcutTitle}" aria-label="${t('labelOpacity')}"/></div>
+            <div class="dp-nw"><input type="number" id="dp-onum" class="dp-num dp-onum-w" min="0" max="100" value="50" title="${alphaShortcutTitle}" aria-label="${t('labelOpacity')}"/><span class="dp-unit">%</span></div>
           </div>
           <div class="dp-row">
             <span class="dp-cl">${t('labelX')}</span>
-            <button type="button" class="dp-sb" data-f="x" data-d="-1" aria-label="${t('labelX')} -1">◀</button>
-            <div class="dp-nw f1"><input type="number" id="dp-xi" class="dp-num fw" value="0" step="1" aria-label="${t('labelX')}"/><span class="dp-unit">px</span></div>
-            <button type="button" class="dp-sb" data-f="x" data-d="1" aria-label="${t('labelX')} +1">▶</button>
+            <button type="button" class="dp-sb" data-f="x" data-d="-1" title="${xLeftTitle}" aria-label="${t('labelX')} -1">◀</button>
+            <div class="dp-nw f1"><input type="number" id="dp-xi" class="dp-num fw" value="0" step="1" title="${moveShortcutTitle}" aria-label="${t('labelX')}"/><span class="dp-unit">px</span></div>
+            <button type="button" class="dp-sb" data-f="x" data-d="1" title="${xRightTitle}" aria-label="${t('labelX')} +1">▶</button>
           </div>
           <div class="dp-row">
             <span class="dp-cl">${t('labelY')}</span>
-            <button type="button" class="dp-sb" data-f="y" data-d="-1" aria-label="${t('labelY')} -1">◀</button>
-            <div class="dp-nw f1"><input type="number" id="dp-yi" class="dp-num fw" value="0" step="1" aria-label="${t('labelY')}"/><span class="dp-unit">px</span></div>
-            <button type="button" class="dp-sb" data-f="y" data-d="1" aria-label="${t('labelY')} +1">▶</button>
+            <button type="button" class="dp-sb" data-f="y" data-d="-1" title="${yUpTitle}" aria-label="${t('labelY')} -1">◀</button>
+            <div class="dp-nw f1"><input type="number" id="dp-yi" class="dp-num fw" value="0" step="1" title="${moveShortcutTitle}" aria-label="${t('labelY')}"/><span class="dp-unit">px</span></div>
+            <button type="button" class="dp-sb" data-f="y" data-d="1" title="${yDownTitle}" aria-label="${t('labelY')} +1">▶</button>
           </div>
           <div class="dp-row">
             <span class="dp-cl">${t('labelScale')}</span>
-            <button type="button" class="dp-sb" data-f="scale" data-d="-1" title="Scale -0.1 (Shift: 0.01 / Alt: 0.001)" aria-label="${t('labelScale')} -0.1">◀</button>
-            <div class="dp-nw f1"><input type="text" id="dp-si" class="dp-num fw" value="1.00" inputmode="decimal" autocomplete="off" aria-label="${t('labelScale')}"/><span class="dp-unit">x</span></div>
-            <button type="button" class="dp-sb" data-f="scale" data-d="1" title="Scale +0.1 (Shift: 0.01 / Alt: 0.001)" aria-label="${t('labelScale')} +0.1">▶</button>
+            <button type="button" class="dp-sb" data-f="scale" data-d="-1" title="${scaleDownTitle}" aria-label="${t('labelScale')} -0.1">−</button>
+            <button type="button" class="dp-sb dp-scale-preset" id="dp-half" title="${scaleHalfTitle}" aria-label="${t('btnScaleHalf')}">0.50 x</button>
+            <div class="dp-nw f1"><input type="text" id="dp-si" class="dp-num fw" value="1.00" inputmode="decimal" autocomplete="off" title="${moveShortcutTitle}; ${scaleNudgeTitle}" aria-label="${t('labelScale')}"/><span class="dp-unit">x</span></div>
+            <button type="button" class="dp-sb dp-scale-preset" id="dp-double" title="${scaleDoubleTitle}" aria-label="${t('btnScaleDouble')}">2.00 x</button>
+            <button type="button" class="dp-sb" data-f="scale" data-d="1" title="${scaleUpTitle}" aria-label="${t('labelScale')} +0.1">+</button>
           </div>
           <div class="dp-row dp-qa">
             <button type="button" class="dp-qbtn" id="dp-reset">${t('btnReset')}</button>
             <button type="button" class="dp-qbtn" id="dp-center">${t('btnCenter')}</button>
             <button type="button" class="dp-qbtn" id="dp-fitw">${t('btnFitW')}</button>
           </div>
-          <div class="dp-row dp-frow">
-            <button type="button" class="dp-fbtn" id="dp-inv" aria-pressed="false">
-              <svg width="11" height="11" viewBox="0 0 13 13" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M6.5 1v11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M1.7 6.5h4.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-              ${t('btnInvert')}
-            </button>
-            <button type="button" class="dp-fbtn" id="dp-lock" aria-pressed="false">
-              <svg width="10" height="11" viewBox="0 0 12 13" fill="none" aria-hidden="true"><rect x="1" y="5.5" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M3 5.5V3.5a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>
-              ${t('btnLock')}
-            </button>
-            <button type="button" class="dp-fbtn dng" id="dp-del" title="${t('btnRemove')}" aria-label="${t('btnRemove')}">
-              <svg width="10" height="10" viewBox="0 0 11 11"><line x1="1.5" y1="1.5" x2="9.5" y2="9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="9.5" y1="1.5" x2="1.5" y2="9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-            </button>
-          </div>
         </div>
         <!-- Tools -->
         <div class="dp-sec">
           <div class="dp-trow">
-            <button type="button" class="dp-tbtn" id="dp-grid" aria-pressed="false">${gridSVG} <span>${t('btnGrid')}</span></button>
+            <button type="button" class="dp-tbtn" id="dp-grid" title="${gridTitle}" aria-pressed="false">${gridSVG} <span>${t('btnGrid')}</span></button>
             <div class="dp-nw" id="dp-gsize">
               <input type="number" id="dp-gnum" class="dp-num dp-gnum-w" min="2" max="128" step="1" value="8" aria-label="${t('gridSizeLabel')}"/>
               <span class="dp-unit">px</span>
@@ -926,6 +1117,7 @@
       this._ox = 0; this._oy = 0; this._collapsed = false;
       this._visible = true;
       this._onPaste = e => this._handlePaste(e);
+      this._onResize = () => this._setPos(this._px, this._py);
     }
 
     show() {
@@ -951,7 +1143,7 @@
       styleEl.textContent = PANEL_CSS;
       this.shadow.appendChild(styleEl);
       const wrapper = document.createElement('div');
-      wrapper.innerHTML = buildPanelHTML();
+      wrapper.innerHTML = buildPanelHTML(this._collapsed);
       this.shadow.appendChild(wrapper.firstElementChild);
       this.root = this.shadow.getElementById('dpp');
       this.root.style.pointerEvents = 'auto';
@@ -965,11 +1157,13 @@
 
       this._bindEvents();
       document.addEventListener('paste', this._onPaste, { capture: true });
+      window.addEventListener('resize', this._onResize, { passive: true });
       this.renderAll();
     }
 
     _setPos(x, y) {
-      this._px = Math.min(Math.max(0, x), window.innerWidth - PANEL_WIDTH);
+      const panelWidth = this.root?.getBoundingClientRect().width || Math.min(PANEL_WIDTH, Math.max(0, window.innerWidth - 16));
+      this._px = Math.min(Math.max(0, x), Math.max(0, window.innerWidth - panelWidth));
       this._py = Math.min(Math.max(0, y), window.innerHeight - 40);
       this.root.style.left = `${this._px}px`;
       this.root.style.top  = `${this._py}px`;
@@ -991,7 +1185,7 @@
     refreshLanguage() {
       if (!this.root) return;
       const wrapper = document.createElement('div');
-      wrapper.innerHTML = buildPanelHTML();
+      wrapper.innerHTML = buildPanelHTML(this._collapsed);
       const nextRoot = wrapper.firstElementChild;
       nextRoot.style.pointerEvents = 'auto';
       nextRoot.style.left = this.root.style.left;
@@ -1020,7 +1214,7 @@
       empty.style.display = layerMeta.length === 0 ? '' : 'none';
       empty.setAttribute('aria-hidden', String(layerMeta.length !== 0));
 
-      layerMeta.forEach(meta => {
+      layerMeta.forEach((meta, index) => {
         const item = document.createElement('div');
         item.className = 'dp-li' + (meta.id === activeLayerId ? ' active' : '');
         item.dataset.id = meta.id;
@@ -1046,15 +1240,51 @@
         metaDiv.textContent = `${Math.round(meta.opacity * 100)}% | ${meta.x}px ${meta.y}px | x${formatScale(meta.scale)}`;
         info.appendChild(nameDiv); info.appendChild(metaDiv);
 
+        const reorder = document.createElement('div');
+        reorder.className = 'dp-reorder';
+
+        const moveUp = document.createElement('button');
+        moveUp.type = 'button';
+        moveUp.className = 'dp-orderbtn';
+        moveUp.title = t('moveLayerUp');
+        moveUp.setAttribute('aria-label', `${t('moveLayerUp')}: ${meta.name}`);
+        moveUp.disabled = index === 0;
+        moveUp.textContent = '▲';
+        moveUp.addEventListener('click', e => {
+          e.stopPropagation();
+          if (moveLayerInStack(meta.id, -1)) {
+            activeLayerId = meta.id;
+            refreshLayers(); this.renderLayers(); debounceSave();
+          }
+        });
+
+        const moveDown = document.createElement('button');
+        moveDown.type = 'button';
+        moveDown.className = 'dp-orderbtn';
+        moveDown.title = t('moveLayerDown');
+        moveDown.setAttribute('aria-label', `${t('moveLayerDown')}: ${meta.name}`);
+        moveDown.disabled = index === layerMeta.length - 1;
+        moveDown.textContent = '▼';
+        moveDown.addEventListener('click', e => {
+          e.stopPropagation();
+          if (moveLayerInStack(meta.id, 1)) {
+            activeLayerId = meta.id;
+            refreshLayers(); this.renderLayers(); debounceSave();
+          }
+        });
+
+        reorder.appendChild(moveUp);
+        reorder.appendChild(moveDown);
+
         const vis = document.createElement('button');
         vis.type = 'button';
         vis.className = 'dp-visbtn' + (!meta.visible ? ' hid' : '');
-        vis.title = t(meta.visible ? 'visHide' : 'visShow');
+        vis.title = `${t(meta.visible ? 'visHide' : 'visShow')} (Alt + V)`;
         vis.setAttribute('aria-label', t(meta.visible ? 'visHide' : 'visShow'));
         vis.setAttribute('aria-pressed', String(!!meta.visible));
         vis.innerHTML = meta.visible
           ? `<svg width="13" height="10" viewBox="0 0 13 10" aria-hidden="true"><ellipse cx="6.5" cy="5" rx="5.5" ry="4" stroke="currentColor" stroke-width="1.3" fill="none"/><circle cx="6.5" cy="5" r="1.8" fill="currentColor"/></svg>`
-          : `<svg width="13" height="11" viewBox="0 0 13 11" aria-hidden="true"><line x1="1" y1="1" x2="12" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M3 7.5A5.5 4 0 0 0 10 7.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>`;
+          : `<svg width="13" height="11" viewBox="0 0 13 11" aria-hidden="true"><ellipse cx="6.5" cy="5.5" rx="5.5" ry="4" stroke="currentColor" stroke-width="1.3" fill="none"/><circle cx="6.5" cy="5.5" r="1.8" fill="currentColor"/><line x1="1" y1="1" x2="12" y2="10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>`;
         vis.addEventListener('click', e => {
           e.stopPropagation();
           meta.visible = !meta.visible;
@@ -1062,7 +1292,38 @@
           this.renderLayers(); debounceSave();
         });
 
-        item.appendChild(th); item.appendChild(info); item.appendChild(vis);
+        const lock = document.createElement('button');
+        lock.type = 'button';
+        lock.className = 'dp-list-lock' + (meta.locked ? ' on' : '');
+        lock.title = `${t('btnLock')} (Alt + L)`;
+        lock.setAttribute('aria-label', `${t('btnLock')}: ${meta.name}`);
+        lock.setAttribute('aria-pressed', String(!!meta.locked));
+        lock.innerHTML = `<svg width="10" height="11" viewBox="0 0 12 13" fill="none" aria-hidden="true"><rect x="1" y="5.5" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/><path d="M3 5.5V3.5a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>`;
+        lock.addEventListener('click', e => {
+          e.stopPropagation();
+          meta.locked = !meta.locked;
+          layerDOM.get(meta.id)?.applyStyle(meta);
+          this.renderLayers(); this.renderControls(); debounceSave();
+        });
+
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'dp-list-del';
+        del.title = t('btnRemove');
+        del.setAttribute('aria-label', `${t('btnRemove')}: ${meta.name}`);
+        del.innerHTML = `<svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><line x1="1.5" y1="1.5" x2="9.5" y2="9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><line x1="9.5" y1="1.5" x2="1.5" y2="9.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+        del.addEventListener('click', e => {
+          e.stopPropagation();
+          this._removeLayer(meta.id);
+        });
+
+        const actions = document.createElement('div');
+        actions.className = 'dp-layer-actions';
+        actions.appendChild(lock);
+        actions.appendChild(vis);
+        actions.appendChild(del);
+
+        item.appendChild(reorder); item.appendChild(th); item.appendChild(info); item.appendChild(actions);
         item.addEventListener('click', () => {
           activeLayerId = meta.id; this.renderLayers(); this.renderControls(); debounceSave();
         });
@@ -1091,12 +1352,6 @@
       const si = g('dp-si'); if (si && si !== this.shadow.activeElement) si.value = formatScale(meta.scale);
       const bl = g('dp-blend'); if (bl) bl.value = meta.blendMode;
       g('dp-blend-row')?.classList.toggle('is-active', meta.blendMode !== 'normal');
-      const inv = g('dp-inv');
-      const lock = g('dp-lock');
-      inv?.classList.toggle('on', !!meta.invert);
-      inv?.setAttribute('aria-pressed', String(!!meta.invert));
-      lock?.classList.toggle('on', !!meta.locked);
-      lock?.setAttribute('aria-pressed', String(!!meta.locked));
     }
 
     renderGrid() {
@@ -1109,12 +1364,38 @@
       if (inp)  inp.value = gridConfig.size;
     }
 
+    _removeLayer(id) {
+      const idx = layerMeta.findIndex(meta => meta.id === id);
+      if (idx < 0) return;
+      layerMeta.splice(idx, 1);
+      layerDOM.get(id)?.destroy(); layerDOM.delete(id); imageData.delete(id);
+      if (activeLayerId === id) activeLayerId = layerMeta[Math.max(0, idx - 1)]?.id ?? null;
+      this.renderAll(); debounceSave(true);
+    }
+
+    _nudgeActiveLayer(event) {
+      const arrowKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+      if (!arrowKeys.includes(event.key)) return false;
+      const meta = getActiveMeta();
+      if (!meta || meta.locked) return false;
+      const step = event.shiftKey ? 10 : 1;
+      if (event.key === 'ArrowLeft')  meta.x -= step;
+      if (event.key === 'ArrowRight') meta.x += step;
+      if (event.key === 'ArrowUp')    meta.y -= step;
+      if (event.key === 'ArrowDown')  meta.y += step;
+      event.preventDefault();
+      event.stopPropagation();
+      layerDOM.get(meta.id)?.applyStyle(meta);
+      this.renderControls(); this.renderLayers(); debounceSave();
+      return true;
+    }
+
     /* ── Events ── */
     _bindEvents() {
       const g = id => this.shadow.getElementById(id);
 
       /* Panel drag */
-      g('dp-drag')?.addEventListener('mousedown', e => {
+      g('dp-drag')?.addEventListener('pointerdown', e => {
         if (e.target.closest('button,label,input,select')) return;
         e.preventDefault();
         this._dragging = true;
@@ -1123,18 +1404,22 @@
         const onMove = e => { if (this._dragging) this._setPos(e.clientX - this._ox, e.clientY - this._oy); };
         const onUp   = () => {
           this._dragging = false;
-          document.removeEventListener('mousemove', onMove, { capture: true });
-          document.removeEventListener('mouseup',   onUp,   { capture: true });
+          document.removeEventListener('pointermove', onMove, { capture: true });
+          document.removeEventListener('pointerup',   onUp,   { capture: true });
           queueStorageSet({ [K.PANEL_POS]: { x: this._px, y: this._py } });
         };
-        document.addEventListener('mousemove', onMove, { capture: true, passive: true });
-        document.addEventListener('mouseup',   onUp,   { capture: true });
+        document.addEventListener('pointermove', onMove, { capture: true, passive: true });
+        document.addEventListener('pointerup',   onUp,   { capture: true });
       });
 
       /* Collapse */
-      g('dp-col')?.addEventListener('click', () => {
+      const colBtn = g('dp-col');
+      colBtn?.addEventListener('click', () => {
         this._collapsed = !this._collapsed;
         this.root.classList.toggle('collapsed', this._collapsed);
+        const nextTitle = t(this._collapsed ? 'expandPanel' : 'collapsePanel');
+        colBtn.title = nextTitle;
+        colBtn.setAttribute('aria-label', nextTitle);
       });
 
       /* Drop zone on the panel itself */
@@ -1189,41 +1474,42 @@
         if (files.length) this._addLayers(files);
         e.target.value = '';
       });
+      g('dp-paste')?.addEventListener('click', () => {
+        this._pasteFromClipboard().catch(error => {
+          if (!isExtensionContextInvalidError(error)) console.warn('[DiffPixel] Failed to paste image from clipboard', error);
+        });
+      });
+
+      this.root.addEventListener('keydown', e => {
+        if (handleLayerShortcut(e)) return;
+        const path = e.composedPath?.() ?? [];
+        if (path.some(node => node instanceof Element && node.matches?.('input, textarea, select'))) return;
+        this._nudgeActiveLayer(e);
+      }, { capture: true });
 
       /* Opacity */
       const arrowKeys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-      const nudgeActiveLayer = e => {
-        const meta = getActiveMeta();
-        if (!meta || meta.locked) return;
-        const step = e.shiftKey ? 10 : 1;
-        let moved = false;
-        if (e.key === 'ArrowLeft')  { meta.x -= step; moved = true; }
-        if (e.key === 'ArrowRight') { meta.x += step; moved = true; }
-        if (e.key === 'ArrowUp')    { meta.y -= step; moved = true; }
-        if (e.key === 'ArrowDown')  { meta.y += step; moved = true; }
-        if (!moved) return;
-        layerDOM.get(meta.id)?.applyStyle(meta);
-        this.renderControls(); this.renderLayers(); debounceSave();
-      };
       const blurAndNudgeOnArrow = el => {
         el?.addEventListener('keydown', e => {
           if (!arrowKeys.includes(e.key)) return;
           e.preventDefault();
           e.stopPropagation();
           e.target.blur();
-          nudgeActiveLayer(e);
+          this._nudgeActiveLayer(e);
         });
       };
 
       g('dp-osl')?.addEventListener('input', e => {
         const meta = getActiveMeta(); if (!meta) return;
         const v = +e.target.value; meta.opacity = v / 100;
+        layerDefaults.opacity = meta.opacity;
         const on = g('dp-onum'); if (on) on.value = v;
         layerDOM.get(meta.id)?.applyStyle(meta); this.renderLayers(); debounceSave();
       });
       g('dp-onum')?.addEventListener('input', e => {
         const meta = getActiveMeta(); if (!meta) return;
         const v = Math.min(100, Math.max(0, +e.target.value || 0)); meta.opacity = v / 100;
+        layerDefaults.opacity = meta.opacity;
         const os = g('dp-osl'); if (os) os.value = v;
         layerDOM.get(meta.id)?.applyStyle(meta); this.renderLayers(); debounceSave();
       });
@@ -1254,7 +1540,7 @@
       });
 
       /* Step buttons */
-      this.shadow.querySelectorAll('.dp-sb').forEach(btn => {
+      this.shadow.querySelectorAll('.dp-sb[data-f]').forEach(btn => {
         btn.addEventListener('click', e => {
           const meta = getActiveMeta(); if (!meta) return;
           const f = btn.dataset.f, d = +btn.dataset.d;
@@ -1274,16 +1560,23 @@
       });
       g('dp-center')?.addEventListener('click', () => {
         const meta = getActiveMeta(), layer = meta ? layerDOM.get(meta.id) : null; if (!meta || !layer) return;
-        meta.x = Math.round(pageLeft() + (window.innerWidth  - (layer.img?.naturalWidth  ?? 0) * meta.scale) / 2);
-        meta.y = Math.round(pageTop()  + (window.innerHeight - (layer.img?.naturalHeight ?? 0) * meta.scale) / 2);
+        meta.x = Math.round((window.innerWidth  - (layer.img?.naturalWidth  ?? 0) * meta.scale) / 2);
+        meta.y = Math.round((window.innerHeight - (layer.img?.naturalHeight ?? 0) * meta.scale) / 2);
         layerDOM.get(meta.id)?.applyStyle(meta); this.renderControls(); this.renderLayers(); debounceSave();
       });
       g('dp-fitw')?.addEventListener('click', () => {
         const meta = getActiveMeta(), layer = meta ? layerDOM.get(meta.id) : null; if (!meta || !layer) return;
         const nw = layer.img?.naturalWidth; if (!nw) return;
-        meta.scale = normalizeScale(window.innerWidth / nw, meta.scale); meta.x = pageLeft();
+        meta.scale = normalizeScale(window.innerWidth / nw, meta.scale); meta.x = 0;
         layerDOM.get(meta.id)?.applyStyle(meta); this.renderControls(); this.renderLayers(); debounceSave();
       });
+      const multiplyScale = multiplier => {
+        const meta = getActiveMeta(); if (!meta) return;
+        meta.scale = normalizeScale(meta.scale * multiplier, meta.scale);
+        layerDOM.get(meta.id)?.applyStyle(meta); this.renderControls(); this.renderLayers(); debounceSave();
+      };
+      g('dp-half')?.addEventListener('click', () => multiplyScale(0.5));
+      g('dp-double')?.addEventListener('click', () => multiplyScale(2));
 
       /* Layer name */
       g('dp-lname')?.addEventListener('input', e => {
@@ -1300,38 +1593,16 @@
         e.preventDefault();
         e.stopPropagation();
         e.target.blur();
-        nudgeActiveLayer(e);
+        this._nudgeActiveLayer(e);
       });
       blendSelect?.addEventListener('change', e => {
         const meta = getActiveMeta(); if (!meta) return;
         meta.blendMode = e.target.value;
+        meta.invert = false;
+        layerDefaults.blendMode = meta.blendMode;
         this.shadow.getElementById('dp-blend-row')?.classList.toggle('is-active', meta.blendMode !== 'normal');
         layerDOM.get(meta.id)?.applyStyle(meta); debounceSave();
         e.target.blur();
-      });
-
-      /* Flag buttons */
-      g('dp-inv')?.addEventListener('click', () => {
-        const meta = getActiveMeta(); if (!meta) return;
-        meta.invert = !meta.invert; layerDOM.get(meta.id)?.applyStyle(meta);
-        g('dp-inv').classList.toggle('on', meta.invert);
-        g('dp-inv').setAttribute('aria-pressed', String(!!meta.invert));
-        debounceSave();
-      });
-      g('dp-lock')?.addEventListener('click', () => {
-        const meta = getActiveMeta(); if (!meta) return;
-        meta.locked = !meta.locked; layerDOM.get(meta.id)?.applyStyle(meta);
-        g('dp-lock').classList.toggle('on', meta.locked);
-        g('dp-lock').setAttribute('aria-pressed', String(!!meta.locked));
-        debounceSave();
-      });
-      g('dp-del')?.addEventListener('click', () => {
-        const meta = getActiveMeta(); if (!meta) return;
-        const idx = layerMeta.indexOf(meta);
-        layerMeta.splice(idx, 1);
-        layerDOM.get(meta.id)?.destroy(); layerDOM.delete(meta.id); imageData.delete(meta.id);
-        activeLayerId = layerMeta[Math.max(0, idx - 1)]?.id ?? null;
-        this.renderAll(); debounceSave(true);
       });
 
       /* Grid */
@@ -1374,6 +1645,27 @@
       this._addLayers(files);
     }
 
+    async _pasteFromClipboard() {
+      if (!navigator.clipboard?.read) return;
+      const items = await navigator.clipboard.read();
+      const files = [];
+      for (const item of items) {
+        const type = item.types.find(type => type.startsWith('image/'));
+        if (!type) continue;
+        const blob = await item.getType(type);
+        if (blob.size > MAX_IMAGE_BYTES) continue;
+        const ext = IMAGE_EXT_BY_MIME[type] ?? 'png';
+        const stamp = new Date().toISOString().replace('T', ' ').replace(/\.\d+Z$/, '').replace(/:/g, '.');
+        const name = `${t('clipboardLayerName')} ${stamp}.${ext}`;
+        try {
+          files.push(new File([blob], name, { type, lastModified: Date.now() }));
+        } catch {
+          files.push(blob);
+        }
+      }
+      if (files.length) this._addLayers(files);
+    }
+
     _addLayers(files) {
       [...files].forEach(file => {
         if (!file.type.startsWith('image/') || file.size > MAX_IMAGE_BYTES) return;
@@ -1381,8 +1673,9 @@
         reader.onload = e => {
           const data = e.target.result;
           const id   = genId();
-          const name = (file.name.replace(/\.[^.]+$/, '') || t('layerDefault')).slice(0, 32);
-          const meta = { id, name, opacity: .5, x: Math.round(pageLeft()), y: Math.round(pageTop()), scale: 1, blendMode: 'normal', visible: true, invert: false, locked: false };
+          const sourceName = typeof file.name === 'string' ? file.name : t('clipboardLayerName');
+          const name = (sourceName.replace(/\.[^.]+$/, '') || t('layerDefault')).slice(0, 32);
+          const meta = { id, name, opacity: layerDefaults.opacity, x: 0, y: 0, scale: 1, blendMode: layerDefaults.blendMode, visible: true, invert: false, locked: false };
           imageData.set(id, data);
           layerMeta.push(meta);
           activeLayerId = id;
@@ -1396,6 +1689,7 @@
 
     destroy() {
       document.removeEventListener('paste', this._onPaste, { capture: true });
+      window.removeEventListener('resize', this._onResize);
       this.host?.remove();
     }
   }
@@ -1406,6 +1700,7 @@
     const res = await safeStorageGet(K.PANEL_POS);
     panel = new DiffPixelPanel();
     panel.mount(res[K.PANEL_POS] ?? null);
+    debounceSave();
   }
 
   /* ── chrome.runtime messages ── */
@@ -1438,7 +1733,7 @@
         if (typeof l.imageData === 'string' && l.imageData.startsWith('data:image/')) {
           imageData.set(l.id, l.imageData);
         }
-        const meta = sanitizeMeta(l);
+        const meta = sanitizeMeta({ opacity: layerDefaults.opacity, blendMode: layerDefaults.blendMode, ...l });
         layerMeta.push(meta); activeLayerId = meta.id;
         setEnabled(true);
         const ld = new Layer(meta.id); layerDOM.set(meta.id, ld); ld.mount(containerEl, meta);
@@ -1480,6 +1775,10 @@
         globalEnabled = typeof s.enabled === 'boolean' ? s.enabled : false;
         activeLayerId = typeof s.activeLayerId === 'string' ? s.activeLayerId : null;
         if (s.grid && typeof s.grid === 'object') Object.assign(gridConfig, sanitizeGrid(s.grid));
+        if (s.layerDefaults && typeof s.layerDefaults === 'object') {
+          layerDefaults.opacity = typeof s.layerDefaults.opacity === 'number' ? Math.min(1, Math.max(0, s.layerDefaults.opacity)) : layerDefaults.opacity;
+          layerDefaults.blendMode = VALID_BLEND.has(s.layerDefaults.blendMode) ? s.layerDefaults.blendMode : layerDefaults.blendMode;
+        }
         layerDOM.forEach(l => l.destroy()); layerDOM.clear(); layerMeta = [];
         if (containerEl) containerEl.innerHTML = '';
         (s.layers ?? []).filter(l => l && typeof l.id === 'string').forEach(l => {
@@ -1520,6 +1819,10 @@
       globalEnabled = typeof s.enabled === 'boolean' ? s.enabled : globalEnabled;
       activeLayerId = typeof s.activeLayerId === 'string' ? s.activeLayerId : activeLayerId;
       if (s.grid && typeof s.grid === 'object') Object.assign(gridConfig, sanitizeGrid(s.grid));
+      if (s.layerDefaults && typeof s.layerDefaults === 'object') {
+        layerDefaults.opacity = typeof s.layerDefaults.opacity === 'number' ? Math.min(1, Math.max(0, s.layerDefaults.opacity)) : layerDefaults.opacity;
+        layerDefaults.blendMode = VALID_BLEND.has(s.layerDefaults.blendMode) ? s.layerDefaults.blendMode : layerDefaults.blendMode;
+      }
 
       /* Sync layers: remove deleted, add new */
       const newMeta = (s.layers ?? []).filter(m => m && typeof m.id === 'string').map(sanitizeMeta);
@@ -1562,8 +1865,11 @@
     if (ae?.tagName === 'INPUT' || ae?.tagName === 'TEXTAREA' || ae?.isContentEditable) return;
     if (panel?.host?.contains(ae)) return;
 
+    if (handleLayerShortcut(e)) return;
+
     const meta = getActiveMeta();
-    if (!meta || meta.locked) return;
+    if (!meta) return;
+    if (meta.locked) return;
     const step = e.shiftKey ? 10 : 1;
     let moved = false;
     if (e.key === 'ArrowLeft')  { meta.x -= step; moved = true; }
@@ -1575,7 +1881,9 @@
       layerDOM.get(meta.id)?.applyStyle(meta);
       panel?.renderControls(); panel?.renderLayers(); debounceSave();
     }
-  });
+  }, { capture: true });
+  document.addEventListener('keyup', releaseShortcutMode, { capture: true });
+  window.addEventListener('blur', () => { activeShortcutMode = null; });
 
   /* ── Init ────────────────────────────────── */
   async function init() {
@@ -1583,8 +1891,7 @@
     ensureDOM();
     await loadFromStorage();
     refreshLayers(); applyGrid(gridConfig); setEnabled(globalEnabled);
-    // panel は TOGGLE_PANEL / SHOW_PANEL でオンデマンド生成
-    // 万が一 init() 完了前にパネルが生成されていれば再描画
+    if (hasStoredState) await createAndShowPanel();
     panel?.renderAll();
   }
 

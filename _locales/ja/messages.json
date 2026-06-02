@@ -13,6 +13,7 @@
 
   "addLayerTitle": { "message": "レイヤーを追加 - クリック、ドロップ、または貼り付け" },
   "btnAddLayer": { "message": "追加" },
+  "btnPasteLayer": { "message": "貼り付け" },
   "emptyState": { "message": "画像をドロップ、貼り付け、または + で開始" },
 
   "labelOpacity": { "message": "不透明度" },
@@ -28,13 +29,15 @@
   "blendOverlay": { "message": "オーバーレイ" },
   "blendHardLight": { "message": "ハードライト" },
   "blendExclusion": { "message": "除外" },
+  "blendInvert": { "message": "反転" },
 
-  "btnInvert": { "message": "反転" },
   "btnLock": { "message": "固定" },
   "btnRemove": { "message": "削除" },
   "btnReset": { "message": "リセット" },
   "btnCenter": { "message": "中央" },
   "btnFitW": { "message": "幅に合わせる" },
+  "btnScaleHalf": { "message": "0.5倍" },
+  "btnScaleDouble": { "message": "2倍" },
   "btnGrid": { "message": "グリッド" },
 
   "gridSizeLabel": { "message": "グリッドサイズ" },
@@ -47,6 +50,10 @@
   "hintMove1px": { "message": "1px移動" },
   "hintMove10px": { "message": "10px移動" },
   "hintDrag": { "message": "オーバーレイ上でドラッグ" },
+  "shortcutMove": { "message": "1px移動: 矢印キー / 10px移動: Shift + 矢印キー" },
+  "shortcutBlend": { "message": "合成: Alt + B を押しながら ↑ / ↓" },
+  "shortcutAlpha": { "message": "不透明度: Alt + A を押しながら ← / →" },
+  "shortcutScaleNudge": { "message": "スケール +0.1 / -0.1: Alt + ; / Alt + -" },
 
   "visShow": { "message": "レイヤーを表示" },
   "visHide": { "message": "レイヤーを非表示" },

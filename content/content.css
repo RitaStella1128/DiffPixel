@@ -19,6 +19,7 @@ html > #dp-root .dp-layer {
   z-index: 2147483645 !important;
   transform-origin: top left !important;
   pointer-events: auto !important;
+  touch-action: none !important;
   user-select: none !important;
   cursor: grab !important;
   margin: 0 !important;
