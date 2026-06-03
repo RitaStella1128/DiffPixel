@@ -85,6 +85,9 @@ DiffPixel uses a small set of Chrome extension permissions:
 - `Alt` + `L` toggles the selected layer lock.
 - `Alt` + `,` and `Alt` + `.` scale the selected layer by `0.5x` and `2x`.
 - `Alt` + `;` and `Alt` + `-` adjust scale by `+0.1` and `-0.1`.
+- `Alt` + `0` resets the selected layer.
+- `Alt` + `C` centers the selected layer.
+- `Alt` + `W` fits the selected layer to the page width.
 
 ## Development Notes
 

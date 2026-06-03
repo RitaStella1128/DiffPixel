@@ -29,7 +29,7 @@
       scaleDecreaseTitle: 'Scale -0.1 (Alt + -)', scaleIncreaseTitle: 'Scale +0.1 (Alt + ;)',
       scaleHalfTitle: 'Set scale to 0.5x (Alt + ,)', scaleDoubleTitle: 'Set scale to 2x (Alt + .)',
       gridTitle: 'Grid (Alt + G)', gridSizeLabel: 'Grid size',
-      btnResetTitle: 'Reset (Alt + R)', btnCenterTitle: 'Center (Alt + C)', btnFitWTitle: 'Fit Width (Alt + W)',
+      btnResetTitle: 'Reset (Alt + 0)', btnCenterTitle: 'Center (Alt + C)', btnFitWTitle: 'Fit Width (Alt + W)',
       shortcutMove: 'Move 1px: Arrow keys; 10px: Shift + Arrow keys',
       shortcutBlend: 'Blend: Alt + B + ; / Alt + B + -',
       shortcutAlpha: 'Opacity: Alt + A + ; / Alt + A + -',
@@ -57,7 +57,7 @@
       scaleDecreaseTitle: 'スケール -0.1 (Alt + -)', scaleIncreaseTitle: 'スケール +0.1 (Alt + ;)',
       scaleHalfTitle: 'スケールを0.5倍に設定 (Alt + ,)', scaleDoubleTitle: 'スケールを2倍に設定 (Alt + .)',
       gridTitle: 'グリッド (Alt + G)', gridSizeLabel: 'グリッドサイズ',
-      btnResetTitle: 'リセット (Alt + R)', btnCenterTitle: '中央寄せ (Alt + C)', btnFitWTitle: '幅に合わせる (Alt + W)',
+      btnResetTitle: 'リセット (Alt + 0)', btnCenterTitle: '中央寄せ (Alt + C)', btnFitWTitle: '幅に合わせる (Alt + W)',
       shortcutMove: '1px移動: 矢印キー / 10px移動: Shift + 矢印キー',
       shortcutBlend: '合成: Alt + B + ; / Alt + B + -',
       shortcutAlpha: '不透明度: Alt + A + ; / Alt + A + -',
@@ -1917,7 +1917,7 @@
     /* Quick action shortcuts */
     if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
       const key = e.key.toLowerCase();
-      if (key === 'r') { e.preventDefault(); panel?._quickActionHanders?.reset(); return; }
+      if (key === '0') { e.preventDefault(); panel?._quickActionHanders?.reset(); return; }
       if (key === 'c') { e.preventDefault(); panel?._quickActionHanders?.center(); return; }
       if (key === 'w') { e.preventDefault(); panel?._quickActionHanders?.fitw(); return; }
 
