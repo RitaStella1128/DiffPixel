@@ -3,370 +3,199 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy – DiffPixel</title>
+  <title>Privacy Policy - DiffPixel</title>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    *, *::before, *::after { box-sizing: border-box; }
     :root {
-      --bg:      #0d0d16;
-      --surface: #161622;
-      --border:  rgba(255,255,255,0.07);
-      --accent:  #00d4ff;
-      --text:    #e8eaf0;
-      --muted:   #9098b8;
-      --dim:     #50566a;
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --text: #162033;
+      --muted: #526078;
+      --border: #d9deea;
+      --accent: #0066d6;
+      --accent-soft: #e8f1ff;
+      --shadow: 0 18px 50px rgba(23, 35, 60, .08);
     }
-
     body {
+      margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 15px;
-      line-height: 1.75;
-      min-height: 100vh;
+      font: 15px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
     }
-
-    header {
-      border-bottom: 1px solid var(--border);
-      padding: 28px 0;
-    }
-
-    .wrap {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    .logo-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .logo-icon {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3px;
-      width: 28px;
-      height: 28px;
-      flex-shrink: 0;
-    }
-    .logo-icon span {
-      background: var(--accent);
-      border-radius: 3px;
-      display: block;
-    }
-
-    .logo-name {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-    .logo-name em {
-      color: var(--accent);
-      font-style: normal;
-    }
-
-    main {
-      padding: 60px 0 100px;
-    }
-
-    .page-title {
-      font-size: 36px;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 8px;
-    }
-
-    .page-meta {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 52px;
-    }
-
-    .lang-switch {
-      display: inline-flex;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 48px;
-      font-size: 12px;
-      font-weight: 600;
-    }
+    header, main, footer { width: min(920px, calc(100% - 40px)); margin: 0 auto; }
+    header { padding: 34px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 750; font-size: 18px; }
+    .mark { width: 30px; height: 30px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
+    .mark span { border-radius: 6px; background: linear-gradient(135deg, #00c8ff, #0066d6); }
+    .lang-switch { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--border); background: var(--surface); border-radius: 999px; }
     .lang-switch button {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      padding: 6px 16px;
-      transition: background 0.15s, color 0.15s;
+      border: 0; border-radius: 999px; background: transparent; color: var(--muted);
+      min-width: 84px; padding: 7px 14px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
     }
-    .lang-switch button.active {
-      background: rgba(0,212,255,0.1);
-      color: var(--accent);
+    .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+    main { padding: 28px 0 70px; }
+    .hero { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 34px; box-shadow: var(--shadow); }
+    h1 { margin: 0 0 8px; font-size: clamp(30px, 5vw, 46px); line-height: 1.12; letter-spacing: 0; }
+    .meta { margin: 0 0 22px; color: var(--muted); font-size: 14px; }
+    .summary { margin: 0; padding: 16px 18px; border: 1px solid #b9d4ff; background: var(--accent-soft); border-radius: 10px; color: #123762; font-weight: 650; }
+    .content { margin-top: 26px; display: grid; gap: 24px; }
+    section { padding-top: 22px; border-top: 1px solid var(--border); }
+    h2 { margin: 0 0 10px; font-size: 17px; line-height: 1.35; }
+    p { margin: 0 0 12px; color: var(--muted); }
+    ul { margin: 0 0 12px; padding-left: 22px; color: var(--muted); }
+    li { margin: 5px 0; }
+    a { color: var(--accent); font-weight: 650; text-decoration-thickness: .08em; text-underline-offset: 3px; }
+    [data-lang-panel] { display: none; }
+    [data-lang-panel].active { display: block; }
+    footer { padding: 0 0 34px; color: var(--muted); font-size: 13px; }
+    @media (max-width: 640px) {
+      header { align-items: flex-start; flex-direction: column; }
+      .hero { padding: 24px; border-radius: 12px; }
+      .lang-switch { width: 100%; }
+      .lang-switch button { flex: 1; }
     }
-
-    section {
-      margin-bottom: 44px;
-    }
-
-    h2 {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 14px;
-    }
-
-    p {
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-    p:last-child { margin-bottom: 0; }
-
-    ul {
-      color: var(--muted);
-      padding-left: 20px;
-      margin-bottom: 12px;
-    }
-    li { margin-bottom: 6px; }
-
-    .highlight {
-      background: rgba(0,212,255,0.06);
-      border: 1px solid rgba(0,212,255,0.14);
-      border-radius: 8px;
-      padding: 16px 20px;
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.65;
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 48px 0;
-    }
-
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 0;
-    }
-    footer p {
-      font-size: 12px;
-      color: var(--dim);
-      margin: 0;
-    }
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    /* lang toggle */
-    [data-lang="ja"] { display: none; }
   </style>
 </head>
 <body>
-
-<header>
-  <div class="wrap">
-    <div class="logo-row">
-      <div class="logo-icon">
-        <span></span><span></span>
-        <span></span><span></span>
-      </div>
-      <span class="logo-name">Diff<em>Pixel</em></span>
+  <header>
+    <div class="brand" aria-label="DiffPixel">
+      <div class="mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <span>DiffPixel</span>
     </div>
-  </div>
-</header>
+    <nav class="lang-switch" aria-label="Language">
+      <button type="button" data-lang-button="en" aria-pressed="true">English</button>
+      <button type="button" data-lang-button="ja" aria-pressed="false">日本語</button>
+    </nav>
+  </header>
 
-<main>
-  <div class="wrap">
+  <main>
+    <article class="hero">
+      <div data-lang-panel="en" class="active">
+        <h1>Privacy Policy</h1>
+        <p class="meta">Effective date: May 27, 2025 / DiffPixel Chrome Extension</p>
+        <p class="summary">DiffPixel does not collect, transmit, sell, or share personal data. Reference images and settings stay on your device.</p>
 
-    <div class="lang-switch">
-      <button class="active">English</button>
-      <button onclick="location.href='privacy_ja.html'">日本語</button>
-    </div>
+        <div class="content">
+          <section>
+            <h2>1. Overview</h2>
+            <p>DiffPixel is a visual comparison extension for designers and developers. It lets you place local reference images over the current browser page and adjust layers, opacity, position, scale, blend modes, and a grid.</p>
+            <p>This policy explains what data the extension handles and how it is used.</p>
+          </section>
 
-    <!-- ===== ENGLISH ===== -->
-    <div data-lang="en">
+          <section>
+            <h2>2. Data We Do Not Collect</h2>
+            <p>DiffPixel does not collect, store on external servers, transmit, sell, or share:</p>
+            <ul>
+              <li>Personal information such as name, email address, or IP address.</li>
+              <li>Browsing history or page contents.</li>
+              <li>Uploaded or pasted reference images.</li>
+              <li>Keystrokes, clicks, or mouse activity.</li>
+              <li>Saved layer settings or visual comparison data.</li>
+            </ul>
+          </section>
 
-      <h1 class="page-title">Privacy Policy</h1>
-      <p class="page-meta">Effective date: May 27, 2025 &nbsp;·&nbsp; DiffPixel Chrome Extension</p>
+          <section>
+            <h2>3. Data Stored Locally</h2>
+            <p>The extension may store reference images, layer names, position, opacity, scale, blend mode, grid settings, panel position, theme, and language preference in Chrome storage on your device.</p>
+            <p>This local storage is used only to restore your visual comparison setup and improve day-to-day usability.</p>
+          </section>
 
-      <div class="highlight">
-        DiffPixel does not collect, transmit, or share any personal data. All data created by the extension stays entirely on your device.
+          <section>
+            <h2>4. Permissions</h2>
+            <p>DiffPixel uses Chrome extension permissions only to run the overlay on the active tab, inject the in-page panel, and save local settings. Optional site access can be granted by the user so the panel can reopen on trusted domains.</p>
+          </section>
+
+          <section>
+            <h2>5. Third Parties</h2>
+            <p>DiffPixel does not use analytics, advertising networks, tracking scripts, or external APIs to process your data.</p>
+          </section>
+
+          <section>
+            <h2>6. User Control</h2>
+            <p>You can remove saved data by clearing the extension's stored settings in Chrome, removing layers in the panel, or uninstalling the extension.</p>
+          </section>
+
+          <section>
+            <h2>7. Contact</h2>
+            <p>For questions about this policy, please contact the repository owner through the public GitHub repository.</p>
+          </section>
+        </div>
       </div>
 
-      <hr />
+      <div data-lang-panel="ja" lang="ja">
+        <h1>プライバシーポリシー</h1>
+        <p class="meta">施行日: 2025年5月27日 / DiffPixel Chrome 拡張機能</p>
+        <p class="summary">DiffPixel は個人データを収集、送信、販売、共有しません。参照画像と設定はユーザーの端末内に保存されます。</p>
 
-      <section>
-        <h2>1. Overview</h2>
-        <p>DiffPixel ("the Extension") is a pixel-perfect overlay comparison tool for designers and developers. It allows you to display reference images as a transparent overlay on browser tabs so you can visually compare designs against live web pages.</p>
-        <p>We are committed to protecting your privacy. This policy explains what data the Extension handles and why.</p>
-      </section>
+        <div class="content">
+          <section>
+            <h2>1. 概要</h2>
+            <p>DiffPixel は、デザイナーや開発者向けの視覚比較用 Chrome 拡張機能です。現在のブラウザページ上にローカルの参照画像を重ね、レイヤー、不透明度、位置、スケール、合成、グリッドを調整できます。</p>
+            <p>本ポリシーでは、拡張機能が扱うデータと、その利用目的を説明します。</p>
+          </section>
 
-      <section>
-        <h2>2. Data We Do Not Collect</h2>
-        <p>The Extension does not collect, store, transmit, or share:</p>
-        <ul>
-          <li>Personal information (name, email, IP address, etc.)</li>
-          <li>Browsing history or visited URLs beyond what is needed in the moment to scope your settings</li>
-          <li>Keystrokes, clicks, or mouse activity</li>
-          <li>The content of web pages you visit</li>
-          <li>The images you load as overlays</li>
-        </ul>
-      </section>
+          <section>
+            <h2>2. 収集しないデータ</h2>
+            <p>DiffPixel は、以下のデータを収集、外部サーバー保存、送信、販売、共有しません。</p>
+            <ul>
+              <li>氏名、メールアドレス、IPアドレスなどの個人情報。</li>
+              <li>閲覧履歴やページ内容。</li>
+              <li>アップロードまたは貼り付けた参照画像。</li>
+              <li>キー入力、クリック、マウス操作の履歴。</li>
+              <li>保存されたレイヤー設定や視覚比較データ。</li>
+            </ul>
+          </section>
 
-      <section>
-        <h2>3. Local Storage</h2>
-        <p>The Extension uses <strong>chrome.storage.local</strong> exclusively to save your preferences on your own device:</p>
-        <ul>
-          <li><strong>UI preferences</strong> – theme (dark / light) and display language (EN / JA)</li>
-          <li><strong>Per-domain overlay settings</strong> – opacity, position, scale, blend mode, and layer configuration for each site you use the Extension on</li>
-          <li><strong>Image data</strong> – reference images you load are stored locally as Base64 data to persist across sessions</li>
-        </ul>
-        <p>All of this data exists only in your browser's local storage. It is never sent to any server.</p>
-      </section>
+          <section>
+            <h2>3. 端末内に保存されるデータ</h2>
+            <p>拡張機能は、参照画像、レイヤー名、位置、不透明度、スケール、合成モード、グリッド設定、パネル位置、テーマ、言語設定を Chrome ストレージに保存する場合があります。</p>
+            <p>これらは比較作業の状態を復元し、日常的に使いやすくするためだけに利用されます。</p>
+          </section>
 
-      <section>
-        <h2>4. Permissions Explained</h2>
-        <ul>
-          <li><strong>activeTab</strong> – to identify the tab you are currently viewing so the overlay can be injected into it</li>
-          <li><strong>scripting</strong> – to inject the overlay UI into the active tab on demand</li>
-          <li><strong>storage</strong> – to read and write your settings locally</li>
-          <li><strong>unlimitedStorage</strong> – to accommodate large or multiple reference images without hitting the default storage quota</li>
-        </ul>
-        <p>No permission is used to access, read, or transmit information about your browsing activity or the content of pages you visit.</p>
-      </section>
+          <section>
+            <h2>4. 権限</h2>
+            <p>DiffPixel は、アクティブなタブでオーバーレイを動かし、ページ内パネルを挿入し、ローカル設定を保存するために Chrome 拡張機能の権限を使用します。ユーザーが許可した場合のみ、信頼したドメインでパネルを自動的に再表示するための任意のサイトアクセスを使用します。</p>
+          </section>
 
-      <section>
-        <h2>5. Third Parties</h2>
-        <p>The Extension does not integrate with any third-party analytics, advertising, or data services. No data is sold, transferred, or shared with any third party.</p>
-      </section>
+          <section>
+            <h2>5. 第三者サービス</h2>
+            <p>DiffPixel は、分析、広告ネットワーク、トラッキングスクリプト、外部APIを使ってユーザーデータを処理しません。</p>
+          </section>
 
-      <section>
-        <h2>6. Remote Code</h2>
-        <p>The Extension does not load or execute any remote code. All scripts and styles are bundled within the extension package and governed by a strict Content Security Policy (<code>script-src 'self'</code>).</p>
-      </section>
+          <section>
+            <h2>6. ユーザーによる管理</h2>
+            <p>保存データは、Chrome の拡張機能設定から保存内容を削除する、パネル内でレイヤーを削除する、または拡張機能をアンインストールすることで削除できます。</p>
+          </section>
 
-      <section>
-        <h2>7. Children's Privacy</h2>
-        <p>The Extension is not directed at children under 13. We do not knowingly collect data from children.</p>
-      </section>
-
-      <section>
-        <h2>8. Changes to This Policy</h2>
-        <p>If this policy is updated, the new version will be published at this URL with a revised effective date. Continued use of the Extension after changes constitutes acceptance of the updated policy.</p>
-      </section>
-
-      <section>
-        <h2>9. Contact</h2>
-        <p>Questions or concerns? Please open an issue on the <a href="https://github.com/RitaStar1128/DiffPixel" target="_blank" rel="noopener">GitHub repository</a>.</p>
-      </section>
-
-    </div><!-- /en -->
-
-    <!-- ===== JAPANESE ===== -->
-    <div data-lang="ja">
-
-      <h1 class="page-title">プライバシーポリシー</h1>
-      <p class="page-meta">施行日: 2025年5月27日 &nbsp;·&nbsp; DiffPixel Chrome 拡張機能</p>
-
-      <div class="highlight">
-        DiffPixel は個人データを収集・送信・共有しません。拡張機能が作成するすべてのデータはお使いのデバイス上にのみ保存されます。
+          <section>
+            <h2>7. お問い合わせ</h2>
+            <p>本ポリシーに関する質問は、公開 GitHub リポジトリの管理者までお問い合わせください。</p>
+          </section>
+        </div>
       </div>
+    </article>
+  </main>
 
-      <hr />
+  <footer>
+    <p>© 2026 DiffPixel. This page is provided for Chrome Web Store and GitHub Pages publication.</p>
+  </footer>
 
-      <section>
-        <h2>1. 概要</h2>
-        <p>DiffPixel（以下「本拡張機能」）は、デザイナーおよびデベロッパー向けのピクセルパーフェクトなオーバーレイ比較ツールです。参照画像をブラウザタブ上に半透明のオーバーレイとして表示し、デザインと実際のウェブページを視覚的に比較するために使用します。</p>
-        <p>本ポリシーでは、本拡張機能が扱うデータと、その目的について説明します。</p>
-      </section>
-
-      <section>
-        <h2>2. 収集しないデータ</h2>
-        <p>本拡張機能は以下のデータを収集・保存・送信・共有しません：</p>
-        <ul>
-          <li>個人情報（氏名・メールアドレス・IPアドレスなど）</li>
-          <li>閲覧履歴やアクセスした URL（設定のスコープ限定に必要な瞬時の参照を除く）</li>
-          <li>キーストローク・クリック・マウス操作</li>
-          <li>閲覧したウェブページのコンテンツ</li>
-          <li>オーバーレイとして読み込まれた画像の内容</li>
-        </ul>
-      </section>
-
-      <section>
-        <h2>3. ローカルストレージ</h2>
-        <p>本拡張機能は <strong>chrome.storage.local</strong> のみを使用し、以下の設定をお使いのデバイス上に保存します：</p>
-        <ul>
-          <li><strong>UI設定</strong> – テーマ（ダーク／ライト）および表示言語（EN／JA）</li>
-          <li><strong>ドメインごとのオーバーレイ設定</strong> – 不透明度・位置・スケール・合成モード・レイヤー構成</li>
-          <li><strong>画像データ</strong> – 読み込んだ参照画像は Base64 形式でローカルに保存されセッションをまたいで維持されます</li>
-        </ul>
-        <p>これらのデータはすべてブラウザのローカルストレージにのみ存在し、いかなるサーバーにも送信されません。</p>
-      </section>
-
-      <section>
-        <h2>4. 権限の説明</h2>
-        <ul>
-          <li><strong>activeTab</strong> – オーバーレイを注入するために現在表示中のタブを特定するため</li>
-          <li><strong>scripting</strong> – アクティブなタブにオーバーレイ UI を注入するため</li>
-          <li><strong>storage</strong> – 設定をローカルに読み書きするため</li>
-          <li><strong>unlimitedStorage</strong> – 大容量または複数の参照画像を保存するためにデフォルトのストレージ上限を超える容量を確保するため</li>
-        </ul>
-        <p>いずれの権限も、閲覧アクティビティやページコンテンツへのアクセス・取得・送信には使用しません。</p>
-      </section>
-
-      <section>
-        <h2>5. 第三者への提供</h2>
-        <p>本拡張機能はサードパーティの分析・広告・データサービスと連携しません。データを第三者へ販売・転送・共有することはありません。</p>
-      </section>
-
-      <section>
-        <h2>6. リモートコード</h2>
-        <p>本拡張機能はリモートコードを読み込み・実行しません。すべてのスクリプトとスタイルは拡張機能パッケージ内にバンドルされており、厳格なコンテンツセキュリティポリシー（<code>script-src 'self'</code>）によって管理されています。</p>
-      </section>
-
-      <section>
-        <h2>7. 子どものプライバシー</h2>
-        <p>本拡張機能は13歳未満の子どもを対象としていません。子どものデータを意図的に収集することはありません。</p>
-      </section>
-
-      <section>
-        <h2>8. ポリシーの変更</h2>
-        <p>本ポリシーを改訂した場合、改訂後の版を同 URL で公開し、施行日を更新します。変更後も引き続き本拡張機能を使用することで、改訂されたポリシーに同意したものとみなします。</p>
-      </section>
-
-      <section>
-        <h2>9. お問い合わせ</h2>
-        <p>ご質問・ご不明点は <a href="https://github.com/RitaStar1128/DiffPixel" target="_blank" rel="noopener">GitHub リポジトリ</a> の Issue よりお問い合わせください。</p>
-      </section>
-
-    </div><!-- /ja -->
-
-  </div>
-</main>
-
-<footer>
-  <div class="wrap">
-    <p>© 2026 DiffPixel &nbsp;·&nbsp; <a href="https://github.com/RitaStar1128/DiffPixel" target="_blank" rel="noopener">GitHub</a></p>
-  </div>
-</footer>
-
-<script>
-  function setLang(lang) {
-    document.querySelectorAll('[data-lang]').forEach(el => {
-      el.style.display = el.dataset.lang === lang ? '' : 'none';
-    });
-    document.querySelectorAll('.lang-switch button').forEach((btn, i) => {
-      btn.classList.toggle('active', (i === 0 && lang === 'en') || (i === 1 && lang === 'ja'));
-    });
-  }
-</script>
-
+  <script>
+    const buttons = [...document.querySelectorAll('[data-lang-button]')];
+    const panels = [...document.querySelectorAll('[data-lang-panel]')];
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.langButton === lang)));
+      panels.forEach(panel => panel.classList.toggle('active', panel.dataset.langPanel === lang));
+      history.replaceState(null, '', `#${lang}`);
+    }
+    buttons.forEach(button => button.addEventListener('click', () => setLang(button.dataset.langButton)));
+    const hashLang = location.hash.replace('#', '');
+    const initial = hashLang === 'en' || hashLang === 'ja'
+      ? hashLang
+      : (navigator.language.toLowerCase().startsWith('ja') ? 'ja' : 'en');
+    setLang(initial);
+  </script>
 </body>
 </html>

@@ -28,7 +28,9 @@ DiffPixel runs locally in Chrome.
 
 Uploaded images and overlay settings are stored on the user's device through Chrome storage. The extension does not send uploaded images, page data, or settings to an external server.
 
-The public privacy policy is available at [docs/privacy.html](docs/privacy.html), with a Japanese version at [docs/privacy_ja.html](docs/privacy_ja.html). A plain-text copy is also available in [PRIVACY.md](PRIVACY.md).
+The public privacy policy is available at [docs/privacy.html](docs/privacy.html) with English and Japanese switching on the same page. A plain-text copy is also available in [PRIVACY.md](PRIVACY.md).
+
+The public user manual is available at [docs/manual.html](docs/manual.html).
 
 ## Installation For Development
 
@@ -76,12 +78,12 @@ DiffPixel uses a small set of Chrome extension permissions:
 
 - Arrow keys move the selected layer by `1px`.
 - `Shift` + arrow keys move the selected layer by `10px`.
-- Hold `Alt` + `B` and press up/down arrow keys to change the blend mode.
-- Hold `Alt` + `A` and press left/right arrow keys to adjust opacity.
+- Hold `Alt` + `B` and press `;` / `-` to change the blend mode.
+- Hold `Alt` + `A` and press `;` / `-` to adjust opacity.
 - `Alt` + `G` toggles the grid.
-- `Alt` + `V` toggles the selected layer visibility.
+- `Alt` + `H` toggles the selected layer visibility.
 - `Alt` + `L` toggles the selected layer lock.
-- `Alt` + `[` and `Alt` + `]` scale the selected layer by `0.5x` and `2x`.
+- `Alt` + `,` and `Alt` + `.` scale the selected layer by `0.5x` and `2x`.
 - `Alt` + `;` and `Alt` + `-` adjust scale by `+0.1` and `-0.1`.
 
 ## Development Notes

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Manual - DiffPixel</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --text: #162033;
+      --muted: #526078;
+      --border: #d9deea;
+      --accent: #0066d6;
+      --accent-soft: #e8f1ff;
+      --kbd: #eef1f7;
+      --shadow: 0 18px 50px rgba(23, 35, 60, .08);
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 15px/1.72 -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
+    }
+    header, main, footer { width: min(1040px, calc(100% - 40px)); margin: 0 auto; }
+    header { padding: 34px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 750; font-size: 18px; color: inherit; text-decoration: none; }
+    .mark { width: 30px; height: 30px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
+    .mark span { border-radius: 6px; background: linear-gradient(135deg, #00c8ff, #0066d6); }
+    .lang-switch { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--border); background: var(--surface); border-radius: 999px; }
+    .lang-switch button {
+      border: 0; border-radius: 999px; background: transparent; color: var(--muted);
+      min-width: 84px; padding: 7px 14px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+    main { padding: 28px 0 70px; }
+    .hero { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 36px; box-shadow: var(--shadow); }
+    h1 { margin: 0 0 10px; font-size: clamp(32px, 5vw, 50px); line-height: 1.1; letter-spacing: 0; }
+    .lead { margin: 0; max-width: 760px; color: var(--muted); font-size: 17px; }
+    .quick-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; }
+    .quick-nav a {
+      display: inline-flex; align-items: center; min-height: 34px; padding: 6px 12px;
+      border: 1px solid var(--border); border-radius: 999px; background: var(--accent-soft);
+      color: #123762; text-decoration: none; font-size: 13px; font-weight: 700;
+    }
+    .content { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    section { border: 1px solid var(--border); border-radius: 12px; padding: 22px; background: #fff; }
+    section.wide { grid-column: 1 / -1; }
+    h2 { margin: 0 0 12px; font-size: 18px; line-height: 1.35; }
+    h3 { margin: 18px 0 8px; font-size: 15px; }
+    p { margin: 0 0 12px; color: var(--muted); }
+    ol, ul { margin: 0 0 12px; padding-left: 22px; color: var(--muted); }
+    li { margin: 6px 0; }
+    kbd {
+      display: inline-block; min-width: 1.7em; padding: 1px 6px; border: 1px solid #c6ccda;
+      border-bottom-width: 2px; border-radius: 5px; background: var(--kbd); color: var(--text);
+      font: 12px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; text-align: center;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+    th, td { padding: 10px 8px; border-top: 1px solid var(--border); text-align: left; vertical-align: top; }
+    th { color: var(--text); font-size: 13px; }
+    td { color: var(--muted); }
+    .note { margin-top: 14px; padding: 14px 16px; border: 1px solid #b9d4ff; background: var(--accent-soft); border-radius: 10px; color: #123762; }
+    [data-lang-panel] { display: none; }
+    [data-lang-panel].active { display: block; }
+    footer { padding: 0 0 34px; color: var(--muted); font-size: 13px; }
+    @media (max-width: 800px) {
+      header { align-items: flex-start; flex-direction: column; }
+      .hero { padding: 24px; }
+      .content { grid-template-columns: 1fr; }
+      .lang-switch { width: 100%; }
+      .lang-switch button { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="brand" href="./manual.html" aria-label="DiffPixel manual">
+      <div class="mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <span>DiffPixel</span>
+    </a>
+    <nav class="lang-switch" aria-label="Language">
+      <button type="button" data-lang-button="en" aria-pressed="true">English</button>
+      <button type="button" data-lang-button="ja" aria-pressed="false">日本語</button>
+    </nav>
+  </header>
+
+  <main>
+    <div data-lang-panel="en" class="active">
+      <article class="hero">
+        <h1>User Manual</h1>
+        <p class="lead">Use DiffPixel to compare a live page with local reference images directly in the browser. The floating panel controls layers, opacity, position, scale, blend modes, and a grid.</p>
+        <nav class="quick-nav" aria-label="Manual sections">
+          <a href="#en-start">Start</a>
+          <a href="#en-layers">Layers</a>
+          <a href="#en-adjust">Adjust</a>
+          <a href="#en-shortcuts">Shortcuts</a>
+          <a href="#en-access">Access</a>
+        </nav>
+
+        <div class="content">
+          <section id="en-start">
+            <h2>1. Open DiffPixel</h2>
+            <ol>
+              <li>Open the web page you want to inspect.</li>
+              <li>Click the DiffPixel extension icon in Chrome.</li>
+              <li>The floating panel appears inside the page.</li>
+              <li>Click the extension icon again to hide or show the panel.</li>
+            </ol>
+            <p class="note">Some Chrome pages and restricted browser pages cannot run extensions. This is a browser limitation.</p>
+          </section>
+
+          <section id="en-layers">
+            <h2>2. Add Reference Images</h2>
+            <ul>
+              <li>Click <strong>Add</strong> to choose one or more image files.</li>
+              <li>Drag and drop images onto the panel.</li>
+              <li>Copy an image and press paste on the page, or click <strong>Paste</strong> in the panel.</li>
+            </ul>
+            <h3>Layer list</h3>
+            <p>Use the controls on each layer to reorder, lock, hide or show, and remove it. Select a layer to edit its detailed settings.</p>
+          </section>
+
+          <section id="en-adjust">
+            <h2>3. Adjust a Layer</h2>
+            <ul>
+              <li><strong>Name:</strong> rename the selected layer.</li>
+              <li><strong>Blend:</strong> choose Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, or Exclusion.</li>
+              <li><strong>Opacity:</strong> adjust transparency with the slider or percentage input.</li>
+              <li><strong>X / Y:</strong> move the layer by pixels.</li>
+              <li><strong>Scale:</strong> use the minus/plus buttons, 0.50x and 2.00x presets, or the input field.</li>
+              <li><strong>Reset / Center / Fit W:</strong> quickly restore, center, or fit the layer width.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>4. Grid and Themes</h2>
+            <p>Turn on <strong>Grid</strong> to check spacing and alignment. The pixel size input stays visible so the grid can be prepared before enabling it.</p>
+            <p>Use the sun or moon button to switch the panel between light and dark themes. Use the language menu to choose Auto, English, or Japanese.</p>
+          </section>
+
+          <section id="en-shortcuts" class="wide">
+            <h2>5. Keyboard Shortcuts</h2>
+            <table>
+              <thead><tr><th>Action</th><th>Shortcut</th></tr></thead>
+              <tbody>
+                <tr><td>Move selected layer by 1px</td><td><kbd>Arrow</kbd></td></tr>
+                <tr><td>Move selected layer by 10px</td><td><kbd>Shift</kbd> + <kbd>Arrow</kbd></td></tr>
+                <tr><td>Change blend mode</td><td><kbd>Alt</kbd> + <kbd>B</kbd>, then <kbd>;</kbd> / <kbd>-</kbd></td></tr>
+                <tr><td>Adjust opacity</td><td><kbd>Alt</kbd> + <kbd>A</kbd>, then <kbd>;</kbd> / <kbd>-</kbd></td></tr>
+                <tr><td>Toggle grid</td><td><kbd>Alt</kbd> + <kbd>G</kbd></td></tr>
+                <tr><td>Toggle layer visibility</td><td><kbd>Alt</kbd> + <kbd>H</kbd></td></tr>
+                <tr><td>Toggle layer lock</td><td><kbd>Alt</kbd> + <kbd>L</kbd></td></tr>
+                <tr><td>Scale to 0.50x / 2.00x</td><td><kbd>Alt</kbd> + <kbd>,</kbd> / <kbd>Alt</kbd> + <kbd>.</kbd></td></tr>
+                <tr><td>Adjust scale by 0.1</td><td><kbd>Alt</kbd> + <kbd>;</kbd> / <kbd>Alt</kbd> + <kbd>-</kbd></td></tr>
+                <tr><td>Reset / Center / Fit width</td><td><kbd>Alt</kbd> + <kbd>R</kbd> / <kbd>Alt</kbd> + <kbd>C</kbd> / <kbd>Alt</kbd> + <kbd>W</kbd></td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="en-access" class="wide">
+            <h2>6. Saved Settings and Site Access</h2>
+            <p>DiffPixel saves layer and panel settings locally for the current site. If you grant optional site access, DiffPixel can reopen automatically on trusted domains where you use it repeatedly.</p>
+            <p>For local <code>file://</code> pages, enable <strong>Allow access to file URLs</strong> on the extension details page in Chrome.</p>
+          </section>
+        </div>
+      </article>
+    </div>
+
+    <div data-lang-panel="ja" lang="ja">
+      <article class="hero">
+        <h1>操作方法マニュアル</h1>
+        <p class="lead">DiffPixel は、ブラウザ上の実装ページとローカルの参照画像を重ねて比較するための Chrome 拡張機能です。ページ内のフローティングパネルから、レイヤー、不透明度、位置、スケール、合成、グリッドを操作できます。</p>
+        <nav class="quick-nav" aria-label="マニュアルの項目">
+          <a href="#ja-start">開始</a>
+          <a href="#ja-layers">レイヤー</a>
+          <a href="#ja-adjust">調整</a>
+          <a href="#ja-shortcuts">ショートカット</a>
+          <a href="#ja-access">権限</a>
+        </nav>
+
+        <div class="content">
+          <section id="ja-start">
+            <h2>1. DiffPixel を開く</h2>
+            <ol>
+              <li>確認したい Web ページを開きます。</li>
+              <li>Chrome の DiffPixel 拡張機能アイコンをクリックします。</li>
+              <li>ページ内にフローティングパネルが表示されます。</li>
+              <li>もう一度拡張機能アイコンをクリックすると、パネルの表示/非表示を切り替えられます。</li>
+            </ol>
+            <p class="note">Chrome の内部ページや制限されたページでは、拡張機能を実行できない場合があります。これはブラウザ側の制限です。</p>
+          </section>
+
+          <section id="ja-layers">
+            <h2>2. 参照画像を追加する</h2>
+            <ul>
+              <li><strong>追加</strong> ボタンから画像ファイルを選択します。</li>
+              <li>画像をパネルへドラッグ&ドロップします。</li>
+              <li>画像をコピーしてページ上で貼り付けるか、パネルの <strong>貼り付け</strong> ボタンを押します。</li>
+            </ul>
+            <h3>レイヤー一覧</h3>
+            <p>各レイヤーでは、並び替え、固定、表示/非表示、削除ができます。レイヤーを選択すると詳細設定を編集できます。</p>
+          </section>
+
+          <section id="ja-adjust">
+            <h2>3. レイヤーを調整する</h2>
+            <ul>
+              <li><strong>名前:</strong> 選択中のレイヤー名を変更します。</li>
+              <li><strong>合成:</strong> 通常、反転、差分、乗算、スクリーン、オーバーレイ、ハードライト、除外を選べます。</li>
+              <li><strong>不透明度:</strong> スライダーまたは数値入力で透明度を調整します。</li>
+              <li><strong>X / Y:</strong> ピクセル単位で位置を動かします。</li>
+              <li><strong>スケール:</strong> マイナス/プラス、0.50x/2.00xのプリセット、入力欄で倍率を調整します。</li>
+              <li><strong>リセット / 中央 / 幅に合わせる:</strong> 位置や倍率をすばやく整えます。</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>4. グリッドとテーマ</h2>
+            <p><strong>グリッド</strong> をオンにすると、余白や整列を確認しやすくなります。グリッドサイズ入力は常に表示されるため、オンにする前にピクセル数を調整できます。</p>
+            <p>太陽/月のボタンでライト/ダークテーマを切り替えます。言語メニューでは、自動、英語、日本語を選択できます。</p>
+          </section>
+
+          <section id="ja-shortcuts" class="wide">
+            <h2>5. キーボードショートカット</h2>
+            <table>
+              <thead><tr><th>操作</th><th>ショートカット</th></tr></thead>
+              <tbody>
+                <tr><td>選択中のレイヤーを1px移動</td><td><kbd>矢印</kbd></td></tr>
+                <tr><td>選択中のレイヤーを10px移動</td><td><kbd>Shift</kbd> + <kbd>矢印</kbd></td></tr>
+                <tr><td>合成モードを切り替え</td><td><kbd>Alt</kbd> + <kbd>B</kbd> の後に <kbd>;</kbd> / <kbd>-</kbd></td></tr>
+                <tr><td>不透明度を調整</td><td><kbd>Alt</kbd> + <kbd>A</kbd> の後に <kbd>;</kbd> / <kbd>-</kbd></td></tr>
+                <tr><td>グリッド切り替え</td><td><kbd>Alt</kbd> + <kbd>G</kbd></td></tr>
+                <tr><td>レイヤー表示/非表示</td><td><kbd>Alt</kbd> + <kbd>H</kbd></td></tr>
+                <tr><td>レイヤー固定/解除</td><td><kbd>Alt</kbd> + <kbd>L</kbd></td></tr>
+                <tr><td>0.50x / 2.00x に変更</td><td><kbd>Alt</kbd> + <kbd>,</kbd> / <kbd>Alt</kbd> + <kbd>.</kbd></td></tr>
+                <tr><td>スケールを0.1ずつ調整</td><td><kbd>Alt</kbd> + <kbd>;</kbd> / <kbd>Alt</kbd> + <kbd>-</kbd></td></tr>
+                <tr><td>リセット / 中央 / 幅に合わせる</td><td><kbd>Alt</kbd> + <kbd>R</kbd> / <kbd>Alt</kbd> + <kbd>C</kbd> / <kbd>Alt</kbd> + <kbd>W</kbd></td></tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section id="ja-access" class="wide">
+            <h2>6. 保存設定とサイトアクセス</h2>
+            <p>DiffPixel は、現在のサイトに対するレイヤー設定とパネル設定を端末内に保存します。任意のサイトアクセスを許可すると、よく使う信頼済みドメインでパネルを自動的に再表示できます。</p>
+            <p>ローカルの <code>file://</code> ページで使う場合は、Chrome の拡張機能詳細ページで <strong>ファイルのURLへのアクセスを許可する</strong> を有効にしてください。</p>
+          </section>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 DiffPixel. Manual page for GitHub Pages publication.</p>
+  </footer>
+
+  <script>
+    const buttons = [...document.querySelectorAll('[data-lang-button]')];
+    const panels = [...document.querySelectorAll('[data-lang-panel]')];
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.langButton === lang)));
+      panels.forEach(panel => panel.classList.toggle('active', panel.dataset.langPanel === lang));
+      history.replaceState(null, '', `#${lang}`);
+    }
+    buttons.forEach(button => button.addEventListener('click', () => setLang(button.dataset.langButton)));
+    const hashLang = location.hash.replace('#', '');
+    const initial = hashLang === 'en' || hashLang === 'ja'
+      ? hashLang
+      : (navigator.language.toLowerCase().startsWith('ja') ? 'ja' : 'en');
+    setLang(initial);
+  </script>
+</body>
+</html>

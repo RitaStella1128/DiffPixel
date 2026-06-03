@@ -12,8 +12,10 @@
 - Increased visibility button hit area and improved select option contrast.
 - Added discoverable keyboard shortcut tooltips and inline `0.5x` / `2x` scale actions.
 - Added `Alt + ;` and `Alt + -` scale nudge shortcuts.
-- Added blend and opacity keyboard chords with `Alt + B` and `Alt + A`.
+- Added browser-safe blend and opacity keyboard chords with `Alt + B/A` plus `;` / `-`.
 - Added a clipboard paste button and localized shortcut tooltips.
+- Added a public user manual and an in-panel help button.
+- Consolidated the privacy policy into one bilingual page.
 - Added Microsoft Edge Add-ons distribution notes.
 
 ## 1.0.0 - 2026-05-31

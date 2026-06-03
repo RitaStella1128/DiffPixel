@@ -21,17 +21,18 @@
       clipboardLayerName: 'Clipboard image',
       themeLight: 'Switch to light theme', themeDark: 'Switch to dark theme',
       toggleOverlay: 'Enable / disable overlay', overlayLabel: 'Overlay', languageTitle: 'Language', languageAuto: 'Lang: Auto',
-      languageEnglish: 'Lang: EN', languageJapanese: 'Lang: JA',
+      languageEnglish: 'Lang: EN', languageJapanese: 'Lang: JA', helpTitle: 'Open user manual',
       collapsePanel: 'Collapse panel', expandPanel: 'Expand panel',
       moveLayerUp: 'Move layer up', moveLayerDown: 'Move layer down',
       xDecrementTitle: 'X -1px (Arrow Left)/ X -10px (Shift + Arrow Left)', xIncrementTitle: 'X +1px (Arrow Right)/ X +10px (Shift + Arrow Right)',
       yDecrementTitle: 'Y -1px (Arrow Up)/ Y -10px (Shift + Arrow Up)', yIncrementTitle: 'Y +1px (Arrow Down)/ Y +10px (Shift + Arrow Down)',
       scaleDecreaseTitle: 'Scale -0.1 (Alt + -)', scaleIncreaseTitle: 'Scale +0.1 (Alt + ;)',
-      scaleHalfTitle: 'Set scale to 0.5x (Alt + [)', scaleDoubleTitle: 'Set scale to 2x (Alt + ])',
+      scaleHalfTitle: 'Set scale to 0.5x (Alt + ,)', scaleDoubleTitle: 'Set scale to 2x (Alt + .)',
       gridTitle: 'Grid (Alt + G)', gridSizeLabel: 'Grid size',
+      btnResetTitle: 'Reset (Alt + R)', btnCenterTitle: 'Center (Alt + C)', btnFitWTitle: 'Fit Width (Alt + W)',
       shortcutMove: 'Move 1px: Arrow keys; 10px: Shift + Arrow keys',
-      shortcutBlend: 'Blend: hold Alt + B, press Up / Down',
-      shortcutAlpha: 'Opacity: hold Alt + A, press Left / Right',
+      shortcutBlend: 'Blend: Alt + B + ; / Alt + B + -',
+      shortcutAlpha: 'Opacity: Alt + A + ; / Alt + A + -',
       shortcutScaleNudge: 'Scale +0.1 / -0.1: Alt + ; / Alt + -',
     },
     ja: {
@@ -48,17 +49,18 @@
       clipboardLayerName: 'クリップボード画像',
       themeLight: 'ライトテーマに切り替え', themeDark: 'ダークテーマに切り替え',
       toggleOverlay: 'オーバーレイを有効 / 無効にする', overlayLabel: 'オーバーレイ', languageTitle: '表示言語',
-      languageAuto: '言語: 自動', languageEnglish: '言語: EN', languageJapanese: '言語: JA',
+      languageAuto: '言語: 自動', languageEnglish: '言語: EN', languageJapanese: '言語: JA', helpTitle: '操作方法マニュアルを開く',
       collapsePanel: 'パネルを折りたたむ', expandPanel: 'パネルを展開する',
       moveLayerUp: 'レイヤーを上に移動', moveLayerDown: 'レイヤーを下に移動',
       xDecrementTitle: 'X -1px（←）/ X -10px（Shift + ←）', xIncrementTitle: 'X +1px（→）/ X +10px（Shift + →）',
       yDecrementTitle: 'Y -1px（↑）/ Y -10px（Shift + ↑）', yIncrementTitle: 'Y +1px（↓）/ Y +10px（Shift + ↓）',
       scaleDecreaseTitle: 'スケール -0.1 (Alt + -)', scaleIncreaseTitle: 'スケール +0.1 (Alt + ;)',
-      scaleHalfTitle: 'スケールを0.5倍に設定 (Alt + [)', scaleDoubleTitle: 'スケールを2倍に設定 (Alt + ])',
+      scaleHalfTitle: 'スケールを0.5倍に設定 (Alt + ,)', scaleDoubleTitle: 'スケールを2倍に設定 (Alt + .)',
       gridTitle: 'グリッド (Alt + G)', gridSizeLabel: 'グリッドサイズ',
+      btnResetTitle: 'リセット (Alt + R)', btnCenterTitle: '中央寄せ (Alt + C)', btnFitWTitle: '幅に合わせる (Alt + W)',
       shortcutMove: '1px移動: 矢印キー / 10px移動: Shift + 矢印キー',
-      shortcutBlend: '合成: Alt + B を押しながら ↑ / ↓',
-      shortcutAlpha: '不透明度: Alt + A を押しながら ← / →',
+      shortcutBlend: '合成: Alt + B + ; / Alt + B + -',
+      shortcutAlpha: '不透明度: Alt + A + ; / Alt + A + -',
       shortcutScaleNudge: 'スケール +0.1 / -0.1: Alt + ; / Alt + -',
     },
   };
@@ -150,6 +152,7 @@
   const SCALE_STEP = 0.1;
   const SCALE_STEP_COARSE = 0.01;
   const SCALE_STEP_FINE = 0.001;
+  const MANUAL_URL = 'https://ritastar1128.github.io/DiffPixel/manual.html';
   const BASE_STYLE_ID = 'dp-base-style';
   const IMAGE_EXT_BY_MIME = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif', 'image/bmp': 'bmp' };
   const isEditablePasteTarget = event => {
@@ -487,6 +490,13 @@
     return 0;
   }
 
+  function scalePresetFromKey(event) {
+    if (!event.altKey) return 0;
+    if (event.key === ',' || event.code === 'Comma') return 0.5;
+    if (event.key === '.' || event.code === 'Period') return 2;
+    return 0;
+  }
+
   function arrowDelta(event) {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') return -1;
     if (event.key === 'ArrowRight' || event.key === 'ArrowDown') return 1;
@@ -518,28 +528,53 @@
     if (!meta) return false;
 
     updateShortcutMode(event);
-    if (activeShortcutMode && event.altKey) {
-      const delta = arrowDelta(event);
-      if (delta) {
+
+    /* Handle opacity with Alt + A + ; / Alt + A + - */
+    if (event.altKey && activeShortcutMode === 'alpha') {
+      const key = event.key;
+      const isPlus = key === ';' || key === '+' || key === '=' || event.code === 'Semicolon' || event.code === 'Equal';
+      const isMinus = key === '-' || event.code === 'Minus';
+      if (isPlus || isMinus) {
         event.preventDefault();
         event.stopPropagation();
-        if (activeShortcutMode === 'blend' && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
-          const currentIndex = Math.max(0, BLEND_ORDER.indexOf(meta.blendMode));
-          meta.blendMode = BLEND_ORDER[(currentIndex + delta + BLEND_ORDER.length) % BLEND_ORDER.length];
-          meta.invert = false;
-          layerDefaults.blendMode = meta.blendMode;
-        } else if (activeShortcutMode === 'alpha' && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
-          const step = event.shiftKey ? 0.1 : 0.01;
-          meta.opacity = Math.min(1, Math.max(0, meta.opacity + delta * step));
-          layerDefaults.opacity = meta.opacity;
-        } else {
-          return true;
-        }
+        const step = event.shiftKey ? 0.1 : 0.01;
+        const delta = isPlus ? step : -step;
+        meta.opacity = Math.min(1, Math.max(0, meta.opacity + delta));
+        layerDefaults.opacity = meta.opacity;
         layerDOM.get(meta.id)?.applyStyle(meta);
         panel?.renderControls(); panel?.renderLayers(); debounceSave();
         return true;
+      } else if (key.toLowerCase() === 'a') {
+        return true;
       }
-      return event.key.toLowerCase() === 'b' || event.key.toLowerCase() === 'a';
+      return false;
+    }
+
+    /* Handle blend mode with Alt + B + ; / Alt + B + - */
+    if (event.altKey && activeShortcutMode === 'blend') {
+      const key = event.key;
+      const isNext = key === ';' || key === '+' || key === '=' || event.code === 'Semicolon' || event.code === 'Equal';
+      const isPrev = key === '-' || event.code === 'Minus';
+      if (isNext || isPrev) {
+        event.preventDefault();
+        event.stopPropagation();
+        const delta = isNext ? 1 : -1;
+        const currentIndex = Math.max(0, BLEND_ORDER.indexOf(meta.blendMode));
+        meta.blendMode = BLEND_ORDER[(currentIndex + delta + BLEND_ORDER.length) % BLEND_ORDER.length];
+        meta.invert = false;
+        layerDefaults.blendMode = meta.blendMode;
+        layerDOM.get(meta.id)?.applyStyle(meta);
+        panel?.renderControls(); panel?.renderLayers(); debounceSave();
+        return true;
+      } else if (key.toLowerCase() === 'b') {
+        return true;
+      }
+      return false;
+    }
+
+    if (activeShortcutMode && event.altKey) {
+      const key = event.key.toLowerCase();
+      return key === 'a' || key === 'b';
     }
 
     const scaleDelta = scaleNudgeFromKey(event);
@@ -559,7 +594,7 @@
       applyGrid(gridConfig); panel?.renderGrid(); debounceSave();
       return true;
     }
-    if (event.altKey && event.key.toLowerCase() === 'v') {
+    if (event.altKey && event.key.toLowerCase() === 'h') {
       event.preventDefault();
       event.stopPropagation();
       meta.visible = !meta.visible;
@@ -752,6 +787,7 @@
       background: var(--active-bg); border-color: var(--active-brd); color: var(--active-fg);
       box-shadow: inset 0 0 0 1px var(--active-brd), 0 0 0 2px var(--active-ring);
     }
+    .dp-help { font-weight: 800; font-size: 12px; }
 
     /* Toggle */
     .dp-tog { display: flex; align-items: center; min-width: 34px; min-height: 26px; cursor: pointer; position: relative; }
@@ -1009,6 +1045,7 @@
             <option value="en" ${langMode === 'en' ? 'selected' : ''}>${t('languageEnglish')}</option>
             <option value="ja" ${langMode === 'ja' ? 'selected' : ''}>${t('languageJapanese')}</option>
           </select>
+          <button type="button" class="dp-ibtn dp-help" id="dp-help" title="${t('helpTitle')}" aria-label="${t('helpTitle')}">?</button>
           <button type="button" class="dp-ibtn" id="dp-theme" title="${t(currentTheme === 'light' ? 'themeDark' : 'themeLight')}" aria-pressed="false" aria-label="${t('toggleTheme')}">${themeIconSVG(currentTheme)}</button>
           </div>
           <div class="dp-overlay-actions" aria-label="${t('overlayLabel')}">
@@ -1090,9 +1127,9 @@
             <button type="button" class="dp-sb" data-f="scale" data-d="1" title="${scaleUpTitle}" aria-label="${t('labelScale')} +0.1">+</button>
           </div>
           <div class="dp-row dp-qa">
-            <button type="button" class="dp-qbtn" id="dp-reset">${t('btnReset')}</button>
-            <button type="button" class="dp-qbtn" id="dp-center">${t('btnCenter')}</button>
-            <button type="button" class="dp-qbtn" id="dp-fitw">${t('btnFitW')}</button>
+            <button type="button" class="dp-qbtn" id="dp-reset" title="${t('btnResetTitle')}" aria-label="${t('btnResetTitle')}">${t('btnReset')}</button>
+            <button type="button" class="dp-qbtn" id="dp-center" title="${t('btnCenterTitle')}" aria-label="${t('btnCenterTitle')}">${t('btnCenter')}</button>
+            <button type="button" class="dp-qbtn" id="dp-fitw" title="${t('btnFitWTitle')}" aria-label="${t('btnFitWTitle')}">${t('btnFitW')}</button>
           </div>
         </div>
         <!-- Tools -->
@@ -1279,7 +1316,7 @@
         const vis = document.createElement('button');
         vis.type = 'button';
         vis.className = 'dp-visbtn' + (!meta.visible ? ' hid' : '');
-        vis.title = `${t(meta.visible ? 'visHide' : 'visShow')} (Alt + V)`;
+        vis.title = `${t(meta.visible ? 'visHide' : 'visShow')} (Alt + H)`;
         vis.setAttribute('aria-label', t(meta.visible ? 'visHide' : 'visShow'));
         vis.setAttribute('aria-pressed', String(!!meta.visible));
         vis.innerHTML = meta.visible
@@ -1450,6 +1487,12 @@
         this.refreshLanguage();
       });
 
+      /* Help */
+      g('dp-help')?.addEventListener('click', () => {
+        const manualLang = activeLang === 'ja' ? 'ja' : 'en';
+        window.open(`${MANUAL_URL}#${manualLang}`, '_blank', 'noopener,noreferrer');
+      });
+
       /* Theme */
       g('dp-theme')?.addEventListener('click', () => {
         const next = currentTheme === 'dark' ? 'light' : 'dark';
@@ -1553,23 +1596,27 @@
       });
 
       /* Quick actions */
-      g('dp-reset')?.addEventListener('click', () => {
+      const doReset = () => {
         const meta = getActiveMeta(); if (!meta) return;
         meta.x = 0; meta.y = 0; meta.scale = 1;
         layerDOM.get(meta.id)?.applyStyle(meta); this.renderControls(); this.renderLayers(); debounceSave();
-      });
-      g('dp-center')?.addEventListener('click', () => {
+      };
+      const doCenter = () => {
         const meta = getActiveMeta(), layer = meta ? layerDOM.get(meta.id) : null; if (!meta || !layer) return;
         meta.x = Math.round((window.innerWidth  - (layer.img?.naturalWidth  ?? 0) * meta.scale) / 2);
         meta.y = Math.round((window.innerHeight - (layer.img?.naturalHeight ?? 0) * meta.scale) / 2);
         layerDOM.get(meta.id)?.applyStyle(meta); this.renderControls(); this.renderLayers(); debounceSave();
-      });
-      g('dp-fitw')?.addEventListener('click', () => {
+      };
+      const doFitW = () => {
         const meta = getActiveMeta(), layer = meta ? layerDOM.get(meta.id) : null; if (!meta || !layer) return;
         const nw = layer.img?.naturalWidth; if (!nw) return;
         meta.scale = normalizeScale(window.innerWidth / nw, meta.scale); meta.x = 0;
         layerDOM.get(meta.id)?.applyStyle(meta); this.renderControls(); this.renderLayers(); debounceSave();
-      });
+      };
+      g('dp-reset')?.addEventListener('click', doReset);
+      g('dp-center')?.addEventListener('click', doCenter);
+      g('dp-fitw')?.addEventListener('click', doFitW);
+      this._quickActionHanders = { reset: doReset, center: doCenter, fitw: doFitW };
       const multiplyScale = multiplier => {
         const meta = getActiveMeta(); if (!meta) return;
         meta.scale = normalizeScale(meta.scale * multiplier, meta.scale);
@@ -1866,6 +1913,27 @@
     if (panel?.host?.contains(ae)) return;
 
     if (handleLayerShortcut(e)) return;
+
+    /* Quick action shortcuts */
+    if (e.altKey && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+      const key = e.key.toLowerCase();
+      if (key === 'r') { e.preventDefault(); panel?._quickActionHanders?.reset(); return; }
+      if (key === 'c') { e.preventDefault(); panel?._quickActionHanders?.center(); return; }
+      if (key === 'w') { e.preventDefault(); panel?._quickActionHanders?.fitw(); return; }
+
+      /* Scale preset shortcuts */
+      const scalePreset = scalePresetFromKey(e);
+      if (scalePreset) {
+        e.preventDefault();
+        const meta = getActiveMeta();
+        if (meta) {
+          meta.scale = scalePreset;
+          layerDOM.get(meta.id)?.applyStyle(meta);
+          panel?.renderControls(); panel?.renderLayers(); debounceSave();
+        }
+        return;
+      }
+    }
 
     const meta = getActiveMeta();
     if (!meta) return;
