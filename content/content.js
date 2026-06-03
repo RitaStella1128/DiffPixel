@@ -731,15 +731,15 @@
 
     /* Header */
     .dp-header {
-      display: flex; align-items: center; justify-content: flex-start; gap: 16px;
-      padding: 0 11px 0 14px; height: 40px;
+      display: flex; align-items: center; justify-content: flex-start; gap: 8px;
+      padding: 0 8px 0 10px; height: 40px;
       background: var(--surf); border-bottom: 1px solid var(--brd);
       cursor: grab; flex-shrink: 0; touch-action: none;
     }
     .dp-header:active { cursor: grabbing; }
     .dp-logo {
       display: flex; align-items: center; gap: 8px;
-      min-width: max-content; flex: 0 0 auto; padding-right: 14px;
+      min-width: max-content; flex: 0 0 auto; padding-right: 8px;
       border-right: 1px solid var(--brd);
       pointer-events: none;
     }
@@ -751,12 +751,12 @@
       width: 22px; height: 22px; display: block; flex: 0 0 22px;
     }
     .dp-logo-tx { font-size: 13px; font-weight: 600; letter-spacing: 0; color: var(--tx); white-space: nowrap; }
-    .dp-hbtns { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; margin-left: 0; }
+    .dp-hbtns { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; margin-left: auto; }
     .dp-settings, .dp-overlay-actions {
-      display: flex; align-items: center; gap: 7px;
+      display: flex; align-items: center; gap: 5px;
     }
     .dp-settings {
-      padding-right: 10px; margin-right: 0;
+      padding-right: 6px; margin-right: 0;
       border-right: 1px solid var(--brd);
     }
     .dp-overlay-actions {
@@ -764,7 +764,7 @@
     }
 
     .dp-lang {
-      width: 94px; height: 26px; padding: 0 6px;
+      width: 84px; height: 26px; padding: 0 5px;
       background: var(--surf2); border: 1px solid var(--brd); border-radius: 4px;
       color: var(--tx2); font-family: var(--sans); font-size: 10.5px;
       outline: none; cursor: pointer;
@@ -778,7 +778,7 @@
 
     .dp-ibtn {
       display: flex; align-items: center; justify-content: center;
-      width: 26px; height: 26px; background: none; border: 1px solid transparent;
+      width: 24px; height: 26px; background: none; border: 1px solid transparent;
       border-radius: 4px; color: var(--tx2); cursor: pointer; font-size: 11px;
       transition: background .12s, color .12s, border-color .12s, box-shadow .12s;
     }
@@ -790,13 +790,13 @@
     .dp-help { font-weight: 800; font-size: 12px; }
 
     /* Toggle */
-    .dp-tog { display: flex; align-items: center; min-width: 34px; min-height: 26px; cursor: pointer; position: relative; }
+    .dp-tog { display: flex; align-items: center; min-width: 32px; min-height: 26px; cursor: pointer; position: relative; }
     .dp-tog input {
       position: absolute; width: 1px; height: 1px; margin: 0; padding: 0;
       opacity: 0; pointer-events: none;
     }
     .dp-track {
-      width: 30px; height: 16px; background: var(--surf3);
+      width: 28px; height: 16px; background: var(--surf3);
       border-radius: 8px; border: 1px solid var(--brd); position: relative;
       transition: background .2s, border-color .2s;
     }
@@ -813,7 +813,7 @@
       box-shadow: 0 0 0 2px var(--active-ring), 0 0 0 4px rgba(0,85,204,.12);
     }
     .dp-tog input:checked + .dp-track .dp-thumb {
-      background: var(--active-fg); transform: translateX(14px);
+      background: var(--active-fg); transform: translateX(12px);
       box-shadow: 0 1px 4px rgba(0,0,0,.35);
     }
 
