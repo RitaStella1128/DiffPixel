@@ -13,6 +13,7 @@
 
   "addLayerTitle": { "message": "Add layer - click, drop, or paste image" },
   "btnAddLayer": { "message": "Add" },
+  "btnPasteLayer": { "message": "Paste" },
   "emptyState": { "message": "Drop, paste, or click + to start" },
 
   "labelOpacity": { "message": "Opacity" },
@@ -28,13 +29,15 @@
   "blendOverlay": { "message": "Overlay" },
   "blendHardLight": { "message": "Hard Light" },
   "blendExclusion": { "message": "Exclusion" },
+  "blendInvert": { "message": "Invert" },
 
-  "btnInvert": { "message": "Invert" },
   "btnLock": { "message": "Lock" },
   "btnRemove": { "message": "Remove" },
   "btnReset": { "message": "Reset" },
   "btnCenter": { "message": "Center" },
   "btnFitW": { "message": "Fit W" },
+  "btnScaleHalf": { "message": "Scale 0.5x" },
+  "btnScaleDouble": { "message": "Scale 2x" },
   "btnGrid": { "message": "Grid" },
 
   "gridSizeLabel": { "message": "Grid size" },
@@ -47,6 +50,10 @@
   "hintMove1px": { "message": "move 1px" },
   "hintMove10px": { "message": "move 10px" },
   "hintDrag": { "message": "drag on overlay" },
+  "shortcutMove": { "message": "Move 1px: Arrow keys; 10px: Shift + Arrow keys" },
+  "shortcutBlend": { "message": "Blend: Alt + B + ; / Alt + B + -" },
+  "shortcutAlpha": { "message": "Opacity: Alt + A + ; / Alt + A + -" },
+  "shortcutScaleNudge": { "message": "Scale +0.1 / -0.1: Alt + ; / Alt + -" },
 
   "visShow": { "message": "Show layer" },
   "visHide": { "message": "Hide layer" },
@@ -65,5 +72,6 @@
   "languageTitle": { "message": "Language" },
   "languageAuto": { "message": "Lang: Auto" },
   "languageEnglish": { "message": "Lang: EN" },
-  "languageJapanese": { "message": "Lang: JA" }
+  "languageJapanese": { "message": "Lang: JA" },
+  "helpTitle": { "message": "Open user manual" }
 }

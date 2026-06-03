@@ -55,6 +55,7 @@ DiffPixel overlays local reference images on the active web page so users can vi
 - `scripting`: injects the floating overlay panel and page styles.
 - `storage`: saves per-site overlay layer settings locally.
 - `unlimitedStorage`: stores local reference images and layer state without hitting the default quota during visual QA.
+- Optional site access: after the user grants access for a site, DiffPixel can reopen its floating panel on that domain after navigation or reload.
 
 ## Privacy Answers
 
@@ -125,6 +126,7 @@ DiffPixelは、ローカルの参考画像を現在のWebページに重ね、�
 - `scripting`: ページ内にフローティングパネルとオーバーレイを表示するために使用します。
 - `storage`: サイトごとのレイヤー設定をローカルに保存するために使用します。
 - `unlimitedStorage`: 参考画像とレイヤー状態を、通常の保存容量制限に妨げられずローカル保存するために使用します。
+- オプションのサイトアクセス: ユーザーが許可したサイトで、ページ遷移や再読み込み後もDiffPixelのフローティングパネルを再表示するために使用します。
 
 ## Privacy Answers
 

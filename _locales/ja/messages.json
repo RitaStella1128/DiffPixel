@@ -1,69 +1,191 @@
 {
-  "appName": { "message": "DiffPixel" },
-  "appDesc": { "message": "Webページと参照画像をフローティング表示で重ね、差分・位置・サイズをすばやく確認できます。" },
-
-  "statusConnecting": { "message": "接続中..." },
-  "statusConnected": { "message": "接続済み" },
-  "statusCantRun": { "message": "このページでは使用できません" },
-  "statusFileNote": { "message": "ローカルファイルで使うには、拡張機能設定で「ファイルのURLへのアクセスを許可」を有効にしてください" },
-
-  "sectionLayers": { "message": "レイヤー" },
-  "sectionControls": { "message": "調整" },
-  "sectionTools": { "message": "ツール" },
-
-  "addLayerTitle": { "message": "レイヤーを追加 - クリック、ドロップ、または貼り付け" },
-  "btnAddLayer": { "message": "追加" },
-  "emptyState": { "message": "画像をドロップ、貼り付け、または + で開始" },
-
-  "labelOpacity": { "message": "不透明度" },
-  "labelX": { "message": "X" },
-  "labelY": { "message": "Y" },
-  "labelScale": { "message": "スケール" },
-  "labelBlend": { "message": "合成" },
-
-  "blendNormal": { "message": "通常" },
-  "blendDifference": { "message": "差の絶対値" },
-  "blendMultiply": { "message": "乗算" },
-  "blendScreen": { "message": "スクリーン" },
-  "blendOverlay": { "message": "オーバーレイ" },
-  "blendHardLight": { "message": "ハードライト" },
-  "blendExclusion": { "message": "除外" },
-
-  "btnInvert": { "message": "反転" },
-  "btnLock": { "message": "固定" },
-  "btnRemove": { "message": "削除" },
-  "btnReset": { "message": "リセット" },
-  "btnCenter": { "message": "中央" },
-  "btnFitW": { "message": "幅に合わせる" },
-  "btnGrid": { "message": "グリッド" },
-
-  "gridSizeLabel": { "message": "グリッドサイズ" },
-
-  "savedLabel": { "message": "設定を自動保存済み" },
-  "clearSavedBtn": { "message": "クリア" },
-  "clearSavedTitle": { "message": "このドメインの保存済み設定を削除" },
-  "noSaved": { "message": "保存済み設定なし" },
-
-  "hintMove1px": { "message": "1px移動" },
-  "hintMove10px": { "message": "10px移動" },
-  "hintDrag": { "message": "オーバーレイ上でドラッグ" },
-
-  "visShow": { "message": "レイヤーを表示" },
-  "visHide": { "message": "レイヤーを非表示" },
-  "dropHint": { "message": "画像をドロップして追加" },
-  "clipboardLayerName": { "message": "クリップボード画像" },
-
-  "layerDefault": { "message": "レイヤー" },
-  "labelLayerName": { "message": "名前" },
-  "layerNamePlaceholder": { "message": "レイヤー名" },
-
-  "toggleTheme": { "message": "ライト / ダークテーマを切り替え" },
-  "themeLight": { "message": "ライトテーマに切り替え" },
-  "themeDark": { "message": "ダークテーマに切り替え" },
-  "toggleOverlay": { "message": "オーバーレイを有効 / 無効にする" },
-  "overlayLabel": { "message": "オーバーレイ" },
-  "languageTitle": { "message": "表示言語" },
-  "languageAuto": { "message": "言語: 自動" },
-  "languageEnglish": { "message": "言語: EN" },
-  "languageJapanese": { "message": "言語: JA" }
+  "appName": {
+    "message": "DiffPixel"
+  },
+  "appDesc": {
+    "message": "Webページと参照画像をフローティング表示で重ね、差分・位置・サイズをすばやく確認できます。"
+  },
+  "statusConnecting": {
+    "message": "接続中..."
+  },
+  "statusConnected": {
+    "message": "接続済み"
+  },
+  "statusCantRun": {
+    "message": "このページでは使用できません"
+  },
+  "statusFileNote": {
+    "message": "ローカルファイルで使うには、拡張機能設定で「ファイルのURLへのアクセスを許可」を有効にしてください"
+  },
+  "sectionLayers": {
+    "message": "レイヤー"
+  },
+  "sectionControls": {
+    "message": "調整"
+  },
+  "sectionTools": {
+    "message": "ツール"
+  },
+  "addLayerTitle": {
+    "message": "レイヤーを追加 - クリック、ドロップ、または貼り付け"
+  },
+  "btnAddLayer": {
+    "message": "追加"
+  },
+  "btnPasteLayer": {
+    "message": "貼り付け"
+  },
+  "emptyState": {
+    "message": "画像をドロップ、貼り付け、または + で開始"
+  },
+  "labelOpacity": {
+    "message": "不透明度"
+  },
+  "labelX": {
+    "message": "X"
+  },
+  "labelY": {
+    "message": "Y"
+  },
+  "labelScale": {
+    "message": "スケール"
+  },
+  "labelBlend": {
+    "message": "合成"
+  },
+  "blendNormal": {
+    "message": "通常"
+  },
+  "blendDifference": {
+    "message": "差の絶対値"
+  },
+  "blendMultiply": {
+    "message": "乗算"
+  },
+  "blendScreen": {
+    "message": "スクリーン"
+  },
+  "blendOverlay": {
+    "message": "オーバーレイ"
+  },
+  "blendHardLight": {
+    "message": "ハードライト"
+  },
+  "blendExclusion": {
+    "message": "除外"
+  },
+  "blendInvert": {
+    "message": "反転"
+  },
+  "btnLock": {
+    "message": "固定"
+  },
+  "btnRemove": {
+    "message": "削除"
+  },
+  "btnReset": {
+    "message": "リセット"
+  },
+  "btnCenter": {
+    "message": "中央"
+  },
+  "btnFitW": {
+    "message": "幅に合わせる"
+  },
+  "btnScaleHalf": {
+    "message": "0.5倍"
+  },
+  "btnScaleDouble": {
+    "message": "2倍"
+  },
+  "btnGrid": {
+    "message": "グリッド"
+  },
+  "gridSizeLabel": {
+    "message": "グリッドサイズ"
+  },
+  "savedLabel": {
+    "message": "設定を自動保存済み"
+  },
+  "clearSavedBtn": {
+    "message": "クリア"
+  },
+  "clearSavedTitle": {
+    "message": "このドメインの保存済み設定を削除"
+  },
+  "noSaved": {
+    "message": "保存済み設定なし"
+  },
+  "hintMove1px": {
+    "message": "1px移動"
+  },
+  "hintMove10px": {
+    "message": "10px移動"
+  },
+  "hintDrag": {
+    "message": "オーバーレイ上でドラッグ"
+  },
+  "shortcutMove": {
+    "message": "1px移動: 矢印キー / 10px移動: Shift + 矢印キー"
+  },
+  "shortcutBlend": {
+    "message": "合成: Alt + B + ; / Alt + B + -"
+  },
+  "shortcutAlpha": {
+    "message": "不透明度: Alt + A + ; / Alt + A + -"
+  },
+  "shortcutScaleNudge": {
+    "message": "スケール +0.1 / -0.1: Alt + ; / Alt + -"
+  },
+  "visShow": {
+    "message": "レイヤーを表示"
+  },
+  "visHide": {
+    "message": "レイヤーを非表示"
+  },
+  "dropHint": {
+    "message": "画像をドロップして追加"
+  },
+  "clipboardLayerName": {
+    "message": "クリップボード画像"
+  },
+  "layerDefault": {
+    "message": "レイヤー"
+  },
+  "labelLayerName": {
+    "message": "名前"
+  },
+  "layerNamePlaceholder": {
+    "message": "レイヤー名"
+  },
+  "toggleTheme": {
+    "message": "ライト / ダークテーマを切り替え"
+  },
+  "themeLight": {
+    "message": "ライトテーマに切り替え"
+  },
+  "themeDark": {
+    "message": "ダークテーマに切り替え"
+  },
+  "toggleOverlay": {
+    "message": "オーバーレイを有効 / 無効にする"
+  },
+  "overlayLabel": {
+    "message": "オーバーレイ"
+  },
+  "languageTitle": {
+    "message": "表示言語"
+  },
+  "languageAuto": {
+    "message": "言語: 自動"
+  },
+  "languageEnglish": {
+    "message": "言語: EN"
+  },
+  "languageJapanese": {
+    "message": "言語: JA"
+  },
+  "helpTitle": {
+    "message": "操作方法マニュアルを開く"
+  }
 }

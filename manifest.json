@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_appName__",
   "description": "__MSG_appDesc__",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "default_locale": "en",
 
   "icons": {
@@ -22,6 +22,7 @@
   },
 
   "permissions": ["activeTab", "storage", "scripting", "unlimitedStorage"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
 
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self'; object-src 'none'; img-src 'self' data: blob:;"
