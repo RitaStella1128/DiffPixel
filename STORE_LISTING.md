@@ -12,6 +12,8 @@ Click the extension icon, upload a reference image, and compare it directly on t
 
 Images and settings stay on your device. DiffPixel does not send your uploaded images to a server.
 
+User manual: https://ritastar1128.github.io/DiffPixel/manual.html
+
 ## Item Introduction and Installation Benefits
 
 DiffPixel is a simple visual comparison tool for web pages.
@@ -91,6 +93,8 @@ DiffPixelは、Webページがデザインやスクリーンショットと合�
 拡張機能アイコンをクリックして参考画像をアップロードすると、ページ上に画像を重ねて比較できます。ページを見たまま、透明度、位置、スケール、ブレンドモード、グリッドサイズをフローティングパネルから調整できます。
 
 画像と設定は端末内に保存されます。アップロードした画像がサーバーへ送信されることはありません。
+
+使い方マニュアル: https://ritastar1128.github.io/DiffPixel/manual.html
 
 ## Item Introduction and Installation Benefits
 
