@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2 - 2026-06-05
+
+- Changed the reset shortcut from `Alt + R` to `Alt + 0` to avoid conflicts with common browser and system-level shortcuts.
+
 ## 1.0.1 - 2026-06-03
 
 - Moved layer removal into the layer list.
@@ -13,7 +17,6 @@
 - Added discoverable keyboard shortcut tooltips and inline `0.5x` / `2x` scale actions.
 - Added `Alt + ;` and `Alt + -` scale nudge shortcuts.
 - Added browser-safe blend and opacity keyboard chords with `Alt + B/A` plus `;` / `-`.
-- Assigned reset to `Alt + 0` to avoid conflicts with common browser and system-level shortcuts.
 - Added a clipboard paste button and localized shortcut tooltips.
 - Added a public user manual and an in-panel help button.
 - Consolidated the privacy policy into one bilingual page.
