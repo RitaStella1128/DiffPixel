@@ -12,7 +12,7 @@ It adds an in-page floating panel that lets you place design screenshots, mockup
 - Use Difference and other blend modes to spot visual mismatches.
 - Toggle a pixel grid for spacing and alignment checks.
 - Save layer settings locally per site.
-- Reopen the floating panel automatically on sites where you have granted access.
+- Reopen the floating panel automatically on sites where DiffPixel is enabled.
 - Switch between light and dark panel themes.
 - Use English or Japanese UI text.
 
@@ -72,7 +72,36 @@ DiffPixel uses a small set of Chrome extension permissions:
 - `scripting` to inject the in-page overlay and floating panel.
 - `storage` to save layer settings locally.
 - `unlimitedStorage` to support local reference images and visual QA sessions without the default storage limit getting in the way.
-- Optional site access to reopen DiffPixel automatically on domains where the user has granted access.
+- `host_permissions` for `http://*/*` and `https://*/*` to inject the local overlay into user-selected websites and restore DiffPixel after reloads on enabled sites.
+
+## Release Log
+
+### 1.0.4
+
+- Changed site access from optional host permissions to declared host permissions for more reliable panel restoration after page reloads.
+- Saved the user's site-level show/hide intent independently from the immediate content-script injection result.
+- Regenerated the Chrome Web Store release ZIP as `dist/DiffPixel-1.0.4.zip`.
+
+### 1.0.3
+
+- Improved toolbar icon behavior so the in-page DiffPixel panel can be shown and hidden from the browser toolbar.
+- Added per-domain panel visibility persistence groundwork.
+- Regenerated the Chrome Web Store release ZIP as `dist/DiffPixel-1.0.3.zip`.
+
+### 1.0.2
+
+- Updated the reset shortcut flow and release package after shortcut conflict fixes.
+- Regenerated the Chrome Web Store release ZIP as `dist/DiffPixel-1.0.2.zip`.
+
+### 1.0.1
+
+- Refined public release documentation and packaging assets.
+- Regenerated the Chrome Web Store release ZIP as `dist/DiffPixel-1.0.1.zip`.
+
+### 1.0.0
+
+- Initial public Chrome extension release.
+- Added the floating in-page panel, reference image layers, local storage, blend controls, grid controls, theme switching, localization, and Chrome Web Store packaging.
 
 ## Keyboard Shortcuts
 

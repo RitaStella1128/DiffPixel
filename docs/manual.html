@@ -107,7 +107,7 @@
               <li>Open the web page you want to inspect.</li>
               <li>Click the DiffPixel extension icon in Chrome.</li>
               <li>The floating panel appears inside the page.</li>
-              <li>Click the extension icon again to hide or show the panel.</li>
+              <li>Click the extension icon again to hide or show DiffPixel for that site.</li>
             </ol>
             <p class="note">Some Chrome pages and restricted browser pages cannot run extensions. This is a browser limitation.</p>
           </section>
@@ -162,7 +162,8 @@
 
           <section id="en-access" class="wide">
             <h2>6. Saved Settings and Site Access</h2>
-            <p>DiffPixel saves layer and panel settings locally for the current site. If you grant optional site access, DiffPixel can reopen automatically on trusted domains where you use it repeatedly.</p>
+            <p>DiffPixel saves layer settings, panel settings, and whether DiffPixel is shown for the current site locally on your device.</p>
+            <p>When DiffPixel is enabled for a site, the panel is restored after page reloads and when you open another page on the same host. Click the extension icon again to hide DiffPixel for that site.</p>
             <p>For local <code>file://</code> pages, enable <strong>Allow access to file URLs</strong> on the extension details page in Chrome.</p>
           </section>
         </div>
@@ -171,24 +172,24 @@
 
     <div data-lang-panel="ja" lang="ja">
       <article class="hero">
-        <h1>操作方法マニュアル</h1>
-        <p class="lead">DiffPixel は、ブラウザ上の実装ページとローカルの参照画像を重ねて比較するための Chrome 拡張機能です。ページ内のフローティングパネルから、レイヤー、不透明度、位置、スケール、合成、グリッドを操作できます。</p>
+        <h1>操作マニュアル</h1>
+        <p class="lead">DiffPixel は、ブラウザ上の実装ページとローカルの参照画像を直接比較するためのツールです。ページ内のフローティングパネルから、レイヤー、不透明度、位置、スケール、合成モード、グリッドを操作できます。</p>
         <nav class="quick-nav" aria-label="マニュアルの項目">
           <a href="#ja-start">開始</a>
           <a href="#ja-layers">レイヤー</a>
           <a href="#ja-adjust">調整</a>
           <a href="#ja-shortcuts">ショートカット</a>
-          <a href="#ja-access">権限</a>
+          <a href="#ja-access">アクセス</a>
         </nav>
 
         <div class="content">
           <section id="ja-start">
             <h2>1. DiffPixel を開く</h2>
             <ol>
-              <li>確認したい Web ページを開きます。</li>
+              <li>確認したいWebページを開きます。</li>
               <li>Chrome の DiffPixel 拡張機能アイコンをクリックします。</li>
               <li>ページ内にフローティングパネルが表示されます。</li>
-              <li>もう一度拡張機能アイコンをクリックすると、パネルの表示/非表示を切り替えられます。</li>
+              <li>もう一度拡張機能アイコンをクリックすると、そのサイトでの表示/非表示を切り替えられます。</li>
             </ol>
             <p class="note">Chrome の内部ページや制限されたページでは、拡張機能を実行できない場合があります。これはブラウザ側の制限です。</p>
           </section>
@@ -196,9 +197,9 @@
           <section id="ja-layers">
             <h2>2. 参照画像を追加する</h2>
             <ul>
-              <li><strong>追加</strong> ボタンから画像ファイルを選択します。</li>
+              <li><strong>追加</strong>ボタンから画像ファイルを選択します。</li>
               <li>画像をパネルへドラッグ&ドロップします。</li>
-              <li>画像をコピーしてページ上で貼り付けるか、パネルの <strong>貼り付け</strong> ボタンを押します。</li>
+              <li>画像をコピーしてページ上で貼り付けるか、パネルの<strong>貼り付け</strong>ボタンを押します。</li>
             </ul>
             <h3>レイヤー一覧</h3>
             <p>各レイヤーでは、並び替え、固定、表示/非表示、削除ができます。レイヤーを選択すると詳細設定を編集できます。</p>
@@ -211,15 +212,15 @@
               <li><strong>合成:</strong> 通常、反転、差分、乗算、スクリーン、オーバーレイ、ハードライト、除外を選べます。</li>
               <li><strong>不透明度:</strong> スライダーまたは数値入力で透明度を調整します。</li>
               <li><strong>X / Y:</strong> ピクセル単位で位置を動かします。</li>
-              <li><strong>スケール:</strong> マイナス/プラス、0.50x/2.00xのプリセット、入力欄で倍率を調整します。</li>
-              <li><strong>リセット / 中央 / 幅に合わせる:</strong> 位置や倍率をすばやく整えます。</li>
+              <li><strong>スケール:</strong> マイナス/プラス、0.50x/2.00xプリセット、入力欄で倍率を調整します。</li>
+              <li><strong>リセット / 中央 / 幅に合わせる:</strong> 位置や倍率を素早く整えます。</li>
             </ul>
           </section>
 
           <section>
             <h2>4. グリッドとテーマ</h2>
-            <p><strong>グリッド</strong> をオンにすると、余白や整列を確認しやすくなります。グリッドサイズ入力は常に表示されるため、オンにする前にピクセル数を調整できます。</p>
-            <p>太陽/月のボタンでライト/ダークテーマを切り替えます。言語メニューでは、自動、英語、日本語を選択できます。</p>
+            <p><strong>グリッド</strong>をオンにすると、余白や整列を確認しやすくなります。グリッドサイズ入力は常に表示されるため、オンにする前にピクセル数を調整できます。</p>
+            <p>太陽/月のボタンでライト/ダークテーマを切り替えられます。言語メニューでは、自動、英語、日本語を選択できます。</p>
           </section>
 
           <section id="ja-shortcuts" class="wide">
@@ -227,8 +228,8 @@
             <table>
               <thead><tr><th>操作</th><th>ショートカット</th></tr></thead>
               <tbody>
-                <tr><td>選択中のレイヤーを1px移動</td><td><kbd>矢印</kbd></td></tr>
-                <tr><td>選択中のレイヤーを10px移動</td><td><kbd>Shift</kbd> + <kbd>矢印</kbd></td></tr>
+                <tr><td>選択中のレイヤーを1px移動</td><td><kbd>矢印キー</kbd></td></tr>
+                <tr><td>選択中のレイヤーを10px移動</td><td><kbd>Shift</kbd> + <kbd>矢印キー</kbd></td></tr>
                 <tr><td>合成モードを切り替え</td><td><kbd>Alt</kbd> + <kbd>B</kbd> の後に <kbd>;</kbd> / <kbd>-</kbd></td></tr>
                 <tr><td>不透明度を調整</td><td><kbd>Alt</kbd> + <kbd>A</kbd> の後に <kbd>;</kbd> / <kbd>-</kbd></td></tr>
                 <tr><td>グリッド切り替え</td><td><kbd>Alt</kbd> + <kbd>G</kbd></td></tr>
@@ -243,7 +244,8 @@
 
           <section id="ja-access" class="wide">
             <h2>6. 保存設定とサイトアクセス</h2>
-            <p>DiffPixel は、現在のサイトに対するレイヤー設定とパネル設定を端末内に保存します。任意のサイトアクセスを許可すると、よく使う信頼済みドメインでパネルを自動的に再表示できます。</p>
+            <p>DiffPixel は、現在のサイトに対するレイヤー設定、パネル設定、DiffPixelの表示状態を端末内に保存します。</p>
+            <p>DiffPixelを有効にしたサイトでは、ページをリロードした後や同じホストの別ページを開いたときにパネルが復元されます。非表示にするには、拡張機能アイコンをもう一度クリックします。</p>
             <p>ローカルの <code>file://</code> ページで使う場合は、Chrome の拡張機能詳細ページで <strong>ファイルのURLへのアクセスを許可する</strong> を有効にしてください。</p>
           </section>
         </div>
