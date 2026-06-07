@@ -1787,11 +1787,11 @@
         reply({ ok: true, visible: panel.toggle() }); break;
 
       case 'SHOW_PANEL':
-        if (!panel) { createAndShowPanel().then(() => reply({ ok: true, visible: true })); return true; }
-        panel.show(true); reply({ ok: true, visible: true }); break;
+        if (!panel) { createAndShowPanel(msg.persist !== false).then(() => reply({ ok: true, visible: true })); return true; }
+        panel.show(msg.persist !== false); reply({ ok: true, visible: true }); break;
 
       case 'HIDE_PANEL':
-        panel?.hide(true); reply({ ok: true, visible: false }); break;
+        panel?.hide(msg.persist !== false); reply({ ok: true, visible: false }); break;
 
       case 'GET_STATE': reply(getFullState()); break;
 

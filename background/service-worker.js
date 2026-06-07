@@ -14,6 +14,19 @@ function sitePattern(urlString) {
   }
 }
 
+function storagePrefix(urlString) {
+  try {
+    const url = new URL(urlString);
+    return `dp_${url.hostname || url.protocol.replace(':', '')}`;
+  } catch {
+    return 'dp_page';
+  }
+}
+
+function panelVisibleKey(urlString) {
+  return `${storagePrefix(urlString)}_panel_visible`;
+}
+
 function scriptId(pattern) {
   let hash = 0;
   for (const char of pattern) hash = ((hash << 5) - hash + char.charCodeAt(0)) | 0;
@@ -22,10 +35,10 @@ function scriptId(pattern) {
 
 async function enableSiteInjection(tab) {
   const pattern = sitePattern(tab?.url);
-  if (!pattern) return;
+  if (!pattern) return false;
   const hasPermission = await chrome.permissions.contains({ origins: [pattern] }).catch(() => false);
   const granted = hasPermission || await chrome.permissions.request({ origins: [pattern] }).catch(() => false);
-  if (!granted) return;
+  if (!granted) return false;
 
   const id = scriptId(pattern);
   const existing = await chrome.scripting.getRegisteredContentScripts({ ids: [id] }).catch(() => []);
@@ -33,35 +46,45 @@ async function enableSiteInjection(tab) {
     const current = existing[0] || {};
     const hasAssets = current.js?.includes('content/content.js') && current.css?.includes('content/content.css');
     const hasMatch = current.matches?.includes(pattern);
-    if (hasAssets && hasMatch) return;
+    if (hasAssets && hasMatch) return true;
     await chrome.scripting.unregisterContentScripts({ ids: [id] }).catch(() => {});
   }
-  await chrome.scripting.registerContentScripts([{
+  const registered = await chrome.scripting.registerContentScripts([{
     id,
     matches: [pattern],
     js: ['content/content.js'],
     css: ['content/content.css'],
     runAt: 'document_idle',
     persistAcrossSessions: true,
-  }]).catch(() => {});
+  }]).then(() => true).catch(() => false);
+  return registered;
 }
 
 /* Extension button click: toggle the page panel, injecting assets if needed. */
 chrome.action.onClicked.addListener(async tab => {
   if (!tab?.id) return;
+  const siteReady = await enableSiteInjection(tab);
+  const visibleKey = panelVisibleKey(tab.url);
+  const stored = await chrome.storage.local.get(visibleKey).catch(() => ({}));
+  const shouldShow = stored[visibleKey] !== true;
 
-  /* Content script already present: just toggle. */
-  const toggled = await chrome.tabs.sendMessage(tab.id, { type: 'TOGGLE_PANEL' }).catch(() => null);
-  if (toggled) {
-    if (toggled.visible) await enableSiteInjection(tab);
+  if (!shouldShow) {
+    await chrome.storage.local.set({ [visibleKey]: false }).catch(() => {});
+    await chrome.tabs.sendMessage(tab.id, { type: 'HIDE_PANEL', persist: false }).catch(() => null);
     return;
   }
+
+  if (siteReady) {
+    await chrome.storage.local.set({ [visibleKey]: true }).catch(() => {});
+  }
+
+  const shown = await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL', persist: false }).catch(() => null);
+  if (shown) return;
 
   try {
     await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content/content.js'] });
     await chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ['content/content.css'] });
-    const shown = await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL' }).catch(() => null);
-    if (shown?.visible) await enableSiteInjection(tab);
+    await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL', persist: false }).catch(() => null);
   } catch {
     /* chrome://, edge://, and other restricted pages cannot be scripted. */
   }
