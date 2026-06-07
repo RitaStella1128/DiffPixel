@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3 - 2026-06-08
+
+- Changed the toolbar icon toggle to save DiffPixel panel visibility per domain.
+- When a domain is turned on, DiffPixel reopens on reloads and matching domain pages where the content script is available.
+- When a domain is turned off, the panel, overlay layers, and grid stay hidden on reloads and matching domain pages.
+
 ## 1.0.2 - 2026-06-05
 
 - Changed the reset shortcut from `Alt + R` to `Alt + 0` to avoid conflicts with common browser and system-level shortcuts.
