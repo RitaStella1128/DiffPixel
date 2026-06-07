@@ -42,16 +42,19 @@ async function enableSiteInjection(tab) {
 /* Extension button click: toggle the page panel, injecting assets if needed. */
 chrome.action.onClicked.addListener(async tab => {
   if (!tab?.id) return;
-  await enableSiteInjection(tab);
 
   /* Content script already present: just toggle. */
   const toggled = await chrome.tabs.sendMessage(tab.id, { type: 'TOGGLE_PANEL' }).catch(() => null);
-  if (toggled) return;
+  if (toggled) {
+    if (toggled.visible) await enableSiteInjection(tab);
+    return;
+  }
 
   try {
     await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content/content.js'] });
     await chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ['content/content.css'] });
-    await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL' }).catch(() => {});
+    const shown = await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL' }).catch(() => null);
+    if (shown?.visible) await enableSiteInjection(tab);
   } catch {
     /* chrome://, edge://, and other restricted pages cannot be scripted. */
   }

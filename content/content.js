@@ -215,6 +215,7 @@
     THEME:     'dp_theme',
     LANG:      'dp_lang',
     PANEL_POS: 'dp_panel_pos',
+    PANEL_VISIBLE: `${storagePrefix}_panel_visible`,
   };
 
   /* ── Security helpers ───────────────────── */
@@ -320,7 +321,7 @@
   let containerEl   = null;
   let gridEl        = null;
   let panel         = null;
-  let hasStoredState = false;
+  let panelVisiblePref = false;
   let activeShortcutMode = null;
 
   function normalizeTheme(theme) {
@@ -623,6 +624,11 @@
     layerMeta.forEach(m => layerDOM.get(m.id)?.applyStyle(m));
   }
 
+  function setPanelVisiblePreference(visible) {
+    panelVisiblePref = !!visible;
+    queueStorageSet({ [K.PANEL_VISIBLE]: panelVisiblePref });
+  }
+
   function applyGrid(cfg) {
     Object.assign(gridConfig, sanitizeGrid(cfg));
     if (!gridEl) return;
@@ -657,12 +663,12 @@
 
   /* ── Storage: load ───────────────────────── */
   async function loadFromStorage() {
-    const res = await safeStorageGet([K.STATE, K.IMAGES, K.THEME, K.LANG, K.PANEL_POS]);
+    const res = await safeStorageGet([K.STATE, K.IMAGES, K.THEME, K.LANG, K.PANEL_POS, K.PANEL_VISIBLE]);
     langMode = normalizeLang(res[K.LANG]);
     updateActiveLang();
     currentTheme = normalizeTheme(res[K.THEME] ?? preferredTheme());
+    panelVisiblePref = res[K.PANEL_VISIBLE] === true;
     if (res[K.IMAGES]) Object.entries(res[K.IMAGES]).forEach(([id, d]) => imageData.set(id, d));
-    hasStoredState = !!res[K.STATE];
     if (res[K.STATE]) {
       const s = res[K.STATE];
       globalEnabled = s.enabled ?? false;
@@ -1157,17 +1163,22 @@
       this._onResize = () => this._setPos(this._px, this._py);
     }
 
-    show() {
+    show(persist = true) {
       this._visible = true;
       if (this.host) this.host.style.display = '';
+      if (persist) setPanelVisiblePreference(true);
     }
 
-    hide() {
+    hide(persist = true) {
       this._visible = false;
       if (this.host) this.host.style.display = 'none';
+      if (persist) setPanelVisiblePreference(false);
     }
 
-    toggle() { this._visible ? this.hide() : this.show(); }
+    toggle() {
+      this._visible ? this.hide(true) : this.show(true);
+      return this._visible;
+    }
 
     mount(savedPos) {
       this.host = document.createElement('div');
@@ -1742,11 +1753,12 @@
   }
 
   /* ── Panel: on-demand creation ──────────── */
-  async function createAndShowPanel() {
-    if (panel) { panel.show(); return; }
+  async function createAndShowPanel(persist = true) {
+    if (panel) { panel.show(persist); return; }
     const res = await safeStorageGet(K.PANEL_POS);
     panel = new DiffPixelPanel();
     panel.mount(res[K.PANEL_POS] ?? null);
+    panel.show(persist);
     debounceSave();
   }
 
@@ -1761,11 +1773,14 @@
 
       case 'TOGGLE_PANEL':
         if (!panel) { createAndShowPanel().then(() => reply({ ok: true })); return true; }
-        panel.toggle(); reply({ ok: true }); break;
+        reply({ ok: true, visible: panel.toggle() }); break;
 
       case 'SHOW_PANEL':
         if (!panel) { createAndShowPanel().then(() => reply({ ok: true })); return true; }
-        panel.show(); reply({ ok: true }); break;
+        panel.show(true); reply({ ok: true, visible: true }); break;
+
+      case 'HIDE_PANEL':
+        panel?.hide(true); reply({ ok: true, visible: false }); break;
 
       case 'GET_STATE': reply(getFullState()); break;
 
@@ -1899,6 +1914,15 @@
       updateActiveLang();
       panel?.refreshLanguage();
     }
+
+    if (changes[K.PANEL_VISIBLE]) {
+      panelVisiblePref = changes[K.PANEL_VISIBLE].newValue === true;
+      if (panelVisiblePref) {
+        createAndShowPanel(false).then(() => panel?.renderAll());
+      } else {
+        panel?.hide(false);
+      }
+    }
       });
     } catch (error) {
       if (!isExtensionContextInvalidError(error)) throw error;
@@ -1959,7 +1983,7 @@
     ensureDOM();
     await loadFromStorage();
     refreshLayers(); applyGrid(gridConfig); setEnabled(globalEnabled);
-    if (hasStoredState) await createAndShowPanel();
+    if (panelVisiblePref) await createAndShowPanel(false);
     panel?.renderAll();
   }
 
