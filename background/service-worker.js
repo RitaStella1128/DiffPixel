@@ -23,12 +23,19 @@ function scriptId(pattern) {
 async function enableSiteInjection(tab) {
   const pattern = sitePattern(tab?.url);
   if (!pattern) return;
-  const granted = await chrome.permissions.request({ origins: [pattern] }).catch(() => false);
+  const hasPermission = await chrome.permissions.contains({ origins: [pattern] }).catch(() => false);
+  const granted = hasPermission || await chrome.permissions.request({ origins: [pattern] }).catch(() => false);
   if (!granted) return;
 
   const id = scriptId(pattern);
   const existing = await chrome.scripting.getRegisteredContentScripts({ ids: [id] }).catch(() => []);
-  if (existing.length) return;
+  if (existing.length) {
+    const current = existing[0] || {};
+    const hasAssets = current.js?.includes('content/content.js') && current.css?.includes('content/content.css');
+    const hasMatch = current.matches?.includes(pattern);
+    if (hasAssets && hasMatch) return;
+    await chrome.scripting.unregisterContentScripts({ ids: [id] }).catch(() => {});
+  }
   await chrome.scripting.registerContentScripts([{
     id,
     matches: [pattern],

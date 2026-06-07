@@ -362,7 +362,7 @@
       if (!this.el || !meta) return;
       const blendMode = VALID_BLEND.has(meta.blendMode) ? meta.blendMode : 'normal';
       const cssBlendMode = blendMode === 'invert' ? 'normal' : blendMode;
-      this.el.style.display      = (meta.visible && globalEnabled) ? 'block' : 'none';
+      this.el.style.display      = (meta.visible && globalEnabled && isDiffPixelVisible()) ? 'block' : 'none';
       this.el.style.zIndex       = '2147483645';
       this.el.style.opacity      = '1';
       this.el.style.transform    = `translate(${meta.x}px, ${meta.y}px) scale(${meta.scale})`;
@@ -624,6 +624,15 @@
     layerMeta.forEach(m => layerDOM.get(m.id)?.applyStyle(m));
   }
 
+  function isDiffPixelVisible() {
+    return panel ? panel._visible : panelVisiblePref;
+  }
+
+  function refreshOverlayVisibility() {
+    layerMeta.forEach(m => layerDOM.get(m.id)?.applyStyle(m));
+    applyGrid(gridConfig);
+  }
+
   function setPanelVisiblePreference(visible) {
     panelVisiblePref = !!visible;
     queueStorageSet({ [K.PANEL_VISIBLE]: panelVisiblePref });
@@ -632,7 +641,7 @@
   function applyGrid(cfg) {
     Object.assign(gridConfig, sanitizeGrid(cfg));
     if (!gridEl) return;
-    if (gridConfig.enabled) {
+    if (gridConfig.enabled && isDiffPixelVisible()) {
       const s = gridConfig.size, c = gridConfig.color;
       gridEl.style.setProperty('display', 'block', 'important');
       gridEl.style.backgroundImage =
@@ -1167,12 +1176,14 @@
       this._visible = true;
       if (this.host) this.host.style.display = '';
       if (persist) setPanelVisiblePreference(true);
+      refreshOverlayVisibility();
     }
 
     hide(persist = true) {
       this._visible = false;
       if (this.host) this.host.style.display = 'none';
       if (persist) setPanelVisiblePreference(false);
+      refreshOverlayVisibility();
     }
 
     toggle() {
@@ -1772,11 +1783,11 @@
       case 'PING': reply({ ok: true }); break;
 
       case 'TOGGLE_PANEL':
-        if (!panel) { createAndShowPanel().then(() => reply({ ok: true })); return true; }
+        if (!panel) { createAndShowPanel().then(() => reply({ ok: true, visible: true })); return true; }
         reply({ ok: true, visible: panel.toggle() }); break;
 
       case 'SHOW_PANEL':
-        if (!panel) { createAndShowPanel().then(() => reply({ ok: true })); return true; }
+        if (!panel) { createAndShowPanel().then(() => reply({ ok: true, visible: true })); return true; }
         panel.show(true); reply({ ok: true, visible: true }); break;
 
       case 'HIDE_PANEL':
@@ -1921,6 +1932,7 @@
         createAndShowPanel(false).then(() => panel?.renderAll());
       } else {
         panel?.hide(false);
+        refreshOverlayVisibility();
       }
     }
       });

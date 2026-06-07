@@ -4,7 +4,7 @@
 
 - Changed the toolbar icon toggle to save DiffPixel panel visibility per domain.
 - When a domain is turned on, DiffPixel reopens on reloads and matching domain pages where the content script is available.
-- When a domain is turned off, DiffPixel stays hidden on reloads and matching domain pages.
+- When a domain is turned off, the panel, overlay layers, and grid stay hidden on reloads and matching domain pages.
 
 ## 1.0.2 - 2026-06-05
 
