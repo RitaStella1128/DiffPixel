@@ -27,6 +27,10 @@ function panelVisibleKey(urlString) {
   return `${storagePrefix(urlString)}_panel_visible`;
 }
 
+function isSupportedPage(urlString) {
+  return !!sitePattern(urlString);
+}
+
 function hostOf(urlString) {
   try {
     const url = new URL(urlString);
@@ -46,8 +50,7 @@ async function enableSiteInjection(tab) {
   const pattern = sitePattern(tab?.url);
   if (!pattern) return false;
   const hasPermission = await chrome.permissions.contains({ origins: [pattern] }).catch(() => false);
-  const granted = hasPermission || await chrome.permissions.request({ origins: [pattern] }).catch(() => false);
-  if (!granted) return false;
+  if (!hasPermission) return false;
 
   const id = scriptId(pattern);
   const existing = await chrome.scripting.getRegisteredContentScripts({ ids: [id] }).catch(() => []);
@@ -98,7 +101,7 @@ async function applyVisibilityToDomainTabs(sourceTab, visible) {
 }
 
 async function applyStoredVisibilityToTab(tab) {
-  if (!tab?.id || !sitePattern(tab.url)) return;
+  if (!tab?.id || !isSupportedPage(tab.url)) return;
   const visibleKey = panelVisibleKey(tab.url);
   const stored = await chrome.storage.local.get(visibleKey).catch(() => ({}));
   const visible = stored[visibleKey] === true;
@@ -127,7 +130,7 @@ chrome.tabs.onActivated.addListener(async info => {
 
 /* Extension button click: toggle the page panel, injecting assets if needed. */
 chrome.action.onClicked.addListener(async tab => {
-  if (!tab?.id) return;
+  if (!tab?.id || !isSupportedPage(tab.url)) return;
   const visibleKey = panelVisibleKey(tab.url);
   const status = await chrome.tabs.sendMessage(tab.id, { type: 'GET_PANEL_STATUS' }).catch(() => null);
   const shouldShow = !status?.visible;
@@ -139,10 +142,8 @@ chrome.action.onClicked.addListener(async tab => {
     return;
   }
 
+  await chrome.storage.local.set({ [visibleKey]: true }).catch(() => {});
   const siteReady = await enableSiteInjection(tab);
-  if (siteReady) {
-    await chrome.storage.local.set({ [visibleKey]: true }).catch(() => {});
-  }
 
   const shown = await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL', persist: false }).catch(() => null);
   if (shown) {
