@@ -27,6 +27,15 @@ function panelVisibleKey(urlString) {
   return `${storagePrefix(urlString)}_panel_visible`;
 }
 
+function hostOf(urlString) {
+  try {
+    const url = new URL(urlString);
+    return ['http:', 'https:'].includes(url.protocol) ? url.hostname : '';
+  } catch {
+    return '';
+  }
+}
+
 function scriptId(pattern) {
   let hash = 0;
   for (const char of pattern) hash = ((hash << 5) - hash + char.charCodeAt(0)) | 0;
@@ -60,32 +69,89 @@ async function enableSiteInjection(tab) {
   return registered;
 }
 
+async function ensureTabScript(tabId) {
+  try {
+    await chrome.scripting.executeScript({ target: { tabId }, files: ['content/content.js'] });
+    await chrome.scripting.insertCSS({ target: { tabId }, files: ['content/content.css'] });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function applyVisibilityToDomainTabs(sourceTab, visible) {
+  const host = hostOf(sourceTab?.url);
+  if (!host) return;
+  const tabs = await chrome.tabs.query({}).catch(() => []);
+  await Promise.all(tabs
+    .filter(tab => tab.id && tab.id !== sourceTab.id && hostOf(tab.url) === host)
+    .map(async tab => {
+      if (visible) {
+        let shown = await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL', persist: false }).catch(() => null);
+        if (!shown && await ensureTabScript(tab.id)) {
+          shown = await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL', persist: false }).catch(() => null);
+        }
+        return shown;
+      }
+      return chrome.tabs.sendMessage(tab.id, { type: 'HIDE_PANEL', persist: false }).catch(() => null);
+    }));
+}
+
+async function applyStoredVisibilityToTab(tab) {
+  if (!tab?.id || !sitePattern(tab.url)) return;
+  const visibleKey = panelVisibleKey(tab.url);
+  const stored = await chrome.storage.local.get(visibleKey).catch(() => ({}));
+  const visible = stored[visibleKey] === true;
+  if (visible) {
+    const siteReady = await enableSiteInjection(tab);
+    if (!siteReady) return;
+    let shown = await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL', persist: false }).catch(() => null);
+    if (!shown && await ensureTabScript(tab.id)) {
+      await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL', persist: false }).catch(() => null);
+    }
+  } else {
+    await chrome.tabs.sendMessage(tab.id, { type: 'HIDE_PANEL', persist: false }).catch(() => null);
+  }
+}
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete') {
+    applyStoredVisibilityToTab(tab || { id: tabId }).catch(() => {});
+  }
+});
+
+chrome.tabs.onActivated.addListener(async info => {
+  const tab = await chrome.tabs.get(info.tabId).catch(() => null);
+  if (tab) await applyStoredVisibilityToTab(tab).catch(() => {});
+});
+
 /* Extension button click: toggle the page panel, injecting assets if needed. */
 chrome.action.onClicked.addListener(async tab => {
   if (!tab?.id) return;
-  const siteReady = await enableSiteInjection(tab);
   const visibleKey = panelVisibleKey(tab.url);
-  const stored = await chrome.storage.local.get(visibleKey).catch(() => ({}));
-  const shouldShow = stored[visibleKey] !== true;
+  const status = await chrome.tabs.sendMessage(tab.id, { type: 'GET_PANEL_STATUS' }).catch(() => null);
+  const shouldShow = !status?.visible;
 
   if (!shouldShow) {
     await chrome.storage.local.set({ [visibleKey]: false }).catch(() => {});
     await chrome.tabs.sendMessage(tab.id, { type: 'HIDE_PANEL', persist: false }).catch(() => null);
+    await applyVisibilityToDomainTabs(tab, false);
     return;
   }
 
+  const siteReady = await enableSiteInjection(tab);
   if (siteReady) {
     await chrome.storage.local.set({ [visibleKey]: true }).catch(() => {});
   }
 
   const shown = await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL', persist: false }).catch(() => null);
-  if (shown) return;
+  if (shown) {
+    if (siteReady) await applyVisibilityToDomainTabs(tab, true);
+    return;
+  }
 
-  try {
-    await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content/content.js'] });
-    await chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ['content/content.css'] });
+  if (await ensureTabScript(tab.id)) {
     await chrome.tabs.sendMessage(tab.id, { type: 'SHOW_PANEL', persist: false }).catch(() => null);
-  } catch {
-    /* chrome://, edge://, and other restricted pages cannot be scripted. */
+    if (siteReady) await applyVisibilityToDomainTabs(tab, true);
   }
 });

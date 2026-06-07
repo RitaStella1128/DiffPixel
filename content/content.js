@@ -1782,6 +1782,10 @@
     switch (msg.type) {
       case 'PING': reply({ ok: true }); break;
 
+      case 'GET_PANEL_STATUS':
+        reply({ ok: true, visible: !!panel?._visible, mounted: !!panel, preferred: panelVisiblePref });
+        break;
+
       case 'TOGGLE_PANEL':
         if (!panel) { createAndShowPanel().then(() => reply({ ok: true, visible: true })); return true; }
         reply({ ok: true, visible: panel.toggle() }); break;
