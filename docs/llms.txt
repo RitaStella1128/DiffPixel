@@ -1,0 +1,19 @@
+# DiffPixel
+
+> DiffPixel is a free Chrome extension that overlays local reference images (design mockups, screenshots) on any web page so designers and developers can compare designs with live implementations pixel by pixel. It supports multiple image layers, eight blend modes (Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, Exclusion), opacity/position/scale controls, a pixel grid, dark/light themes, English and Japanese UI, and keyboard shortcuts. All data stays in local Chrome storage; the extension collects no data and uses no analytics, external APIs, or remote code.
+
+Key facts:
+- Price: free, no account required
+- Platform: Google Chrome extension (Manifest V3)
+- Supported pages: HTTP/HTTPS; file:// pages with the file-URL permission enabled
+- Privacy: no data collection or transmission; everything stored locally
+
+## Docs
+
+- [Home](https://ritastar1128.github.io/DiffPixel/): overview, features, how it works, FAQ (English/Japanese)
+- [User Manual](https://ritastar1128.github.io/DiffPixel/manual.html): opening the panel, adding reference images, adjusting layers, keyboard shortcuts, saved settings (English/Japanese)
+- [Privacy Policy](https://ritastar1128.github.io/DiffPixel/privacy.html): data handling, permissions, local storage details (English/Japanese)
+
+## Source
+
+- [GitHub Repository](https://github.com/RitaStar1128/DiffPixel): source code, releases, issue tracker
