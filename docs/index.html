@@ -75,50 +75,32 @@
           {
             "@type": "Question",
             "name": "What is DiffPixel?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "DiffPixel is a free Chrome extension for designers and developers. It overlays local reference images (design mockups, screenshots) on the current web page in a floating panel, so you can compare the design and the live implementation pixel by pixel using layers, blend modes, opacity, position, scale, and a grid."
-            }
+            "acceptedAnswer": { "@type": "Answer", "text": "DiffPixel is a free Chrome extension for designers and developers. It overlays local reference images (design mockups, screenshots) on the current web page in a floating panel, so you can compare the design and the live implementation pixel by pixel using layers, blend modes, opacity, position, scale, and a grid." }
           },
           {
             "@type": "Question",
             "name": "Is DiffPixel free?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. DiffPixel is completely free. No account, sign-up, or payment is required."
-            }
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. DiffPixel is completely free. No account, sign-up, or payment is required." }
           },
           {
             "@type": "Question",
             "name": "Does DiffPixel upload my images or collect data?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No. DiffPixel does not collect, transmit, sell, or share any data. Reference images and settings are stored only in Chrome storage on your device, and the extension uses no analytics, external APIs, or remote code."
-            }
+            "acceptedAnswer": { "@type": "Answer", "text": "No. DiffPixel does not collect, transmit, sell, or share any data. Reference images and settings are stored only in Chrome storage on your device, and the extension uses no analytics, external APIs, or remote code." }
           },
           {
             "@type": "Question",
             "name": "Which blend modes does DiffPixel support?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "DiffPixel supports Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, and Exclusion. Difference and Exclusion are especially useful for spotting pixel-level mismatches between a design and the live page."
-            }
+            "acceptedAnswer": { "@type": "Answer", "text": "DiffPixel supports Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, and Exclusion. Difference and Exclusion are especially useful for spotting pixel-level mismatches between a design and the live page." }
           },
           {
             "@type": "Question",
             "name": "Which websites does DiffPixel work on?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "DiffPixel works on regular HTTP and HTTPS pages. Local file:// pages work after enabling 'Allow access to file URLs' on the extension details page. Chrome internal pages and some restricted pages cannot run extensions due to browser limitations."
-            }
+            "acceptedAnswer": { "@type": "Answer", "text": "DiffPixel works on regular HTTP and HTTPS pages. Local file:// pages work after enabling Allow access to file URLs on the extension details page. Chrome internal pages cannot run extensions due to browser limitations." }
           },
           {
             "@type": "Question",
             "name": "How do I compare a design with a live page using DiffPixel?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Open the page, click the DiffPixel icon in Chrome, then add a reference image via the Add button, drag and drop, or paste. Align it with the X/Y and scale controls, lower the opacity or switch to the Difference blend mode, and inspect mismatches. Settings are restored automatically after reloads."
-            }
+            "acceptedAnswer": { "@type": "Answer", "text": "Open the page, click the DiffPixel icon in Chrome, then add a reference image via the Add button, drag and drop, or paste. Align it with the X/Y and scale controls, lower the opacity or switch to the Difference blend mode, and inspect mismatches. Settings are restored automatically after reloads." }
           }
         ]
       }
@@ -126,456 +108,865 @@
   }
   </script>
 
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    :root {
-      color-scheme: dark;
-      --bg: #0d0d16;
-      --surface: #161622;
-      --surface-2: #1d1d2e;
-      --border: #2a2a40;
-      --text: #e8eaf0;
-      --muted: #9aa0b4;
-      --accent: #00d4ff;
-      --accent-dim: rgba(0, 212, 255, .12);
-      --shadow: 0 24px 70px rgba(0, 0, 0, .45);
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font: 15px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
-    }
-    body::before {
-      content: "";
-      position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background:
-        radial-gradient(680px 420px at 82% -8%, rgba(0, 212, 255, .14), transparent 65%),
-        radial-gradient(560px 380px at 8% 28%, rgba(0, 102, 214, .12), transparent 65%);
-    }
-    header.site, main, footer.site { width: min(1080px, calc(100% - 40px)); margin: 0 auto; }
-    header.site { padding: 26px 0 14px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .brand { display: flex; align-items: center; gap: 11px; font-weight: 750; font-size: 18px; color: inherit; text-decoration: none; }
-    .brand img { width: 32px; height: 32px; border-radius: 8px; }
-    .top-nav { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-    .top-nav a {
-      color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 650;
-      padding: 7px 11px; border-radius: 8px;
-    }
-    .top-nav a:hover { color: var(--text); background: var(--surface-2); }
-    .lang-switch { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--border); background: var(--surface); border-radius: 999px; }
-    .lang-switch button {
-      border: 0; border-radius: 999px; background: transparent; color: var(--muted);
-      min-width: 76px; padding: 6px 12px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
-    }
-    .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #04222b; }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
-    main { padding: 30px 0 80px; }
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #06060b;
+      --surface:     #0d0d16;
+      --surface-2:   #13131e;
+      --surface-3:   #191928;
+      --border:      #1e1e2e;
+      --border-2:    #282840;
+      --text:        #edeef5;
+      --muted:       #5e6080;
+      --muted-2:     #8890aa;
+      --accent:      #00e5ff;
+      --accent-dim:  rgba(0,229,255,.07);
+      --accent-glow: rgba(0,229,255,.22);
+      --diff:        #ff4466;
+      --diff-dim:    rgba(255,68,102,.14);
+      --mono:        'JetBrains Mono', 'Courier New', monospace;
+      --display:     'Syne', system-ui, sans-serif;
+      --body:        -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Yu Gothic UI', Meiryo, sans-serif;
+      --shadow:      0 28px 72px rgba(0,0,0,.65);
+      --shadow-sm:   0 8px 28px rgba(0,0,0,.45);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: var(--body); font-size: 15px; line-height: 1.72;
+      overflow-x: hidden;
+    }
+
+    /* Ambient glow */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 800px 500px at 72% -10%, rgba(0,229,255,.09) 0%, transparent 68%),
+        radial-gradient(ellipse 500px 380px at 5%  65%,  rgba(0,80,190,.08)  0%, transparent 66%);
+    }
+
+    /* Dot-grid texture */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      opacity: .04;
+      background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .wrap { width: min(1100px, calc(100% - 44px)); margin: 0 auto; position: relative; z-index: 1; }
+
+    /* ── HEADER ─────────────────────────────── */
+    .site-header {
+      position: sticky; top: 0; z-index: 200;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6,6,11,.88);
+      backdrop-filter: blur(16px) saturate(1.4);
+      -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    }
+    .header-inner {
+      display: flex; align-items: center; gap: 8px;
+      height: 58px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 9px;
+      font-family: var(--display); font-weight: 700; font-size: 16.5px;
+      letter-spacing: -.01em; color: var(--text); text-decoration: none; white-space: nowrap;
+    }
+    .brand img { width: 26px; height: 26px; border-radius: 6px; }
+
+    .site-nav { display: flex; gap: 2px; margin-left: auto; }
+    .site-nav a {
+      font-family: var(--mono); font-size: 12px; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      padding: 6px 10px; border-radius: 6px;
+      transition: color .14s, background .14s;
+    }
+    .site-nav a:hover { color: var(--text); background: var(--surface-2); }
+
+    .lang-switch {
+      display: flex; gap: 2px; padding: 3px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; margin-left: 8px;
+    }
+    .lang-switch button {
+      border: 0; border-radius: 5px; background: transparent;
+      color: var(--muted); padding: 5px 11px;
+      font-family: var(--mono); font-size: 11.5px; font-weight: 700; cursor: pointer;
+      transition: background .14s, color .14s;
+    }
+    .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #032428; }
+
+    /* ── LANG PANELS ────────────────────────── */
     [data-lang-panel] { display: none; }
     [data-lang-panel].active { display: block; }
 
-    .hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; padding: 36px 0 18px; }
-    .eyebrow {
-      display: inline-flex; align-items: center; gap: 8px; margin: 0 0 16px;
-      padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px;
-      background: var(--surface); color: var(--accent); font-size: 12px; font-weight: 750; letter-spacing: .04em;
+    /* ── HERO ───────────────────────────────── */
+    .hero {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 56px; align-items: center;
+      padding: 76px 0 84px;
     }
-    h1 { margin: 0 0 16px; font-size: clamp(34px, 4.6vw, 54px); line-height: 1.08; letter-spacing: -.01em; }
-    h1 .grad { background: linear-gradient(100deg, #00d4ff 10%, #5b8cff 90%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .lead { margin: 0 0 26px; max-width: 560px; color: var(--muted); font-size: 16.5px; }
-    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .1em;
+      color: var(--accent); padding: 5px 10px;
+      border: 1px solid rgba(0,229,255,.28); border-radius: 5px;
+      background: var(--accent-dim); margin-bottom: 20px;
+      animation: up .55s ease both;
+    }
+    .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 1.6s ease-in-out infinite; }
+    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
+
+    h1 {
+      font-family: var(--display); font-weight: 800;
+      font-size: clamp(36px, 4.2vw, 58px);
+      line-height: 1.035; letter-spacing: -.028em;
+      margin-bottom: 18px;
+      animation: up .55s .08s ease both;
+    }
+    h1 .hl {
+      background: linear-gradient(115deg, #00e5ff 0%, #7af8ff 55%, #00b4cc 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    h1 .dim { color: var(--muted-2); }
+
+    .hero-lead {
+      color: var(--muted-2); font-size: 15.5px; line-height: 1.78;
+      max-width: 490px; margin-bottom: 26px;
+      animation: up .55s .16s ease both;
+    }
+
+    .cta-row { display: flex; gap: 10px; margin-bottom: 26px; animation: up .55s .24s ease both; }
     .btn {
-      display: inline-flex; align-items: center; gap: 9px; min-height: 46px; padding: 10px 22px;
-      border-radius: 11px; font-size: 14.5px; font-weight: 750; text-decoration: none; border: 1px solid transparent;
+      display: inline-flex; align-items: center; gap: 8px;
+      min-height: 44px; padding: 10px 20px;
+      font-family: var(--mono); font-size: 13px; font-weight: 700;
+      border-radius: 9px; text-decoration: none;
+      border: 1px solid transparent; transition: all .18s;
+      letter-spacing: .01em;
     }
-    .btn-primary { background: var(--accent); color: #04222b; box-shadow: 0 10px 32px rgba(0, 212, 255, .28); }
-    .btn-primary:hover { filter: brightness(1.08); }
-    .btn-ghost { border-color: var(--border); background: var(--surface); color: var(--text); }
-    .btn-ghost:hover { border-color: #3a3a58; }
-    .hero-note { margin: 16px 0 0; color: var(--muted); font-size: 13px; }
+    .btn-primary { background: var(--accent); color: #03252c; box-shadow: 0 0 0 0 var(--accent-glow); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 26px var(--accent-glow); filter: brightness(1.06); }
+    .btn-ghost { background: var(--surface); border-color: var(--border-2); color: var(--text); }
+    .btn-ghost:hover { border-color: var(--muted); background: var(--surface-2); }
 
-    /* Panel mockup */
-    .stage { position: relative; min-height: 430px; }
-    .page-mock {
-      position: absolute; inset: 14px 56px 36px 0; border: 1px solid var(--border); border-radius: 14px;
-      background: var(--surface); box-shadow: var(--shadow); overflow: hidden;
+    .badges {
+      display: flex; flex-wrap: wrap; gap: 18px;
+      font-family: var(--mono); font-size: 12px; color: var(--muted);
+      animation: up .55s .32s ease both;
     }
-    .page-mock .bar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
-    .page-mock .dot { width: 10px; height: 10px; border-radius: 50%; background: #3a3a58; }
-    .page-mock .url { flex: 1; margin-left: 8px; height: 18px; border-radius: 9px; background: #232338; }
-    .wire { padding: 18px; display: grid; gap: 12px; }
-    .wire .row { height: 14px; border-radius: 7px; background: #232338; }
-    .wire .row.w60 { width: 60%; } .wire .row.w85 { width: 85%; } .wire .row.w40 { width: 40%; }
-    .wire .block { height: 86px; border-radius: 10px; background: linear-gradient(135deg, #232338, #1b1b2c); }
-    .ghost-overlay {
-      position: absolute; inset: 64px 18px auto 18px; height: 150px; border-radius: 10px;
-      border: 1.5px dashed var(--accent); background: var(--accent-dim);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--accent); font-size: 12px; font-weight: 750; letter-spacing: .06em;
+    .badge::before { content: '○'; color: var(--accent); margin-right: 6px; }
+
+    /* DIFF VISUALIZER */
+    .diff-wrap {
+      position: relative;
+      animation: fadeIn .7s .12s ease both;
     }
-    .panel-mock {
-      position: absolute; right: 0; bottom: 0; width: 252px; border: 1px solid #2e2e48; border-radius: 14px;
-      background: #14141f; box-shadow: var(--shadow); font-size: 11.5px; overflow: hidden;
+    .browser {
+      border: 1px solid var(--border-2); border-radius: 13px;
+      overflow: hidden; background: var(--surface);
+      box-shadow: var(--shadow);
     }
-    .panel-mock .ph { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid #262640; }
-    .panel-mock .ph img { width: 16px; height: 16px; border-radius: 4px; }
-    .panel-mock .ph strong { font-size: 12px; }
-    .panel-mock .ph span { margin-left: auto; color: var(--muted); }
-    .panel-mock .sec { padding: 10px 12px; border-bottom: 1px solid #262640; }
-    .panel-mock .sec:last-child { border-bottom: 0; }
-    .panel-mock .label { color: var(--muted); font-weight: 700; margin-bottom: 7px; letter-spacing: .03em; }
-    .layer-row { display: flex; align-items: center; gap: 7px; padding: 6px 8px; border-radius: 7px; }
-    .layer-row.sel { background: var(--accent-dim); outline: 1px solid rgba(0, 212, 255, .4); }
-    .layer-row .thumb { width: 20px; height: 20px; border-radius: 4px; background: linear-gradient(135deg, #00d4ff, #0066d6); }
-    .layer-row .nm { flex: 1; color: var(--text); font-weight: 650; }
-    .layer-row .ic { color: var(--muted); }
-    .slider { position: relative; height: 4px; border-radius: 2px; background: #262640; margin: 9px 0 3px; }
-    .slider::before { content: ""; position: absolute; inset: 0 28% 0 0; border-radius: 2px; background: var(--accent); }
-    .slider::after { content: ""; position: absolute; top: 50%; left: 72%; width: 12px; height: 12px; border-radius: 50%; background: #fff; transform: translate(-50%, -50%); box-shadow: 0 1px 5px rgba(0,0,0,.5); }
-    .chips { display: flex; gap: 5px; flex-wrap: wrap; }
-    .chip { padding: 3px 9px; border-radius: 6px; border: 1px solid #2e2e48; color: var(--muted); font-weight: 650; }
-    .chip.on { border-color: rgba(0, 212, 255, .5); color: var(--accent); background: var(--accent-dim); }
-
-    .section { margin-top: 64px; }
-    .section > h2 { margin: 0 0 8px; font-size: clamp(24px, 3vw, 32px); line-height: 1.2; }
-    .section > .sub { margin: 0 0 26px; color: var(--muted); max-width: 640px; }
-    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .card {
-      border: 1px solid var(--border); border-radius: 14px; padding: 22px; background: var(--surface);
+    .browser-bar {
+      display: flex; align-items: center; gap: 6px; padding: 10px 14px;
+      background: var(--surface-2); border-bottom: 1px solid var(--border);
     }
-    .card .glyph {
-      width: 38px; height: 38px; border-radius: 10px; background: var(--accent-dim);
-      display: grid; place-items: center; margin-bottom: 14px; color: var(--accent);
+    .b-dot { width: 9px; height: 9px; border-radius: 50%; }
+    .b-dot:nth-child(1) { background: #ff5f57; }
+    .b-dot:nth-child(2) { background: #febc2e; }
+    .b-dot:nth-child(3) { background: #28c840; }
+    .b-url {
+      flex: 1; margin: 0 10px; height: 20px; background: var(--bg);
+      border-radius: 5px; display: flex; align-items: center; padding: 0 10px;
+      font-family: var(--mono); font-size: 10px; color: var(--muted);
     }
-    .card h3 { margin: 0 0 8px; font-size: 16px; }
-    .card p { margin: 0; color: var(--muted); font-size: 14px; }
-
-    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: step; }
-    .step { border: 1px solid var(--border); border-radius: 14px; padding: 22px; background: var(--surface); }
-    .step::before {
-      counter-increment: step; content: counter(step);
-      display: grid; place-items: center; width: 32px; height: 32px; margin-bottom: 12px;
-      border-radius: 50%; background: var(--accent); color: #04222b; font-weight: 800; font-size: 15px;
+    .browser-body {
+      position: relative; padding: 18px; min-height: 290px;
+      display: flex; flex-direction: column; gap: 10px; overflow: hidden;
     }
-    .step h3 { margin: 0 0 8px; font-size: 16px; }
-    .step p { margin: 0; color: var(--muted); font-size: 14px; }
-
-    table.spec { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface); font-size: 14px; }
-    table.spec th, table.spec td { padding: 13px 16px; text-align: left; vertical-align: top; border-top: 1px solid var(--border); }
-    table.spec thead th { border-top: 0; background: var(--surface-2); font-size: 13px; }
-    table.spec td { color: var(--muted); }
-    table.spec td:first-child { color: var(--text); font-weight: 650; white-space: nowrap; }
-
-    details.faq { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); margin-bottom: 10px; }
-    details.faq summary { cursor: pointer; padding: 16px 18px; font-weight: 700; font-size: 15px; list-style: none; display: flex; align-items: center; gap: 10px; }
-    details.faq summary::before { content: "+"; color: var(--accent); font-weight: 800; width: 16px; }
-    details.faq[open] summary::before { content: "−"; }
-    details.faq .a { padding: 0 18px 16px 44px; color: var(--muted); font-size: 14px; }
-    details.faq .a p { margin: 0 0 8px; }
-
-    .privacy-band {
-      margin-top: 64px; border: 1px solid rgba(0, 212, 255, .3); border-radius: 16px;
-      background: linear-gradient(135deg, rgba(0, 212, 255, .08), rgba(0, 102, 214, .06));
-      padding: 30px; display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap;
+    /* wireframe elements */
+    .wf { border-radius: 5px; background: var(--surface-2); flex-shrink: 0; }
+    .wf-h  { height: 14px; width: 52%; }
+    .wf-s  { height: 8px; width: 78%; }
+    .wf-s2 { height: 8px; width: 60%; }
+    .wf-block { height: 80px; background: linear-gradient(135deg, var(--surface-2) 0%, #141424 100%); }
+    .wf-r  { height: 8px; width: 68%; }
+    .wf-r2 { height: 8px; width: 42%; }
+    .wf-r3 { height: 8px; width: 55%; }
+    /* overlay layer */
+    .overlay-ring {
+      position: absolute; inset: 10px;
+      border: 1.5px dashed rgba(0,229,255,.35); border-radius: 7px;
+      background: rgba(0,229,255,.02); pointer-events: none;
     }
-    .privacy-band h2 { margin: 0 0 6px; font-size: 21px; }
-    .privacy-band p { margin: 0; color: var(--muted); max-width: 620px; }
+    .overlay-badge {
+      position: absolute; top: -1px; left: 10px;
+      font-family: var(--mono); font-size: 9px; font-weight: 700;
+      color: var(--accent); background: var(--surface);
+      padding: 2px 7px; border-radius: 0 0 4px 4px;
+      border: 1px solid rgba(0,229,255,.3); border-top: 0; letter-spacing: .06em;
+    }
+    /* diff highlights */
+    .dpx {
+      position: absolute; border-radius: 3px;
+      background: var(--diff-dim); border: 1px solid rgba(255,68,102,.45);
+      animation: dpx 2.5s ease-in-out infinite;
+    }
+    .dpx:nth-child(1) { width: 28px; height: 14px; top: 36px;  left: 52px;  animation-delay: 0s;    }
+    .dpx:nth-child(2) { width: 40px; height: 12px; top: 72px;  right: 38px; animation-delay: .5s;   }
+    .dpx:nth-child(3) { width: 22px; height: 14px; top: 136px; left: 88px;  animation-delay: 1s;    }
+    .dpx:nth-child(4) { width: 32px; height: 12px; top: 190px; right: 55px; animation-delay: 1.4s;  }
+    .dpx:nth-child(5) { width: 18px; height: 14px; top: 234px; left: 42px;  animation-delay: 1.9s;  }
+    @keyframes dpx {
+      0%,100% { opacity: .35; }
+      50% { opacity: 1; box-shadow: 0 0 10px rgba(255,68,102,.45); }
+    }
+    /* scan line */
+    .scan {
+      position: absolute; left: 0; right: 0; height: 1.5px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent) 25%, rgba(0,229,255,.9) 50%, var(--accent) 75%, transparent 100%);
+      box-shadow: 0 0 10px var(--accent), 0 0 3px rgba(255,255,255,.6);
+      animation: sweep 3.8s ease-in-out infinite; pointer-events: none;
+    }
+    @keyframes sweep {
+      0%   { top: 0%;   opacity: 0; }
+      4%   { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+    /* floating panel */
+    .panel {
+      position: absolute; right: -24px; bottom: -18px; width: 214px;
+      border: 1px solid #26263a; border-radius: 12px;
+      background: #0e0e1a; box-shadow: var(--shadow); overflow: hidden;
+      animation: panelIn .7s .35s ease both;
+    }
+    @keyframes panelIn {
+      from { opacity: 0; transform: translate(10px, 14px); }
+      to   { opacity: 1; transform: translate(0, 0); }
+    }
+    .pan-head {
+      display: flex; align-items: center; gap: 7px;
+      padding: 9px 11px; border-bottom: 1px solid #1e1e2e;
+      background: #121220;
+    }
+    .pan-head img { width: 13px; height: 13px; border-radius: 3px; }
+    .pan-head strong { font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 700; }
+    .pan-head span { margin-left: auto; color: var(--muted); font-size: 12px; }
+    .pan-sec { padding: 9px 11px; border-bottom: 1px solid #1e1e2e; }
+    .pan-sec:last-child { border-bottom: 0; }
+    .pan-lbl { font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .1em; color: var(--muted); margin-bottom: 7px; }
+    .pan-row {
+      display: flex; align-items: center; gap: 6px; padding: 5px 7px;
+      border-radius: 6px; font-family: var(--mono); font-size: 10px;
+    }
+    .pan-row.sel { background: rgba(0,229,255,.09); outline: 1px solid rgba(0,229,255,.28); }
+    .pan-thumb { width: 15px; height: 15px; border-radius: 3px; background: linear-gradient(135deg, #00e5ff, #0055c8); flex-shrink: 0; }
+    .pan-nm { flex: 1; color: var(--text); font-weight: 500; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .pan-ic { color: var(--muted); font-size: 9px; }
+    .pan-slider { height: 3px; background: #1e1e2e; border-radius: 2px; margin: 8px 0 4px; position: relative; }
+    .pan-slider::before { content: ''; position: absolute; left: 0; inset-block: 0; width: 68%; background: var(--accent); border-radius: 2px; }
+    .pan-slider::after  { content: ''; position: absolute; top: 50%; left: 68%; width: 9px; height: 9px; background: #fff; border-radius: 50%; transform: translate(-50%,-50%); box-shadow: 0 1px 4px rgba(0,0,0,.5); }
+    .pan-chips { display: flex; gap: 4px; flex-wrap: wrap; }
+    .pan-chip { padding: 2px 7px; border-radius: 4px; border: 1px solid #262640; color: var(--muted); font-family: var(--mono); font-size: 9px; }
+    .pan-chip.on { background: rgba(0,229,255,.09); border-color: rgba(0,229,255,.38); color: var(--accent); }
 
-    footer.site { padding: 0 0 40px; color: var(--muted); font-size: 13px; }
-    footer.site .links { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 12px; }
-    footer.site a { color: var(--muted); text-decoration: none; font-weight: 650; }
-    footer.site a:hover { color: var(--accent); }
-    a.inline { color: var(--accent); font-weight: 650; text-decoration-thickness: .08em; text-underline-offset: 3px; }
+    /* ── FEATURES ───────────────────────────── */
+    .section { padding: 80px 0; }
+    .sec-tag {
+      font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .12em;
+      color: var(--accent); margin-bottom: 12px;
+    }
+    h2.sec-title {
+      font-family: var(--display); font-weight: 800;
+      font-size: clamp(26px, 3vw, 38px); letter-spacing: -.022em; line-height: 1.12;
+      margin-bottom: 12px;
+    }
+    .sec-sub { color: var(--muted-2); max-width: 580px; font-size: 15px; margin-bottom: 36px; }
 
-    @media (max-width: 880px) {
-      .hero { grid-template-columns: 1fr; }
-      .stage { min-height: 400px; }
-      .grid3, .steps { grid-template-columns: 1fr; }
-      .top-nav { display: none; }
+    .feat-grid {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 12px;
+    }
+    .feat-card {
+      border: 1px solid var(--border); border-radius: 14px; padding: 26px;
+      background: var(--surface);
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .feat-card:hover {
+      border-color: var(--border-2); transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(0,0,0,.35);
+    }
+    .feat-card.wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+    .feat-card.tall { grid-row: span 2; }
+    .glyph {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: var(--accent-dim); border: 1px solid rgba(0,229,255,.18);
+      display: grid; place-items: center; color: var(--accent);
+      font-family: var(--mono); font-size: 14px; margin-bottom: 15px; font-weight: 700;
+    }
+    .feat-card h3 { font-family: var(--display); font-size: 15.5px; font-weight: 700; margin-bottom: 8px; }
+    .feat-card p  { color: var(--muted-2); font-size: 13.5px; line-height: 1.72; }
+
+    .blend-pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+    .bpill { padding: 4px 9px; border-radius: 5px; border: 1px solid var(--border-2); color: var(--muted-2); font-family: var(--mono); font-size: 11px; }
+    .bpill.hi { background: var(--accent-dim); border-color: rgba(0,229,255,.35); color: var(--accent); }
+
+    /* ── HOW IT WORKS ───────────────────────── */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; counter-reset: s; }
+    .step {
+      border: 1px solid var(--border); border-radius: 14px; padding: 26px;
+      background: var(--surface); counter-increment: s;
+      transition: border-color .2s, transform .2s;
+    }
+    .step:hover { border-color: var(--border-2); transform: translateY(-2px); }
+    .step-num {
+      font-family: var(--mono); font-size: 28px; font-weight: 700;
+      color: var(--accent); opacity: .5; margin-bottom: 14px; line-height: 1; display: block;
+    }
+    .step h3 { font-family: var(--display); font-size: 15.5px; font-weight: 700; margin-bottom: 8px; }
+    .step p  { color: var(--muted-2); font-size: 13.5px; line-height: 1.72; }
+
+    /* ── SPECS ──────────────────────────────── */
+    .spec-table {
+      width: 100%; border-collapse: collapse;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+    }
+    .spec-table th, .spec-table td { padding: 13px 18px; text-align: left; border-top: 1px solid var(--border); font-size: 14px; vertical-align: top; }
+    .spec-table thead th { background: var(--surface-2); border-top: 0; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; color: var(--muted); }
+    .spec-table tbody td:first-child { color: var(--text); font-weight: 600; white-space: nowrap; font-family: var(--mono); font-size: 12px; }
+    .spec-table td { color: var(--muted-2); }
+    code { font-family: var(--mono); font-size: 12px; color: var(--muted-2); }
+
+    /* ── FAQ ────────────────────────────────── */
+    .faq-list { display: grid; gap: 8px; }
+    details.q {
+      border: 1px solid var(--border); border-radius: 12px;
+      background: var(--surface); overflow: hidden;
+      transition: border-color .15s;
+    }
+    details.q[open] { border-color: var(--border-2); }
+    details.q summary {
+      list-style: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 16px 20px; font-weight: 600; font-size: 14.5px;
+      transition: background .14s;
+    }
+    details.q summary:hover { background: var(--surface-2); }
+    details.q summary::after { content: '+'; font-family: var(--mono); font-weight: 700; font-size: 18px; color: var(--accent); flex-shrink: 0; }
+    details.q[open] summary::after { content: '−'; }
+    details.q .a { padding: 0 20px 16px; color: var(--muted-2); font-size: 14px; line-height: 1.75; }
+    details.q .a p { margin-bottom: 8px; }
+    details.q .a p:last-child { margin-bottom: 0; }
+    a.il { color: var(--accent); font-weight: 600; text-underline-offset: 3px; text-decoration-thickness: .08em; }
+
+    /* ── PRIVACY BAND ───────────────────────── */
+    .priv {
+      border: 1px solid rgba(0,229,255,.2); border-radius: 16px; padding: 36px;
+      background: linear-gradient(135deg, rgba(0,229,255,.06) 0%, rgba(0,70,180,.04) 100%);
+      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+      margin-top: 72px;
+    }
+    .priv h2 { font-family: var(--display); font-size: 21px; font-weight: 800; margin-bottom: 8px; }
+    .priv p  { color: var(--muted-2); max-width: 580px; font-size: 14.5px; }
+
+    /* ── FOOTER ─────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--border); padding: 24px 0;
+    }
+    .footer-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .footer-links { display: flex; gap: 14px; }
+    .footer-links a { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; transition: color .14s; }
+    .footer-links a:hover { color: var(--accent); }
+    .footer-copy { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+    /* ── SCROLL REVEAL ──────────────────────── */
+    .rv { opacity: 0; transform: translateY(22px); transition: opacity .58s ease, transform .58s ease; }
+    .rv.visible { opacity: 1; transform: none; }
+    .d1 { transition-delay: .08s; }
+    .d2 { transition-delay: .16s; }
+    .d3 { transition-delay: .24s; }
+    .d4 { transition-delay: .32s; }
+
+    /* ── ANIMATIONS ─────────────────────────── */
+    @keyframes up {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: none; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media (max-width: 920px) {
+      .hero { grid-template-columns: 1fr; padding: 54px 0 62px; gap: 44px; }
+      .diff-wrap { order: -1; }
+      .panel { right: 0; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .feat-card.wide { grid-template-columns: 1fr; }
+      .feat-card.tall { grid-row: auto; }
+      .steps { grid-template-columns: 1fr; }
+      .site-nav { display: none; }
+    }
+    @media (max-width: 540px) {
+      .cta-row { flex-direction: column; }
+      .priv { flex-direction: column; }
     }
   </style>
 </head>
 <body>
-  <header class="site">
-    <a class="brand" href="./">
-      <img src="icons/icon48.png" alt="" width="32" height="32" />
-      <span>DiffPixel</span>
-    </a>
-    <nav class="top-nav" aria-label="Site">
-      <a href="#features" data-i18n-nav="features">Features</a>
-      <a href="#how" data-i18n-nav="how">How it works</a>
-      <a href="#faq" data-i18n-nav="faq">FAQ</a>
-      <a href="manual.html" data-i18n-nav="manual">Manual</a>
-      <a href="privacy.html" data-i18n-nav="privacy">Privacy</a>
-    </nav>
-    <nav class="lang-switch" aria-label="Language">
-      <button type="button" data-lang-button="en" aria-pressed="true">English</button>
-      <button type="button" data-lang-button="ja" aria-pressed="false">日本語</button>
-    </nav>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="./">
+        <img src="icons/icon48.png" alt="DiffPixel" width="26" height="26" />
+        DiffPixel
+      </a>
+      <nav class="site-nav" aria-label="Site">
+        <a href="#features"  data-nav="features">Features</a>
+        <a href="#how"       data-nav="how">How it works</a>
+        <a href="#faq"       data-nav="faq">FAQ</a>
+        <a href="manual.html" data-nav="manual">Manual</a>
+        <a href="privacy.html" data-nav="privacy">Privacy</a>
+      </nav>
+      <nav class="lang-switch" aria-label="Language">
+        <button type="button" data-lang-button="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang-button="ja" aria-pressed="false">JA</button>
+      </nav>
+    </div>
   </header>
 
   <main>
-    <!-- ===================== EN ===================== -->
-    <div data-lang-panel="en" class="active">
-      <section class="hero">
-        <div>
-          <p class="eyebrow">FREE CHROME EXTENSION · v1.0.4</p>
-          <h1>Pixel-perfect <span class="grad">overlay comparison</span>, right in your browser</h1>
-          <p class="lead">DiffPixel is a free Chrome extension that overlays local reference images — design mockups, screenshots — on any web page, so designers and developers can compare the design and the live implementation pixel by pixel.</p>
-          <div class="cta-row">
-            <a class="btn btn-primary" href="https://github.com/RitaStar1128/DiffPixel" rel="noopener">Get DiffPixel</a>
-            <a class="btn btn-ghost" href="manual.html">Read the manual</a>
-          </div>
-          <p class="hero-note">No account. No tracking. Images and settings never leave your device.</p>
-        </div>
-        <div class="stage" aria-hidden="true">
-          <div class="page-mock">
-            <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url"></span></div>
-            <div class="wire">
-              <div class="row w60"></div>
-              <div class="block"></div>
-              <div class="row w85"></div>
-              <div class="row w40"></div>
-              <div class="block"></div>
-            </div>
-            <div class="ghost-overlay">REFERENCE OVERLAY · 72%</div>
-          </div>
-          <div class="panel-mock">
-            <div class="ph"><img src="icons/icon32.png" alt="" /><strong>DiffPixel</strong><span>⛶ ✕</span></div>
-            <div class="sec">
-              <div class="label">LAYERS</div>
-              <div class="layer-row sel"><span class="thumb"></span><span class="nm">home-mockup.png</span><span class="ic">👁 🔒</span></div>
-              <div class="layer-row"><span class="thumb" style="opacity:.45"></span><span class="nm" style="color:var(--muted)">header-v2.png</span><span class="ic">👁</span></div>
-            </div>
-            <div class="sec">
-              <div class="label">OPACITY · 72%</div>
-              <div class="slider"></div>
-            </div>
-            <div class="sec">
-              <div class="label">BLEND</div>
-              <div class="chips"><span class="chip">Normal</span><span class="chip on">Difference</span><span class="chip">Multiply</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section class="section" id="features">
-        <h2>Everything you need for visual QA</h2>
-        <p class="sub">DiffPixel puts a full overlay toolkit in a floating panel on the page itself — no tab switching, no uploads, no setup.</p>
-        <div class="grid3">
-          <div class="card">
-            <div class="glyph">▤</div>
-            <h3>Multiple image layers</h3>
-            <p>Stack several reference images at once. Reorder, lock, hide, rename, and remove layers from the panel — add files by picker, drag &amp; drop, or paste.</p>
+    <!-- ══════════════════ ENGLISH ══════════════════ -->
+    <div data-lang-panel="en" class="active">
+
+      <div class="wrap">
+        <!-- HERO -->
+        <section class="hero">
+          <div class="hero-text">
+            <p class="tag"><span class="tag-dot"></span>FREE CHROME EXTENSION · v1.0.4</p>
+            <h1>
+              Pixel-perfect<br>
+              <span class="hl">overlay comparison</span><br>
+              <span class="dim">in your browser.</span>
+            </h1>
+            <p class="hero-lead">
+              DiffPixel is a free Chrome extension that overlays local reference images — design mockups, screenshots — on any web page, so designers and developers can compare the design and the live implementation pixel by pixel.
+            </p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="https://github.com/RitaStar1128/DiffPixel" rel="noopener">↓ Get DiffPixel</a>
+              <a class="btn btn-ghost"   href="manual.html">Read the manual</a>
+            </div>
+            <div class="badges">
+              <span class="badge">No account</span>
+              <span class="badge">No tracking</span>
+              <span class="badge">Local-only</span>
+            </div>
           </div>
-          <div class="card">
-            <div class="glyph">◑</div>
-            <h3>8 blend modes</h3>
-            <p>Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, and Exclusion. Difference mode makes every mismatched pixel stand out instantly.</p>
+
+          <div class="diff-wrap">
+            <div class="browser">
+              <div class="browser-bar">
+                <span class="b-dot"></span><span class="b-dot"></span><span class="b-dot"></span>
+                <span class="b-url">localhost:3000 / home</span>
+              </div>
+              <div class="browser-body">
+                <div class="wf wf-h"></div>
+                <div class="wf wf-s"></div>
+                <div class="wf wf-s2"></div>
+                <div class="wf wf-block"></div>
+                <div class="wf wf-r"></div>
+                <div class="wf wf-r2"></div>
+                <div class="wf wf-block" style="height:60px"></div>
+                <div class="wf wf-r3"></div>
+                <div class="wf wf-r2"></div>
+                <div class="overlay-ring">
+                  <span class="overlay-badge">design.png · 68%</span>
+                </div>
+                <div class="dpx"></div>
+                <div class="dpx"></div>
+                <div class="dpx"></div>
+                <div class="dpx"></div>
+                <div class="dpx"></div>
+                <div class="scan"></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="pan-head">
+                <img src="icons/icon32.png" alt="" />
+                <strong>DiffPixel</strong>
+                <span>⊡ ✕</span>
+              </div>
+              <div class="pan-sec">
+                <div class="pan-lbl">LAYERS</div>
+                <div class="pan-row sel">
+                  <span class="pan-thumb"></span>
+                  <span class="pan-nm">design.png</span>
+                  <span class="pan-ic">👁 🔒</span>
+                </div>
+                <div class="pan-row">
+                  <span class="pan-thumb" style="opacity:.4"></span>
+                  <span class="pan-nm" style="color:var(--muted)">header-v3.png</span>
+                  <span class="pan-ic">👁</span>
+                </div>
+              </div>
+              <div class="pan-sec">
+                <div class="pan-lbl">OPACITY · 68%</div>
+                <div class="pan-slider"></div>
+              </div>
+              <div class="pan-sec">
+                <div class="pan-lbl">BLEND</div>
+                <div class="pan-chips">
+                  <span class="pan-chip">Normal</span>
+                  <span class="pan-chip on">Difference</span>
+                  <span class="pan-chip">Multiply</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="card">
+        </section>
+      </div>
+
+      <!-- FEATURES -->
+      <div class="wrap section" id="features">
+        <div class="rv">
+          <p class="sec-tag">FEATURES</p>
+          <h2 class="sec-title">Everything you need<br>for visual QA</h2>
+          <p class="sec-sub">DiffPixel puts a full overlay toolkit in a floating panel on the page — no tab switching, no uploads, no server-side processing.</p>
+        </div>
+        <div class="feat-grid">
+          <div class="feat-card wide rv d1">
+            <div>
+              <div class="glyph">▤</div>
+              <h3>Multiple image layers</h3>
+              <p>Stack several reference images at once. Reorder, lock, hide, rename, and remove layers from the panel. Add files by picker, drag &amp; drop, or paste from clipboard.</p>
+            </div>
+            <div>
+              <div class="glyph">◑</div>
+              <h3>8 blend modes</h3>
+              <p>Every mode you need for visual comparison in one place. Difference mode makes every mismatched pixel glow.</p>
+              <div class="blend-pills">
+                <span class="bpill">Normal</span>
+                <span class="bpill">Invert</span>
+                <span class="bpill hi">Difference</span>
+                <span class="bpill">Multiply</span>
+                <span class="bpill">Screen</span>
+                <span class="bpill">Overlay</span>
+                <span class="bpill">Hard Light</span>
+                <span class="bpill hi">Exclusion</span>
+              </div>
+            </div>
+          </div>
+          <div class="feat-card rv d1">
             <div class="glyph">✛</div>
             <h3>Pixel-precise controls</h3>
             <p>Tune opacity, X/Y position, and scale numerically or with arrow keys. Reset, Center, and Fit-Width buttons align a layer in one click.</p>
           </div>
-          <div class="card">
+          <div class="feat-card rv d2">
             <div class="glyph">▦</div>
             <h3>Grid overlay</h3>
-            <p>Toggle a configurable pixel grid to verify spacing, alignment, and rhythm against your design system.</p>
+            <p>Toggle a configurable pixel grid to verify spacing, alignment, and visual rhythm against your design system.</p>
           </div>
-          <div class="card">
+          <div class="feat-card rv d2">
             <div class="glyph">⌨</div>
             <h3>Keyboard shortcuts</h3>
-            <p>Nudge layers by 1px or 10px, switch blend modes, adjust opacity and scale, toggle the grid — all without leaving the keyboard.</p>
+            <p>Nudge layers by 1px or 10px, cycle blend modes, adjust opacity and scale — all without touching the mouse.</p>
           </div>
-          <div class="card">
+          <div class="feat-card rv d3">
             <div class="glyph">☾</div>
             <h3>Themes &amp; languages</h3>
-            <p>Dark and light panel themes, English and Japanese UI, and per-site visibility that survives page reloads.</p>
+            <p>Dark and light panel themes. English and Japanese UI. Per-site visibility that survives page reloads.</p>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="section" id="how">
-        <h2>How it works</h2>
-        <p class="sub">From install to pixel diff in under a minute.</p>
+      <!-- HOW IT WORKS -->
+      <div class="wrap section" id="how">
+        <div class="rv">
+          <p class="sec-tag">HOW IT WORKS</p>
+          <h2 class="sec-title">From install to pixel diff<br>in under a minute.</h2>
+          <p class="sec-sub">Three steps is all it takes.</p>
+        </div>
         <div class="steps">
-          <div class="step">
+          <div class="step rv d1">
+            <span class="step-num">01</span>
             <h3>Open the panel</h3>
             <p>Open the page you want to inspect and click the DiffPixel icon in Chrome. The floating panel appears inside the page.</p>
           </div>
-          <div class="step">
+          <div class="step rv d2">
+            <span class="step-num">02</span>
             <h3>Add a reference image</h3>
             <p>Click <strong>Add</strong>, drag &amp; drop an image onto the panel, or paste one from the clipboard.</p>
           </div>
-          <div class="step">
+          <div class="step rv d3">
+            <span class="step-num">03</span>
             <h3>Compare &amp; fix</h3>
             <p>Align with X/Y and scale, lower the opacity or switch to <strong>Difference</strong>, and spot every mismatch. Your setup is restored after reloads.</p>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="section" id="specs">
-        <h2>At a glance</h2>
-        <p class="sub">Key facts about DiffPixel.</p>
-        <table class="spec">
-          <thead><tr><th scope="col">Item</th><th scope="col">Details</th></tr></thead>
+      <!-- SPECS -->
+      <div class="wrap section" id="specs">
+        <div class="rv">
+          <p class="sec-tag">AT A GLANCE</p>
+          <h2 class="sec-title">Key facts</h2>
+          <p class="sec-sub">Everything you need to know before you install.</p>
+        </div>
+        <table class="spec-table rv">
+          <thead><tr><th>Item</th><th>Details</th></tr></thead>
           <tbody>
             <tr><td>Price</td><td>Free. No account or sign-up required.</td></tr>
             <tr><td>Platform</td><td>Google Chrome extension (Manifest V3).</td></tr>
             <tr><td>Blend modes</td><td>Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, Exclusion.</td></tr>
             <tr><td>Layer controls</td><td>Opacity, X/Y position, scale, lock, show/hide, reorder, rename.</td></tr>
             <tr><td>Extras</td><td>Pixel grid, dark/light themes, English &amp; Japanese, keyboard shortcuts.</td></tr>
-            <tr><td>Privacy</td><td>No data collection. No analytics, external APIs, or remote code. Everything is stored locally in Chrome storage.</td></tr>
-            <tr><td>Supported pages</td><td>HTTP/HTTPS pages; <code>file://</code> pages with the file-URL permission enabled. Chrome internal pages are not supported by browser design.</td></tr>
+            <tr><td>Privacy</td><td>No data collection. No analytics, external APIs, or remote code. Everything stored locally in Chrome storage.</td></tr>
+            <tr><td>Supported pages</td><td>HTTP/HTTPS pages. <code>file://</code> pages with the file-URL permission enabled. Chrome internal pages are not supported.</td></tr>
           </tbody>
         </table>
-      </section>
+      </div>
 
-      <section class="section" id="faq">
-        <h2>Frequently asked questions</h2>
-        <p class="sub">Quick answers about DiffPixel.</p>
-        <details class="faq" open>
-          <summary>What is DiffPixel?</summary>
-          <div class="a"><p>DiffPixel is a free Chrome extension for designers and developers. It overlays local reference images (design mockups, screenshots) on the current web page in a floating panel, so you can compare the design and the live implementation pixel by pixel using layers, blend modes, opacity, position, scale, and a grid.</p></div>
-        </details>
-        <details class="faq">
-          <summary>Is DiffPixel free?</summary>
-          <div class="a"><p>Yes. DiffPixel is completely free. No account, sign-up, or payment is required.</p></div>
-        </details>
-        <details class="faq">
-          <summary>Does DiffPixel upload my images or collect data?</summary>
-          <div class="a"><p>No. DiffPixel does not collect, transmit, sell, or share any data. Reference images and settings are stored only in Chrome storage on your device, and the extension uses no analytics, external APIs, or remote code. See the <a class="inline" href="privacy.html">privacy policy</a> for details.</p></div>
-        </details>
-        <details class="faq">
-          <summary>Which blend modes does DiffPixel support?</summary>
-          <div class="a"><p>DiffPixel supports Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, and Exclusion. Difference and Exclusion are especially useful for spotting pixel-level mismatches between a design and the live page.</p></div>
-        </details>
-        <details class="faq">
-          <summary>Which websites does DiffPixel work on?</summary>
-          <div class="a"><p>DiffPixel works on regular HTTP and HTTPS pages. Local <code>file://</code> pages work after enabling <strong>Allow access to file URLs</strong> on the extension details page. Chrome internal pages and some restricted pages cannot run extensions due to browser limitations.</p></div>
-        </details>
-        <details class="faq">
-          <summary>How do I compare a design with a live page using DiffPixel?</summary>
-          <div class="a"><p>Open the page, click the DiffPixel icon in Chrome, then add a reference image via the Add button, drag and drop, or paste. Align it with the X/Y and scale controls, lower the opacity or switch to the Difference blend mode, and inspect mismatches. Settings are restored automatically after reloads. The <a class="inline" href="manual.html">user manual</a> covers every control and shortcut.</p></div>
-        </details>
-      </section>
-
-      <section class="privacy-band">
-        <div>
-          <h2>Private by design</h2>
-          <p>DiffPixel ships with zero analytics, zero external requests, and zero remote code. Your screenshots and mockups are yours — they stay in local Chrome storage and never touch a server.</p>
+      <!-- FAQ -->
+      <div class="wrap section" id="faq">
+        <div class="rv">
+          <p class="sec-tag">FAQ</p>
+          <h2 class="sec-title">Frequently asked questions</h2>
+          <p class="sec-sub">Quick answers about DiffPixel.</p>
         </div>
-        <a class="btn btn-ghost" href="privacy.html">Privacy policy</a>
-      </section>
-    </div>
+        <div class="faq-list">
+          <details class="q rv" open>
+            <summary>What is DiffPixel?</summary>
+            <div class="a"><p>DiffPixel is a free Chrome extension for designers and developers. It overlays local reference images (design mockups, screenshots) on the current web page in a floating panel, so you can compare the design and the live implementation pixel by pixel using layers, blend modes, opacity, position, scale, and a grid.</p></div>
+          </details>
+          <details class="q rv d1">
+            <summary>Is DiffPixel free?</summary>
+            <div class="a"><p>Yes. DiffPixel is completely free. No account, sign-up, or payment is required.</p></div>
+          </details>
+          <details class="q rv d1">
+            <summary>Does DiffPixel upload my images or collect data?</summary>
+            <div class="a"><p>No. DiffPixel does not collect, transmit, sell, or share any data. Reference images and settings are stored only in Chrome storage on your device. The extension uses no analytics, external APIs, or remote code. See the <a class="il" href="privacy.html">privacy policy</a> for full details.</p></div>
+          </details>
+          <details class="q rv d2">
+            <summary>Which blend modes does DiffPixel support?</summary>
+            <div class="a"><p>DiffPixel supports Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, and Exclusion. Difference and Exclusion are especially useful for spotting pixel-level mismatches between a design and the live page.</p></div>
+          </details>
+          <details class="q rv d2">
+            <summary>Which websites does DiffPixel work on?</summary>
+            <div class="a"><p>DiffPixel works on regular HTTP and HTTPS pages. Local <code>file://</code> pages work after enabling <strong>Allow access to file URLs</strong> on the extension details page in Chrome. Chrome internal pages and some restricted pages cannot run extensions due to browser limitations.</p></div>
+          </details>
+          <details class="q rv d3">
+            <summary>How do I compare a design with a live page using DiffPixel?</summary>
+            <div class="a"><p>Open the page, click the DiffPixel icon in Chrome, then add a reference image via the Add button, drag and drop, or paste. Align with the X/Y and scale controls, lower the opacity or switch to the Difference blend mode, and inspect mismatches. Settings are restored automatically after reloads. The <a class="il" href="manual.html">user manual</a> covers every control and shortcut in detail.</p></div>
+          </details>
+        </div>
 
-    <!-- ===================== JA ===================== -->
+        <div class="priv rv">
+          <div>
+            <h2>Private by design</h2>
+            <p>DiffPixel ships with zero analytics, zero external requests, and zero remote code. Your screenshots and mockups are yours — they stay in local Chrome storage and never touch a server.</p>
+          </div>
+          <a class="btn btn-ghost" href="privacy.html">Privacy policy →</a>
+        </div>
+      </div>
+
+    </div><!-- /EN -->
+
+
+    <!-- ══════════════════ JAPANESE ══════════════════ -->
     <div data-lang-panel="ja" lang="ja">
-      <section class="hero">
-        <div>
-          <p class="eyebrow">無料の CHROME 拡張機能 · v1.0.4</p>
-          <h1>ブラウザ上で<span class="grad">ピクセル単位の重ね合わせ比較</span></h1>
-          <p class="lead">DiffPixel は、デザインカンプやスクリーンショットなどのローカル参照画像を任意のWebページに重ねて表示できる無料の Chrome 拡張機能です。デザイナーとエンジニアが、デザインと実装をピクセル単位で比較できます。</p>
-          <div class="cta-row">
-            <a class="btn btn-primary" href="https://github.com/RitaStar1128/DiffPixel" rel="noopener">DiffPixel を入手</a>
-            <a class="btn btn-ghost" href="manual.html#ja">マニュアルを読む</a>
-          </div>
-          <p class="hero-note">アカウント不要・トラッキングなし。画像と設定が端末の外に出ることはありません。</p>
-        </div>
-        <div class="stage" aria-hidden="true">
-          <div class="page-mock">
-            <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url"></span></div>
-            <div class="wire">
-              <div class="row w60"></div>
-              <div class="block"></div>
-              <div class="row w85"></div>
-              <div class="row w40"></div>
-              <div class="block"></div>
-            </div>
-            <div class="ghost-overlay">参照画像オーバーレイ · 72%</div>
-          </div>
-          <div class="panel-mock">
-            <div class="ph"><img src="icons/icon32.png" alt="" /><strong>DiffPixel</strong><span>⛶ ✕</span></div>
-            <div class="sec">
-              <div class="label">レイヤー</div>
-              <div class="layer-row sel"><span class="thumb"></span><span class="nm">home-mockup.png</span><span class="ic">👁 🔒</span></div>
-              <div class="layer-row"><span class="thumb" style="opacity:.45"></span><span class="nm" style="color:var(--muted)">header-v2.png</span><span class="ic">👁</span></div>
-            </div>
-            <div class="sec">
-              <div class="label">不透明度 · 72%</div>
-              <div class="slider"></div>
-            </div>
-            <div class="sec">
-              <div class="label">合成モード</div>
-              <div class="chips"><span class="chip">通常</span><span class="chip on">差分</span><span class="chip">乗算</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section class="section" id="ja-features">
-        <h2>ビジュアルQAに必要な機能をすべて</h2>
-        <p class="sub">DiffPixel は、ページ内のフローティングパネルにオーバーレイ比較のツール一式をまとめています。タブの切り替えも、アップロードも、セットアップも不要です。</p>
-        <div class="grid3">
-          <div class="card">
-            <div class="glyph">▤</div>
-            <h3>複数の画像レイヤー</h3>
-            <p>複数の参照画像を同時に重ねられます。並び替え、固定、表示切替、名前変更、削除に対応。ファイル選択、ドラッグ&amp;ドロップ、貼り付けで追加できます。</p>
+      <div class="wrap">
+        <section class="hero">
+          <div class="hero-text">
+            <p class="tag"><span class="tag-dot"></span>無料 CHROME 拡張機能 · v1.0.4</p>
+            <h1>
+              ブラウザ上で<br>
+              <span class="hl">ピクセル単位の</span><br>
+              <span class="dim">重ね合わせ比較。</span>
+            </h1>
+            <p class="hero-lead">
+              DiffPixel は、デザインカンプやスクリーンショットなどのローカル参照画像を任意のWebページに重ねて表示できる無料の Chrome 拡張機能です。デザイナーとエンジニアが、デザインと実装をピクセル単位で比較できます。
+            </p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="https://github.com/RitaStar1128/DiffPixel" rel="noopener">↓ DiffPixel を入手</a>
+              <a class="btn btn-ghost"   href="manual.html#ja">マニュアルを読む</a>
+            </div>
+            <div class="badges">
+              <span class="badge">アカウント不要</span>
+              <span class="badge">トラッキングなし</span>
+              <span class="badge">ローカル保存のみ</span>
+            </div>
           </div>
-          <div class="card">
-            <div class="glyph">◑</div>
-            <h3>8種類の合成モード</h3>
-            <p>通常、反転、差分、乗算、スクリーン、オーバーレイ、ハードライト、除外。差分モードなら、ずれたピクセルが一目で分かります。</p>
+
+          <div class="diff-wrap">
+            <div class="browser">
+              <div class="browser-bar">
+                <span class="b-dot"></span><span class="b-dot"></span><span class="b-dot"></span>
+                <span class="b-url">localhost:3000 / home</span>
+              </div>
+              <div class="browser-body">
+                <div class="wf wf-h"></div>
+                <div class="wf wf-s"></div>
+                <div class="wf wf-s2"></div>
+                <div class="wf wf-block"></div>
+                <div class="wf wf-r"></div>
+                <div class="wf wf-r2"></div>
+                <div class="wf wf-block" style="height:60px"></div>
+                <div class="wf wf-r3"></div>
+                <div class="wf wf-r2"></div>
+                <div class="overlay-ring">
+                  <span class="overlay-badge">design.png · 68%</span>
+                </div>
+                <div class="dpx"></div>
+                <div class="dpx"></div>
+                <div class="dpx"></div>
+                <div class="dpx"></div>
+                <div class="dpx"></div>
+                <div class="scan"></div>
+              </div>
+            </div>
+            <div class="panel">
+              <div class="pan-head">
+                <img src="icons/icon32.png" alt="" />
+                <strong>DiffPixel</strong>
+                <span>⊡ ✕</span>
+              </div>
+              <div class="pan-sec">
+                <div class="pan-lbl">レイヤー</div>
+                <div class="pan-row sel">
+                  <span class="pan-thumb"></span>
+                  <span class="pan-nm">design.png</span>
+                  <span class="pan-ic">👁 🔒</span>
+                </div>
+                <div class="pan-row">
+                  <span class="pan-thumb" style="opacity:.4"></span>
+                  <span class="pan-nm" style="color:var(--muted)">header-v3.png</span>
+                  <span class="pan-ic">👁</span>
+                </div>
+              </div>
+              <div class="pan-sec">
+                <div class="pan-lbl">不透明度 · 68%</div>
+                <div class="pan-slider"></div>
+              </div>
+              <div class="pan-sec">
+                <div class="pan-lbl">合成モード</div>
+                <div class="pan-chips">
+                  <span class="pan-chip">通常</span>
+                  <span class="pan-chip on">差分</span>
+                  <span class="pan-chip">乗算</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="card">
+        </section>
+      </div>
+
+      <div class="wrap section" id="ja-features">
+        <div class="rv">
+          <p class="sec-tag">機能</p>
+          <h2 class="sec-title">ビジュアルQAに必要な<br>機能をすべて</h2>
+          <p class="sec-sub">DiffPixel はページ内のフローティングパネルにオーバーレイ比較のツール一式をまとめています。タブの切り替えも、アップロードも、サーバーも不要です。</p>
+        </div>
+        <div class="feat-grid">
+          <div class="feat-card wide rv d1">
+            <div>
+              <div class="glyph">▤</div>
+              <h3>複数の画像レイヤー</h3>
+              <p>複数の参照画像を同時に重ねられます。並び替え、固定、表示切替、名前変更、削除に対応。ファイル選択、ドラッグ&amp;ドロップ、貼り付けで追加できます。</p>
+            </div>
+            <div>
+              <div class="glyph">◑</div>
+              <h3>8種類の合成モード</h3>
+              <p>視覚比較に必要なすべてのモードを搭載。差分モードなら、ずれたピクセルが一目で分かります。</p>
+              <div class="blend-pills">
+                <span class="bpill">通常</span>
+                <span class="bpill">反転</span>
+                <span class="bpill hi">差分</span>
+                <span class="bpill">乗算</span>
+                <span class="bpill">スクリーン</span>
+                <span class="bpill">オーバーレイ</span>
+                <span class="bpill">ハードライト</span>
+                <span class="bpill hi">除外</span>
+              </div>
+            </div>
+          </div>
+          <div class="feat-card rv d1">
             <div class="glyph">✛</div>
             <h3>ピクセル単位の調整</h3>
             <p>不透明度、X/Y位置、スケールを数値や矢印キーで微調整。リセット・中央・幅合わせボタンでワンクリック整列。</p>
           </div>
-          <div class="card">
+          <div class="feat-card rv d2">
             <div class="glyph">▦</div>
             <h3>グリッドオーバーレイ</h3>
             <p>ピクセル数を指定できるグリッドで、余白・整列・リズムをデザインシステムに沿って検証できます。</p>
           </div>
-          <div class="card">
+          <div class="feat-card rv d2">
             <div class="glyph">⌨</div>
             <h3>キーボードショートカット</h3>
             <p>1px/10px移動、合成モード切替、不透明度・スケール調整、グリッド切替まで、キーボードだけで操作できます。</p>
           </div>
-          <div class="card">
+          <div class="feat-card rv d3">
             <div class="glyph">☾</div>
             <h3>テーマと言語</h3>
-            <p>ダーク/ライトテーマ、英語/日本語UI、リロード後も維持されるサイト単位の表示設定に対応しています。</p>
+            <p>ダーク/ライトテーマ、英語/日本語UI、リロード後も維持されるサイト単位の表示設定に対応。</p>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="section" id="ja-how">
-        <h2>使い方</h2>
-        <p class="sub">インストールからピクセル比較まで1分以内。</p>
+      <div class="wrap section" id="ja-how">
+        <div class="rv">
+          <p class="sec-tag">使い方</p>
+          <h2 class="sec-title">インストールからピクセル比較まで<br>1分以内。</h2>
+          <p class="sec-sub">たった3ステップで始められます。</p>
+        </div>
         <div class="steps">
-          <div class="step">
+          <div class="step rv d1">
+            <span class="step-num">01</span>
             <h3>パネルを開く</h3>
             <p>確認したいページを開き、Chrome の DiffPixel アイコンをクリックします。ページ内にフローティングパネルが表示されます。</p>
           </div>
-          <div class="step">
+          <div class="step rv d2">
+            <span class="step-num">02</span>
             <h3>参照画像を追加</h3>
             <p><strong>追加</strong>ボタン、パネルへのドラッグ&amp;ドロップ、またはクリップボードからの貼り付けで画像を追加します。</p>
           </div>
-          <div class="step">
+          <div class="step rv d3">
+            <span class="step-num">03</span>
             <h3>比較して修正</h3>
             <p>X/Yとスケールで位置を合わせ、不透明度を下げるか<strong>差分</strong>モードに切り替えて、ずれを確認します。設定はリロード後も復元されます。</p>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section class="section" id="ja-specs">
-        <h2>仕様一覧</h2>
-        <p class="sub">DiffPixel の基本情報。</p>
-        <table class="spec">
-          <thead><tr><th scope="col">項目</th><th scope="col">内容</th></tr></thead>
+      <div class="wrap section" id="ja-specs">
+        <div class="rv">
+          <p class="sec-tag">仕様一覧</p>
+          <h2 class="sec-title">基本情報</h2>
+          <p class="sec-sub">インストール前に確認しておきたいこと。</p>
+        </div>
+        <table class="spec-table rv">
+          <thead><tr><th>項目</th><th>内容</th></tr></thead>
           <tbody>
             <tr><td>価格</td><td>無料。アカウント登録は不要です。</td></tr>
             <tr><td>プラットフォーム</td><td>Google Chrome 拡張機能(Manifest V3)。</td></tr>
@@ -583,85 +974,105 @@
             <tr><td>レイヤー操作</td><td>不透明度、X/Y位置、スケール、固定、表示/非表示、並び替え、名前変更。</td></tr>
             <tr><td>その他の機能</td><td>ピクセルグリッド、ダーク/ライトテーマ、英語・日本語、キーボードショートカット。</td></tr>
             <tr><td>プライバシー</td><td>データ収集なし。分析ツール、外部API、リモートコードを一切使用せず、すべて Chrome ストレージにローカル保存されます。</td></tr>
-            <tr><td>対応ページ</td><td>HTTP/HTTPSページ。<code>file://</code> ページはファイルURLアクセス許可で利用可能。Chrome 内部ページはブラウザの仕様上、非対応です。</td></tr>
+            <tr><td>対応ページ</td><td>HTTP/HTTPSページ。<code>file://</code> ページはファイルURLアクセス許可で利用可能。Chrome 内部ページは非対応です。</td></tr>
           </tbody>
         </table>
-      </section>
+      </div>
 
-      <section class="section" id="ja-faq">
-        <h2>よくある質問</h2>
-        <p class="sub">DiffPixel についての簡単なQ&amp;A。</p>
-        <details class="faq" open>
-          <summary>DiffPixel とは何ですか?</summary>
-          <div class="a"><p>DiffPixel は、デザイナーと開発者向けの無料 Chrome 拡張機能です。デザインカンプやスクリーンショットなどのローカル参照画像を、ページ内のフローティングパネルから現在のWebページに重ねて表示し、レイヤー、合成モード、不透明度、位置、スケール、グリッドを使ってデザインと実装をピクセル単位で比較できます。</p></div>
-        </details>
-        <details class="faq">
-          <summary>DiffPixel は無料ですか?</summary>
-          <div class="a"><p>はい、完全に無料です。アカウント登録や支払いは不要です。</p></div>
-        </details>
-        <details class="faq">
-          <summary>画像のアップロードやデータ収集はありますか?</summary>
-          <div class="a"><p>ありません。DiffPixel はいかなるデータも収集・送信・販売・共有しません。参照画像と設定は端末内の Chrome ストレージにのみ保存され、分析ツール、外部API、リモートコードも使用していません。詳細は<a class="inline" href="privacy.html#ja">プライバシーポリシー</a>をご覧ください。</p></div>
-        </details>
-        <details class="faq">
-          <summary>対応している合成モードは?</summary>
-          <div class="a"><p>通常、反転、差分、乗算、スクリーン、オーバーレイ、ハードライト、除外に対応しています。差分と除外は、デザインと実装のピクセル単位のずれを発見するのに特に有効です。</p></div>
-        </details>
-        <details class="faq">
-          <summary>どのWebサイトで使えますか?</summary>
-          <div class="a"><p>通常の HTTP/HTTPS ページで動作します。ローカルの <code>file://</code> ページは、拡張機能の詳細ページで<strong>ファイルのURLへのアクセスを許可する</strong>を有効にすると利用できます。Chrome 内部ページなどはブラウザの制限により拡張機能を実行できません。</p></div>
-        </details>
-        <details class="faq">
-          <summary>デザインと実装ページを比較する手順は?</summary>
-          <div class="a"><p>ページを開いて Chrome の DiffPixel アイコンをクリックし、追加ボタン・ドラッグ&amp;ドロップ・貼り付けのいずれかで参照画像を追加します。X/Yとスケールで位置を合わせ、不透明度を下げるか差分モードに切り替えて、ずれを確認してください。設定はリロード後に自動復元されます。詳しくは<a class="inline" href="manual.html#ja">操作マニュアル</a>をご覧ください。</p></div>
-        </details>
-      </section>
-
-      <section class="privacy-band">
-        <div>
-          <h2>プライバシー第一の設計</h2>
-          <p>DiffPixel には、分析ツールも、外部リクエストも、リモートコードもありません。スクリーンショットやカンプはあなたのもの — Chrome のローカルストレージに保存され、サーバーに送られることはありません。</p>
+      <div class="wrap section" id="ja-faq">
+        <div class="rv">
+          <p class="sec-tag">よくある質問</p>
+          <h2 class="sec-title">FAQ</h2>
+          <p class="sec-sub">DiffPixel についての簡単なQ&amp;A。</p>
         </div>
-        <a class="btn btn-ghost" href="privacy.html#ja">プライバシーポリシー</a>
-      </section>
-    </div>
+        <div class="faq-list">
+          <details class="q rv" open>
+            <summary>DiffPixel とは何ですか?</summary>
+            <div class="a"><p>DiffPixel は、デザイナーと開発者向けの無料 Chrome 拡張機能です。デザインカンプやスクリーンショットなどのローカル参照画像を、ページ内のフローティングパネルから現在のWebページに重ねて表示し、レイヤー、合成モード、不透明度、位置、スケール、グリッドを使ってデザインと実装をピクセル単位で比較できます。</p></div>
+          </details>
+          <details class="q rv d1">
+            <summary>DiffPixel は無料ですか?</summary>
+            <div class="a"><p>はい、完全に無料です。アカウント登録や支払いは不要です。</p></div>
+          </details>
+          <details class="q rv d1">
+            <summary>画像のアップロードやデータ収集はありますか?</summary>
+            <div class="a"><p>ありません。DiffPixel はいかなるデータも収集・送信・販売・共有しません。参照画像と設定は端末内の Chrome ストレージにのみ保存され、分析ツール、外部API、リモートコードも使用していません。詳細は<a class="il" href="privacy.html#ja">プライバシーポリシー</a>をご覧ください。</p></div>
+          </details>
+          <details class="q rv d2">
+            <summary>対応している合成モードは?</summary>
+            <div class="a"><p>通常、反転、差分、乗算、スクリーン、オーバーレイ、ハードライト、除外に対応しています。差分と除外は、デザインと実装のピクセル単位のずれを発見するのに特に有効です。</p></div>
+          </details>
+          <details class="q rv d2">
+            <summary>どのWebサイトで使えますか?</summary>
+            <div class="a"><p>通常の HTTP/HTTPS ページで動作します。ローカルの <code>file://</code> ページは、拡張機能の詳細ページで<strong>ファイルのURLへのアクセスを許可する</strong>を有効にすると利用できます。Chrome 内部ページなどはブラウザの制限により拡張機能を実行できません。</p></div>
+          </details>
+          <details class="q rv d3">
+            <summary>デザインと実装ページを比較する手順は?</summary>
+            <div class="a"><p>ページを開いて Chrome の DiffPixel アイコンをクリックし、追加ボタン・ドラッグ&amp;ドロップ・貼り付けのいずれかで参照画像を追加します。X/Yとスケールで位置を合わせ、不透明度を下げるか差分モードに切り替えて、ずれを確認してください。設定はリロード後に自動復元されます。詳しくは<a class="il" href="manual.html#ja">操作マニュアル</a>をご覧ください。</p></div>
+          </details>
+        </div>
+
+        <div class="priv rv">
+          <div>
+            <h2>プライバシー第一の設計</h2>
+            <p>DiffPixel には、分析ツールも、外部リクエストも、リモートコードもありません。スクリーンショットやカンプはあなたのもの — Chrome のローカルストレージに保存され、サーバーに送られることはありません。</p>
+          </div>
+          <a class="btn btn-ghost" href="privacy.html#ja">プライバシーポリシー →</a>
+        </div>
+      </div>
+
+    </div><!-- /JA -->
+
   </main>
 
-  <footer class="site">
-    <div class="links">
-      <a href="manual.html" data-i18n-nav="manual">Manual</a>
-      <a href="privacy.html" data-i18n-nav="privacy">Privacy Policy</a>
-      <a href="https://github.com/RitaStar1128/DiffPixel" rel="noopener">GitHub</a>
+  <footer class="site-footer">
+    <div class="wrap footer-in">
+      <div class="footer-links">
+        <a href="manual.html"  data-nav-f="manual">Manual</a>
+        <a href="privacy.html" data-nav-f="privacy">Privacy Policy</a>
+        <a href="https://github.com/RitaStar1128/DiffPixel" rel="noopener">GitHub</a>
+      </div>
+      <span class="footer-copy">© 2026 DiffPixel</span>
     </div>
-    <p>© 2026 DiffPixel</p>
   </footer>
 
   <script>
-    const buttons = [...document.querySelectorAll('[data-lang-button]')];
+    /* ─── Language switch ─── */
+    const btns   = [...document.querySelectorAll('[data-lang-button]')];
     const panels = [...document.querySelectorAll('[data-lang-panel]')];
     const navLabels = {
-      en: { features: 'Features', how: 'How it works', faq: 'FAQ', manual: 'Manual', privacy: 'Privacy' },
-      ja: { features: '機能', how: '使い方', faq: 'FAQ', manual: 'マニュアル', privacy: 'プライバシー' }
+      en: { features:'Features', how:'How it works', faq:'FAQ', manual:'Manual', privacy:'Privacy' },
+      ja: { features:'機能', how:'使い方', faq:'FAQ', manual:'マニュアル', privacy:'プライバシー' }
+    };
+    const footerLabels = {
+      en: { manual:'Manual', privacy:'Privacy Policy' },
+      ja: { manual:'マニュアル', privacy:'プライバシーポリシー' }
     };
     function setLang(lang) {
       document.documentElement.lang = lang;
-      buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.langButton === lang)));
-      panels.forEach(panel => panel.classList.toggle('active', panel.dataset.langPanel === lang));
-      document.querySelectorAll('[data-i18n-nav]').forEach(a => {
-        const key = a.dataset.i18nNav;
-        if (navLabels[lang][key]) a.textContent = navLabels[lang][key];
-        if (a.hash && (key === 'features' || key === 'how' || key === 'faq')) {
-          a.href = lang === 'ja' ? `#ja-${key}` : `#${key}`;
-        }
+      btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.langButton === lang)));
+      panels.forEach(p => p.classList.toggle('active', p.dataset.langPanel === lang));
+      document.querySelectorAll('[data-nav]').forEach(a => {
+        const k = a.dataset.nav;
+        if (navLabels[lang][k]) a.textContent = navLabels[lang][k];
       });
-      history.replaceState(null, '', `#${lang}`);
+      document.querySelectorAll('[data-nav-f]').forEach(a => {
+        const k = a.dataset.navF;
+        if (footerLabels[lang] && footerLabels[lang][k]) a.textContent = footerLabels[lang][k];
+      });
+      history.replaceState(null, '', '#' + lang);
     }
-    buttons.forEach(button => button.addEventListener('click', () => setLang(button.dataset.langButton)));
-    const hashLang = location.hash.replace('#', '');
-    const initial = hashLang === 'en' || hashLang === 'ja'
-      ? hashLang
-      : (navigator.language.toLowerCase().startsWith('ja') ? 'ja' : 'en');
-    setLang(initial);
+    btns.forEach(b => b.addEventListener('click', () => setLang(b.dataset.langButton)));
+    const h = location.hash.replace('#','');
+    const init = (h === 'en' || h === 'ja') ? h : (navigator.language.toLowerCase().startsWith('ja') ? 'ja' : 'en');
+    setLang(init);
+
+    /* ─── Scroll reveal ─── */
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
   </script>
+
 </body>
 </html>
