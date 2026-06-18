@@ -28,9 +28,9 @@ DiffPixel runs locally in Chrome.
 
 Uploaded images and overlay settings are stored on the user's device through Chrome storage. The extension does not send uploaded images, page data, or settings to an external server.
 
-The public privacy policy is available at [https://ritastar1128.github.io/DiffPixel/privacy.html](https://ritastar1128.github.io/DiffPixel/privacy.html) with English and Japanese switching on the same page. A plain-text copy is also available in [PRIVACY.md](PRIVACY.md).
+The public privacy policy is available at [https://ritastella1128.github.io/DiffPixel/privacy.html](https://ritastella1128.github.io/DiffPixel/privacy.html) with English and Japanese switching on the same page. A plain-text copy is also available in [PRIVACY.md](PRIVACY.md).
 
-The public user manual is available at [https://ritastar1128.github.io/DiffPixel/manual.html](https://ritastar1128.github.io/DiffPixel/manual.html).
+The public user manual is available at [https://ritastella1128.github.io/DiffPixel/manual.html](https://ritastella1128.github.io/DiffPixel/manual.html).
 
 ## Installation For Development
 
@@ -75,6 +75,11 @@ DiffPixel uses a small set of Chrome extension permissions:
 - `host_permissions` for `http://*/*` and `https://*/*` to inject the local overlay into user-selected websites and restore DiffPixel after reloads on enabled sites.
 
 ## Release Log
+
+### 1.0.5
+
+- Updated GitHub Pages, repository, and in-extension manual links for the GitHub username change to `RitaStella1128`.
+- Regenerated the Chrome Web Store release ZIP as `dist/DiffPixel-1.0.5.zip`.
 
 ### 1.0.4
 

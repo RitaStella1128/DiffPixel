@@ -152,7 +152,7 @@
   const SCALE_STEP = 0.1;
   const SCALE_STEP_COARSE = 0.01;
   const SCALE_STEP_FINE = 0.001;
-  const MANUAL_URL = 'https://ritastar1128.github.io/DiffPixel/manual.html';
+  const MANUAL_URL = 'https://ritastella1128.github.io/DiffPixel/manual.html';
   const BASE_STYLE_ID = 'dp-base-style';
   const IMAGE_EXT_BY_MIME = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif', 'image/bmp': 'bmp' };
   const isEditablePasteTarget = event => {
