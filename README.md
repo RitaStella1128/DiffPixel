@@ -9,6 +9,7 @@ It adds an in-page floating panel that lets you place design screenshots, mockup
 - Overlay one or more local reference images on the active page.
 - Add images by file picker, drag and drop, keyboard paste, or the clipboard paste button.
 - Adjust layer opacity, position, scale, blend mode, inversion, visibility, and lock state.
+- Remove all layers at once and apply the selected blend mode to every layer.
 - Use Difference and other blend modes to spot visual mismatches.
 - Toggle a pixel grid for spacing and alignment checks.
 - Save layer settings locally per site.
@@ -75,6 +76,13 @@ DiffPixel uses a small set of Chrome extension permissions:
 - `host_permissions` for `http://*/*` and `https://*/*` to inject the local overlay into user-selected websites and restore DiffPixel after reloads on enabled sites.
 
 ## Release Log
+
+### 1.0.6
+
+- Prevented duplicate content-script instances and duplicate floating panels.
+- Made layer deletion and storage synchronization more reliable.
+- Added bulk layer deletion and bulk blend-mode application.
+- Regenerated the Chrome Web Store release ZIP as `dist/DiffPixel-1.0.6.zip`.
 
 ### 1.0.5
 

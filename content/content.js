@@ -7,6 +7,13 @@
 (() => {
   'use strict';
 
+  const INSTANCE_KEY = '__DIFFPIXEL_CONTENT_ACTIVE__';
+  if (window[INSTANCE_KEY]) {
+    window[INSTANCE_KEY].lastDuplicateAt = Date.now();
+    return;
+  }
+  window[INSTANCE_KEY] = { startedAt: Date.now(), lastDuplicateAt: 0 };
+
   const I18N = {
     en: {
       sectionLayers: 'LAYERS', sectionControls: 'CONTROLS', addLayerTitle: 'Add layer - click, drop, or paste image from clipboard',
@@ -15,6 +22,9 @@
       blendMultiply: 'Multiply', blendScreen: 'Screen', blendOverlay: 'Overlay', blendHardLight: 'Hard Light',
       blendExclusion: 'Exclusion', blendInvert: 'Invert', btnLock: 'Lock', btnRemove: 'Remove',
       btnReset: 'Reset', btnCenter: 'Center', btnFitW: 'Fit W', btnGrid: 'Grid', btnAddLayer: 'Add', btnPasteLayer: 'Paste from clipboard',
+      btnClearAll: 'Clear all', btnApplyBlendAll: 'Apply to all',
+      clearAllTitle: 'Remove all layers', applyBlendAllTitle: 'Apply current blend mode to all layers',
+      clearAllConfirm: 'Remove all DiffPixel layers on this site?',
       btnScaleHalf: 'Scale 0.5x', btnScaleDouble: 'Scale 2x',
       visShow: 'Show layer', visHide: 'Hide layer', dropHint: 'Drop image to add layer',
       layerDefault: 'Layer', layerNamePlaceholder: 'Layer name', toggleTheme: 'Toggle light / dark theme',
@@ -133,6 +143,8 @@
   const t = key => {
     const msg = I18N[activeLang]?.[key];
     if (msg) return msg;
+    const enMsg = I18N.en?.[key];
+    if (enMsg) return enMsg;
     try { return chrome.i18n.getMessage(key) || key; } catch { return key; }
   };
   const storagePrefix = (() => {
@@ -321,8 +333,11 @@
   let containerEl   = null;
   let gridEl        = null;
   let panel         = null;
+  let creatingPanelPromise = null;
   let panelVisiblePref = false;
   let activeShortcutMode = null;
+  let _saveTimer = null;
+  let _saveSeq = 0;
 
   function normalizeTheme(theme) {
     if (theme === true) return 'light';
@@ -638,6 +653,43 @@
     queueStorageSet({ [K.PANEL_VISIBLE]: panelVisiblePref });
   }
 
+  function destroyLayer(id) {
+    layerDOM.get(id)?.destroy();
+    layerDOM.delete(id);
+    imageData.delete(id);
+  }
+
+  function removeLayerById(id) {
+    const idx = layerMeta.findIndex(meta => meta.id === id);
+    if (idx < 0) return false;
+    layerMeta.splice(idx, 1);
+    destroyLayer(id);
+    if (activeLayerId === id) activeLayerId = layerMeta[Math.max(0, idx - 1)]?.id ?? null;
+    refreshLayers();
+    return true;
+  }
+
+  function removeAllLayers() {
+    layerDOM.forEach(layer => layer.destroy());
+    layerDOM.clear();
+    imageData.clear();
+    layerMeta = [];
+    activeLayerId = null;
+    if (containerEl) containerEl.innerHTML = '';
+    refreshLayers();
+  }
+
+  function setAllLayerBlendModes(blendMode) {
+    if (!VALID_BLEND.has(blendMode)) return false;
+    layerDefaults.blendMode = blendMode;
+    layerMeta.forEach(meta => {
+      meta.blendMode = blendMode;
+      meta.invert = false;
+      layerDOM.get(meta.id)?.applyStyle(meta);
+    });
+    return true;
+  }
+
   function applyGrid(cfg) {
     Object.assign(gridConfig, sanitizeGrid(cfg));
     if (!gridEl) return;
@@ -651,19 +703,21 @@
   }
 
   /* ── Storage: save ───────────────────────── */
-  let _saveTimer = null;
   function debounceSave(immediate = false) {
+    const seq = ++_saveSeq;
     clearTimeout(_saveTimer);
     _saveTimer = setTimeout(() => {
-      saveToStorage().catch(error => {
+      saveToStorage(seq).catch(error => {
         if (!isExtensionContextInvalidError(error)) console.warn('[DiffPixel] Failed to save state', error);
       });
     }, immediate ? 0 : 280);
   }
 
-  async function saveToStorage() {
+  async function saveToStorage(seq = _saveSeq) {
+    if (seq !== _saveSeq) return;
     const imgs = {};
     layerMeta.forEach(m => { const d = imageData.get(m.id); if (d) imgs[m.id] = d; });
+    if (seq !== _saveSeq) return;
     await safeStorageSet({
       [K.STATE]:  { enabled: globalEnabled, activeLayerId, grid: gridConfig, layerDefaults, layers: layerMeta },
       [K.IMAGES]: imgs,
@@ -869,6 +923,14 @@
     .dp-add-plus { font-size: 15px; font-weight: 800; line-height: 1; }
     .dp-pastebtn { min-width: 0; padding: 0 7px; background: var(--surf2); color: var(--tx2); border-color: var(--brd); }
     .dp-pastebtn:hover { color: var(--acc); }
+    .dp-clearbtn { min-width: 0; padding: 0 7px; background: rgba(255,75,95,.14); border-color: rgba(255,75,95,.45); color: #ff6f82; }
+    .dp-clearbtn:hover { background: rgba(255,75,95,.22); border-color: #ff6f82; color: #ff8fa0; }
+    .dp-applyall {
+      margin-left: 4px; min-width: 70px; height: 24px; padding: 0 7px;
+      background: var(--surf2); border: 1px solid var(--brd); border-radius: 5px;
+      color: var(--tx2); cursor: pointer; font: 700 10px/1 var(--sans);
+    }
+    .dp-applyall:hover { background: var(--active-soft); border-color: var(--active-brd); color: var(--acc); }
 
     /* Layer list */
     .dp-ll { display: flex; flex-direction: column; gap: 2px; }
@@ -1081,6 +1143,9 @@
           <div class="dp-shead">
             <span class="dp-slabel">${t('sectionLayers')}</span>
             <div class="dp-layer-tools">
+              <button type="button" class="dp-addbtn dp-clearbtn" id="dp-clear-all" title="${t('clearAllTitle')}" aria-label="${t('clearAllTitle')}">
+                <span>${t('btnClearAll')}</span>
+              </button>
               <button type="button" class="dp-addbtn dp-pastebtn" id="dp-paste" title="${t('btnPasteLayer')}" aria-label="${t('btnPasteLayer')}">
                 <span>${t('btnPasteLayer')}</span>
               </button>
@@ -1115,6 +1180,7 @@
               <option value="hard-light">${t('blendHardLight')}</option>
               <option value="exclusion">${t('blendExclusion')}</option>
             </select></div>
+            <button type="button" class="dp-applyall" id="dp-blend-all" title="${t('applyBlendAllTitle')}" aria-label="${t('applyBlendAllTitle')}">${t('btnApplyBlendAll')}</button>
           </div>
           <div class="dp-row">
             <span class="dp-cl">${t('labelOpacity')}</span>
@@ -1272,6 +1338,11 @@
       list.querySelectorAll('.dp-li').forEach(el => el.remove());
       empty.style.display = layerMeta.length === 0 ? '' : 'none';
       empty.setAttribute('aria-hidden', String(layerMeta.length !== 0));
+      const hasLayers = layerMeta.length > 0;
+      const clearAll = this.shadow.getElementById('dp-clear-all');
+      if (clearAll) clearAll.disabled = !hasLayers;
+      const blendAll = this.shadow.getElementById('dp-blend-all');
+      if (blendAll) blendAll.disabled = !hasLayers;
 
       layerMeta.forEach((meta, index) => {
         const item = document.createElement('div');
@@ -1424,11 +1495,7 @@
     }
 
     _removeLayer(id) {
-      const idx = layerMeta.findIndex(meta => meta.id === id);
-      if (idx < 0) return;
-      layerMeta.splice(idx, 1);
-      layerDOM.get(id)?.destroy(); layerDOM.delete(id); imageData.delete(id);
-      if (activeLayerId === id) activeLayerId = layerMeta[Math.max(0, idx - 1)]?.id ?? null;
+      if (!removeLayerById(id)) return;
       this.renderAll(); debounceSave(true);
     }
 
@@ -1543,6 +1610,13 @@
         this._pasteFromClipboard().catch(error => {
           if (!isExtensionContextInvalidError(error)) console.warn('[DiffPixel] Failed to paste image from clipboard', error);
         });
+      });
+      g('dp-clear-all')?.addEventListener('click', () => {
+        if (!layerMeta.length) return;
+        if (!window.confirm(t('clearAllConfirm'))) return;
+        removeAllLayers();
+        this.renderAll();
+        debounceSave(true);
       });
 
       this.root.addEventListener('keydown', e => {
@@ -1673,6 +1747,11 @@
         layerDOM.get(meta.id)?.applyStyle(meta); debounceSave();
         e.target.blur();
       });
+      g('dp-blend-all')?.addEventListener('click', () => {
+        const meta = getActiveMeta(); if (!meta) return;
+        if (!setAllLayerBlendModes(meta.blendMode)) return;
+        this.renderControls(); this.renderLayers(); debounceSave(true);
+      });
 
       /* Grid */
       g('dp-grid')?.addEventListener('click', () => {
@@ -1766,10 +1845,18 @@
   /* ── Panel: on-demand creation ──────────── */
   async function createAndShowPanel(persist = true) {
     if (panel) { panel.show(persist); return; }
-    const res = await safeStorageGet(K.PANEL_POS);
-    panel = new DiffPixelPanel();
-    panel.mount(res[K.PANEL_POS] ?? null);
-    panel.show(persist);
+    if (!creatingPanelPromise) {
+      creatingPanelPromise = (async () => {
+        const res = await safeStorageGet(K.PANEL_POS);
+        if (!panel) {
+          panel = new DiffPixelPanel();
+          panel.mount(res[K.PANEL_POS] ?? null);
+        }
+      })().finally(() => { creatingPanelPromise = null; });
+    }
+    await creatingPanelPromise;
+    panel?.show(persist);
+    panel?.renderAll();
     debounceSave();
   }
 
@@ -1807,6 +1894,9 @@
         if (!l || typeof l !== 'object' || typeof l.id !== 'string' || !VALID_ID_RE.test(l.id)) {
           reply({ error: 'invalid' }); break;
         }
+        if (getMeta(l.id)) {
+          reply({ error: 'duplicate' }); break;
+        }
         if (typeof l.imageData === 'string' && l.imageData.startsWith('data:image/')) {
           imageData.set(l.id, l.imageData);
         }
@@ -1818,9 +1908,15 @@
       }
 
       case 'REMOVE_LAYER':
-        layerDOM.get(msg.layerId)?.destroy(); layerDOM.delete(msg.layerId); imageData.delete(msg.layerId);
-        layerMeta = layerMeta.filter(m => m.id !== msg.layerId);
-        if (activeLayerId === msg.layerId) activeLayerId = layerMeta[0]?.id ?? null;
+        removeLayerById(msg.layerId);
+        panel?.renderAll(); debounceSave(true); reply({ ok: true }); break;
+
+      case 'REMOVE_ALL_LAYERS':
+        removeAllLayers();
+        panel?.renderAll(); debounceSave(true); reply({ ok: true }); break;
+
+      case 'SET_ALL_BLEND':
+        if (!setAllLayerBlendModes(msg.blendMode)) { reply({ error: 'invalid' }); break; }
         panel?.renderAll(); debounceSave(true); reply({ ok: true }); break;
 
       case 'UPDATE_LAYER': {
@@ -1856,7 +1952,7 @@
           layerDefaults.opacity = typeof s.layerDefaults.opacity === 'number' ? Math.min(1, Math.max(0, s.layerDefaults.opacity)) : layerDefaults.opacity;
           layerDefaults.blendMode = VALID_BLEND.has(s.layerDefaults.blendMode) ? s.layerDefaults.blendMode : layerDefaults.blendMode;
         }
-        layerDOM.forEach(l => l.destroy()); layerDOM.clear(); layerMeta = [];
+        layerDOM.forEach(l => l.destroy()); layerDOM.clear(); layerMeta = []; imageData.clear();
         if (containerEl) containerEl.innerHTML = '';
         (s.layers ?? []).filter(l => l && typeof l.id === 'string').forEach(l => {
           if (typeof l.imageData === 'string' && l.imageData.startsWith('data:image/')) {
@@ -1887,6 +1983,7 @@
 
     if (changes[K.IMAGES]) {
       const imgs = changes[K.IMAGES].newValue ?? {};
+      imageData.clear();
       Object.entries(imgs).forEach(([id, d]) => imageData.set(id, d));
     }
 
@@ -1904,7 +2001,10 @@
       /* Sync layers: remove deleted, add new */
       const newMeta = (s.layers ?? []).filter(m => m && typeof m.id === 'string').map(sanitizeMeta);
       [...layerDOM.keys()].forEach(id => {
-        if (!newMeta.find(m => m.id === id)) { layerDOM.get(id)?.destroy(); layerDOM.delete(id); }
+        if (!newMeta.find(m => m.id === id)) destroyLayer(id);
+      });
+      [...imageData.keys()].forEach(id => {
+        if (!newMeta.find(m => m.id === id)) imageData.delete(id);
       });
       layerMeta = newMeta;
       newMeta.forEach(meta => {
@@ -1995,7 +2095,7 @@
 
   /* ── Init ────────────────────────────────── */
   async function init() {
-    if (document.getElementById('dp-panel-host')) return;
+    document.getElementById('dp-panel-host')?.remove();
     ensureDOM();
     await loadFromStorage();
     refreshLayers(); applyGrid(gridConfig); setEnabled(globalEnabled);
