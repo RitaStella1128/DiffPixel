@@ -77,6 +77,12 @@ DiffPixel uses a small set of Chrome extension permissions:
 
 ## Release Log
 
+### 1.0.7
+
+- Added layer switching shortcuts with `Alt` + `Shift` + `J` / `K`.
+- Localized the bulk action button labels and tooltips in the in-page panel.
+- Regenerated the Chrome Web Store release ZIP as `dist/DiffPixel-1.0.7.zip`.
+
 ### 1.0.6
 
 - Prevented duplicate content-script instances and duplicate floating panels.
@@ -120,6 +126,7 @@ DiffPixel uses a small set of Chrome extension permissions:
 
 - Arrow keys move the selected layer by `1px`.
 - `Shift` + arrow keys move the selected layer by `10px`.
+- `Alt` + `Shift` + `J` / `K` switches to the next or previous layer.
 - Hold `Alt` + `B` and press `;` / `-` to change the blend mode.
 - Hold `Alt` + `A` and press `;` / `-` to adjust opacity.
 - `Alt` + `G` toggles the grid.

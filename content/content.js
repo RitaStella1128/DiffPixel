@@ -41,6 +41,7 @@
       gridTitle: 'Grid (Alt + G)', gridSizeLabel: 'Grid size',
       btnResetTitle: 'Reset (Alt + 0)', btnCenterTitle: 'Center (Alt + C)', btnFitWTitle: 'Fit Width (Alt + W)',
       shortcutMove: 'Move 1px: Arrow keys; 10px: Shift + Arrow keys',
+      shortcutLayerSwitch: 'Switch layer: Alt + Shift + J / K',
       shortcutBlend: 'Blend: Alt + B + ; / Alt + B + -',
       shortcutAlpha: 'Opacity: Alt + A + ; / Alt + A + -',
       shortcutScaleNudge: 'Scale +0.1 / -0.1: Alt + ; / Alt + -',
@@ -53,6 +54,9 @@
       blendExclusion: '除外', blendInvert: '反転', btnLock: '固定', btnRemove: '削除',
       btnReset: 'リセット', btnCenter: '中央', btnFitW: '幅に合わせる', btnGrid: 'グリッド',
       btnAddLayer: '追加', btnPasteLayer: 'クリップボードから貼り付け',
+      btnClearAll: '全削除', btnApplyBlendAll: 'すべてに適用',
+      clearAllTitle: 'すべてのレイヤーを削除', applyBlendAllTitle: '現在の合成をすべてのレイヤーに適用',
+      clearAllConfirm: 'このサイトのDiffPixelレイヤーをすべて削除しますか？',
       btnScaleHalf: '0.5倍', btnScaleDouble: '2倍',
       visShow: 'レイヤーを表示', visHide: 'レイヤーを非表示', dropHint: '画像をドロップして追加',
       layerDefault: 'レイヤー', layerNamePlaceholder: 'レイヤー名', toggleTheme: 'ライト / ダークテーマを切り替え',
@@ -69,6 +73,7 @@
       gridTitle: 'グリッド (Alt + G)', gridSizeLabel: 'グリッドサイズ',
       btnResetTitle: 'リセット (Alt + 0)', btnCenterTitle: '中央寄せ (Alt + C)', btnFitWTitle: '幅に合わせる (Alt + W)',
       shortcutMove: '1px移動: 矢印キー / 10px移動: Shift + 矢印キー',
+      shortcutLayerSwitch: 'レイヤー切替: Alt + Shift + J / K',
       shortcutBlend: '合成: Alt + B + ; / Alt + B + -',
       shortcutAlpha: '不透明度: Alt + A + ; / Alt + A + -',
       shortcutScaleNudge: 'スケール +0.1 / -0.1: Alt + ; / Alt + -',
@@ -450,6 +455,18 @@
     layerMeta.splice(to, 0, meta);
     return true;
   }
+
+  function selectLayerByOffset(delta) {
+    if (!layerMeta.length) return false;
+    const current = layerMeta.findIndex(meta => meta.id === activeLayerId);
+    const start = current >= 0 ? current : 0;
+    const next = (start + delta + layerMeta.length) % layerMeta.length;
+    activeLayerId = layerMeta[next].id;
+    panel?.renderLayers();
+    panel?.renderControls();
+    debounceSave();
+    return true;
+  }
   /* ── DOM setup ───────────────────────────── */
   function ensureBaseStyles() {
     let styleEl = document.getElementById(BASE_STYLE_ID);
@@ -539,6 +556,15 @@
   }
 
   function handleLayerShortcut(event) {
+    if (event.altKey && event.shiftKey && !event.ctrlKey && !event.metaKey) {
+      const key = event.key.toLowerCase();
+      if (key === 'j' || key === 'k') {
+        event.preventDefault();
+        event.stopPropagation();
+        return selectLayerByOffset(key === 'j' ? 1 : -1);
+      }
+    }
+
     if (!globalEnabled || !activeLayerId) return false;
     const meta = getActiveMeta();
     if (!meta) return false;
@@ -1083,6 +1109,7 @@
   /* ── Panel HTML ──────────────────────────── */
   function buildPanelHTML(collapsed = false) {
     const moveShortcutTitle = t('shortcutMove');
+    const layerSwitchTitle = t('shortcutLayerSwitch');
     const blendShortcutTitle = t('shortcutBlend');
     const alphaShortcutTitle = t('shortcutAlpha');
     const scaleNudgeTitle = t('shortcutScaleNudge');
@@ -1155,7 +1182,7 @@
               </label>
             </div>
           </div>
-          <div class="dp-ll" id="dp-ll" role="listbox" aria-label="${t('sectionLayers')}">
+          <div class="dp-ll" id="dp-ll" role="listbox" aria-label="${t('sectionLayers')}" title="${layerSwitchTitle}">
             <div class="dp-empty" id="dp-empty">
               <svg width="24" height="24" viewBox="0 0 32 32" fill="none" opacity=".35" aria-hidden="true"><rect x="2" y="2" width="13" height="13" rx="1.5" stroke="var(--acc)" stroke-width="1.5"/><rect x="17" y="2" width="13" height="13" rx="1.5" stroke="var(--acc)" stroke-width="1.5" opacity=".5"/><rect x="2" y="17" width="13" height="13" rx="1.5" stroke="var(--acc)" stroke-width="1.5" opacity=".5"/><rect x="17" y="17" width="13" height="13" rx="1.5" stroke="var(--acc)" stroke-width="1.5"/></svg>
               <p>${t('emptyState')}</p>
