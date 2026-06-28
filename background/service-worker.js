@@ -8,7 +8,9 @@ chrome.runtime.onMessage.addListener((msg, _sender) => {
 function sitePattern(urlString) {
   try {
     const url = new URL(urlString);
-    return ['http:', 'https:'].includes(url.protocol) ? `${url.protocol}//${url.hostname}/*` : '';
+    if (['http:', 'https:'].includes(url.protocol)) return `${url.protocol}//${url.hostname}/*`;
+    if (url.protocol === 'file:') return 'file:///*';
+    return '';
   } catch {
     return '';
   }
@@ -34,7 +36,9 @@ function isSupportedPage(urlString) {
 function hostOf(urlString) {
   try {
     const url = new URL(urlString);
-    return ['http:', 'https:'].includes(url.protocol) ? url.hostname : '';
+    if (['http:', 'https:'].includes(url.protocol)) return url.hostname;
+    if (url.protocol === 'file:') return 'file';
+    return '';
   } catch {
     return '';
   }

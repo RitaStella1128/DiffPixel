@@ -22,7 +22,7 @@
   },
 
   "permissions": ["activeTab", "storage", "scripting", "unlimitedStorage"],
-  "host_permissions": ["http://*/*", "https://*/*"],
+  "host_permissions": ["http://*/*", "https://*/*", "file:///*"],
 
   "content_security_policy": {
     "extension_pages": "script-src 'self'; style-src 'self'; object-src 'none'; img-src 'self' data: blob:;"
