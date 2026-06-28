@@ -7,57 +7,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="icons/icon32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="icons/icon16.png" />
   <link rel="apple-touch-icon" href="icons/icon128.png" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    :root {
-      color-scheme: light;
-      --bg: #f7f8fb;
-      --surface: #ffffff;
-      --text: #162033;
-      --muted: #526078;
-      --border: #d9deea;
-      --accent: #0066d6;
-      --accent-soft: #e8f1ff;
-      --shadow: 0 18px 50px rgba(23, 35, 60, .08);
-    }
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font: 15px/1.75 -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", Meiryo, sans-serif;
-    }
-    header, main, footer { width: min(920px, calc(100% - 40px)); margin: 0 auto; }
-    header { padding: 34px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 750; font-size: 18px; color: inherit; text-decoration: none; }
-    .brand img { width: 30px; height: 30px; border-radius: 7px; }
-    .lang-switch { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--border); background: var(--surface); border-radius: 999px; }
-    .lang-switch button {
-      border: 0; border-radius: 999px; background: transparent; color: var(--muted);
-      min-width: 84px; padding: 7px 14px; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
-    }
-    .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #fff; }
-    main { padding: 28px 0 70px; }
-    .hero { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 34px; box-shadow: var(--shadow); }
-    h1 { margin: 0 0 8px; font-size: clamp(30px, 5vw, 46px); line-height: 1.12; letter-spacing: 0; }
-    .meta { margin: 0 0 22px; color: var(--muted); font-size: 14px; }
-    .summary { margin: 0; padding: 16px 18px; border: 1px solid #b9d4ff; background: var(--accent-soft); border-radius: 10px; color: #123762; font-weight: 650; }
-    .content { margin-top: 26px; display: grid; gap: 24px; }
-    section { padding-top: 22px; border-top: 1px solid var(--border); }
-    h2 { margin: 0 0 10px; font-size: 17px; line-height: 1.35; }
-    p { margin: 0 0 12px; color: var(--muted); }
-    ul { margin: 0 0 12px; padding-left: 22px; color: var(--muted); }
-    li { margin: 5px 0; }
-    a { color: var(--accent); font-weight: 650; text-decoration-thickness: .08em; text-underline-offset: 3px; }
-    [data-lang-panel] { display: none; }
-    [data-lang-panel].active { display: block; }
-    footer { padding: 0 0 34px; color: var(--muted); font-size: 13px; }
-    @media (max-width: 640px) {
-      header { align-items: flex-start; flex-direction: column; }
-      .hero { padding: 24px; border-radius: 12px; }
-      .lang-switch { width: 100%; }
-      .lang-switch button { flex: 1; }
-    }
-  </style>
+  <link rel="stylesheet" href="axis-rigid.css" />
 </head>
 <body>
   <header>
@@ -101,7 +51,7 @@
           <section>
             <h2>4. Permissions</h2>
             <p>DiffPixel uses Chrome extension permissions to inject its local content script and CSS, display the in-page floating panel, overlay user-provided reference images, and save local settings.</p>
-            <p>Host access for HTTP and HTTPS pages is required because DiffPixel is designed to work on user-selected websites, and those websites cannot be known in advance. Host access is also used to restore the panel after reloads on sites where the user has enabled DiffPixel.</p>
+            <p>Host access for HTTP, HTTPS, and local file pages is required because DiffPixel is designed to work on user-selected pages, and those pages cannot be known in advance. Local file pages also require the user to enable Chrome's file URL access setting for the extension. Host access is used to inject the local overlay and restore the panel after reloads on pages where the user has enabled DiffPixel.</p>
           </section>
           <section>
             <h2>5. Network Use and Remote Code</h2>
@@ -146,7 +96,7 @@
           <section>
             <h2>4. 権限</h2>
             <p>DiffPixel は、ローカルの content script と CSS をページに挿入し、ページ内フローティングパネルを表示し、ユーザーが追加した参照画像を重ね、ローカル設定を保存するために Chrome 拡張機能の権限を使用します。</p>
-            <p>DiffPixel はユーザーが選んだWebサイト上で動作することを目的としており、対象サイトを事前に固定できないため、HTTPおよびHTTPSページへのホストアクセスが必要です。また、ユーザーがDiffPixelを有効にしたサイトで、リロード後にパネルを復元するためにも使用します。</p>
+            <p>DiffPixel はユーザーが選んだページ上で動作することを目的としており、対象ページを事前に固定できないため、HTTP、HTTPS、ローカルファイルページへのホストアクセスが必要です。ローカルファイルページでは、Chrome の拡張機能詳細でファイル URL アクセスをユーザーが有効にする必要があります。ホストアクセスはローカルのオーバーレイを挿入し、DiffPixel が有効なページでリロード後にパネルを復元するために使用します。</p>
           </section>
           <section>
             <h2>5. ネットワーク利用とリモートコード</h2>

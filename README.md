@@ -73,7 +73,7 @@ DiffPixel uses a small set of Chrome extension permissions:
 - `scripting` to inject the in-page overlay and floating panel.
 - `storage` to save layer settings locally.
 - `unlimitedStorage` to support local reference images and visual QA sessions without the default storage limit getting in the way.
-- `host_permissions` for `http://*/*` and `https://*/*` to inject the local overlay into user-selected websites and restore DiffPixel after reloads on enabled sites.
+- `host_permissions` for `http://*/*`, `https://*/*`, and `file:///*` to inject the local overlay into user-selected websites, support local files when Chrome file URL access is enabled, and restore DiffPixel after reloads on enabled sites.
 
 ## Release Log
 
