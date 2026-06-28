@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>document.documentElement.classList.add('js');</script>
   <title>DiffPixel — Pixel-Perfect Overlay Comparison Chrome Extension</title>
   <meta name="description" content="DiffPixel is a free Chrome extension that overlays local reference images on any web page so designers and developers can compare designs with live implementations pixel by pixel. Layers, blend modes, opacity, grid, keyboard shortcuts. No data leaves your device." />
   <link rel="canonical" href="https://ritastella1128.github.io/DiffPixel/" />
@@ -111,427 +112,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:          #06060b;
-      --surface:     #0d0d16;
-      --surface-2:   #13131e;
-      --surface-3:   #191928;
-      --border:      #1e1e2e;
-      --border-2:    #282840;
-      --text:        #edeef5;
-      --muted:       #5e6080;
-      --muted-2:     #8890aa;
-      --accent:      #00e5ff;
-      --accent-dim:  rgba(0,229,255,.07);
-      --accent-glow: rgba(0,229,255,.22);
-      --diff:        #ff4466;
-      --diff-dim:    rgba(255,68,102,.14);
-      --mono:        'JetBrains Mono', 'Courier New', monospace;
-      --display:     'Syne', system-ui, sans-serif;
-      --body:        -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', 'Yu Gothic UI', Meiryo, sans-serif;
-      --shadow:      0 28px 72px rgba(0,0,0,.65);
-      --shadow-sm:   0 8px 28px rgba(0,0,0,.45);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg); color: var(--text);
-      font-family: var(--body); font-size: 15px; line-height: 1.72;
-      overflow-x: hidden;
-    }
-
-    /* Ambient glow */
-    body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 800px 500px at 72% -10%, rgba(0,229,255,.09) 0%, transparent 68%),
-        radial-gradient(ellipse 500px 380px at 5%  65%,  rgba(0,80,190,.08)  0%, transparent 66%);
-    }
-
-    /* Dot-grid texture */
-    body::after {
-      content: '';
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      opacity: .04;
-      background-image: radial-gradient(circle, #ffffff 1px, transparent 1px);
-      background-size: 28px 28px;
-    }
-
-    .wrap { width: min(1100px, calc(100% - 44px)); margin: 0 auto; position: relative; z-index: 1; }
-
-    /* ── HEADER ─────────────────────────────── */
-    .site-header {
-      position: sticky; top: 0; z-index: 200;
-      border-bottom: 1px solid var(--border);
-      background: rgba(6,6,11,.88);
-      backdrop-filter: blur(16px) saturate(1.4);
-      -webkit-backdrop-filter: blur(16px) saturate(1.4);
-    }
-    .header-inner {
-      display: flex; align-items: center; gap: 8px;
-      height: 58px;
-    }
-    .brand {
-      display: flex; align-items: center; gap: 9px;
-      font-family: var(--display); font-weight: 700; font-size: 16.5px;
-      letter-spacing: -.01em; color: var(--text); text-decoration: none; white-space: nowrap;
-    }
-    .brand img { width: 26px; height: 26px; border-radius: 6px; }
-
-    .site-nav { display: flex; gap: 2px; margin-left: auto; }
-    .site-nav a {
-      font-family: var(--mono); font-size: 12px; font-weight: 500;
-      color: var(--muted); text-decoration: none;
-      padding: 6px 10px; border-radius: 6px;
-      transition: color .14s, background .14s;
-    }
-    .site-nav a:hover { color: var(--text); background: var(--surface-2); }
-
-    .lang-switch {
-      display: flex; gap: 2px; padding: 3px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; margin-left: 8px;
-    }
-    .lang-switch button {
-      border: 0; border-radius: 5px; background: transparent;
-      color: var(--muted); padding: 5px 11px;
-      font-family: var(--mono); font-size: 11.5px; font-weight: 700; cursor: pointer;
-      transition: background .14s, color .14s;
-    }
-    .lang-switch button[aria-pressed="true"] { background: var(--accent); color: #032428; }
-
-    /* ── LANG PANELS ────────────────────────── */
-    [data-lang-panel] { display: none; }
-    [data-lang-panel].active { display: block; }
-
-    /* ── HERO ───────────────────────────────── */
-    .hero {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 56px; align-items: center;
-      padding: 76px 0 84px;
-    }
-
-    .tag {
-      display: inline-flex; align-items: center; gap: 7px;
-      font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .1em;
-      color: var(--accent); padding: 5px 10px;
-      border: 1px solid rgba(0,229,255,.28); border-radius: 5px;
-      background: var(--accent-dim); margin-bottom: 20px;
-      animation: up .55s ease both;
-    }
-    .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 1.6s ease-in-out infinite; }
-    @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
-
-    h1 {
-      font-family: var(--display); font-weight: 800;
-      font-size: clamp(36px, 4.2vw, 58px);
-      line-height: 1.035; letter-spacing: -.028em;
-      margin-bottom: 18px;
-      animation: up .55s .08s ease both;
-    }
-    h1 .hl {
-      background: linear-gradient(115deg, #00e5ff 0%, #7af8ff 55%, #00b4cc 100%);
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-    }
-    h1 .dim { color: var(--muted-2); }
-
-    .hero-lead {
-      color: var(--muted-2); font-size: 15.5px; line-height: 1.78;
-      max-width: 490px; margin-bottom: 26px;
-      animation: up .55s .16s ease both;
-    }
-
-    .cta-row { display: flex; gap: 10px; margin-bottom: 26px; animation: up .55s .24s ease both; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      min-height: 44px; padding: 10px 20px;
-      font-family: var(--mono); font-size: 13px; font-weight: 700;
-      border-radius: 9px; text-decoration: none;
-      border: 1px solid transparent; transition: all .18s;
-      letter-spacing: .01em;
-    }
-    .btn-primary { background: var(--accent); color: #03252c; box-shadow: 0 0 0 0 var(--accent-glow); }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 26px var(--accent-glow); filter: brightness(1.06); }
-    .btn-ghost { background: var(--surface); border-color: var(--border-2); color: var(--text); }
-    .btn-ghost:hover { border-color: var(--muted); background: var(--surface-2); }
-
-    .badges {
-      display: flex; flex-wrap: wrap; gap: 18px;
-      font-family: var(--mono); font-size: 12px; color: var(--muted);
-      animation: up .55s .32s ease both;
-    }
-    .badge::before { content: '○'; color: var(--accent); margin-right: 6px; }
-
-    /* DIFF VISUALIZER */
-    .diff-wrap {
-      position: relative;
-      animation: fadeIn .7s .12s ease both;
-    }
-    .browser {
-      border: 1px solid var(--border-2); border-radius: 13px;
-      overflow: hidden; background: var(--surface);
-      box-shadow: var(--shadow);
-    }
-    .browser-bar {
-      display: flex; align-items: center; gap: 6px; padding: 10px 14px;
-      background: var(--surface-2); border-bottom: 1px solid var(--border);
-    }
-    .b-dot { width: 9px; height: 9px; border-radius: 50%; }
-    .b-dot:nth-child(1) { background: #ff5f57; }
-    .b-dot:nth-child(2) { background: #febc2e; }
-    .b-dot:nth-child(3) { background: #28c840; }
-    .b-url {
-      flex: 1; margin: 0 10px; height: 20px; background: var(--bg);
-      border-radius: 5px; display: flex; align-items: center; padding: 0 10px;
-      font-family: var(--mono); font-size: 10px; color: var(--muted);
-    }
-    .browser-body {
-      position: relative; padding: 18px; min-height: 290px;
-      display: flex; flex-direction: column; gap: 10px; overflow: hidden;
-    }
-    /* wireframe elements */
-    .wf { border-radius: 5px; background: var(--surface-2); flex-shrink: 0; }
-    .wf-h  { height: 14px; width: 52%; }
-    .wf-s  { height: 8px; width: 78%; }
-    .wf-s2 { height: 8px; width: 60%; }
-    .wf-block { height: 80px; background: linear-gradient(135deg, var(--surface-2) 0%, #141424 100%); }
-    .wf-r  { height: 8px; width: 68%; }
-    .wf-r2 { height: 8px; width: 42%; }
-    .wf-r3 { height: 8px; width: 55%; }
-    /* overlay layer */
-    .overlay-ring {
-      position: absolute; inset: 10px;
-      border: 1.5px dashed rgba(0,229,255,.35); border-radius: 7px;
-      background: rgba(0,229,255,.02); pointer-events: none;
-    }
-    .overlay-badge {
-      position: absolute; top: -1px; left: 10px;
-      font-family: var(--mono); font-size: 9px; font-weight: 700;
-      color: var(--accent); background: var(--surface);
-      padding: 2px 7px; border-radius: 0 0 4px 4px;
-      border: 1px solid rgba(0,229,255,.3); border-top: 0; letter-spacing: .06em;
-    }
-    /* diff highlights */
-    .dpx {
-      position: absolute; border-radius: 3px;
-      background: var(--diff-dim); border: 1px solid rgba(255,68,102,.45);
-      animation: dpx 2.5s ease-in-out infinite;
-    }
-    .dpx:nth-child(1) { width: 28px; height: 14px; top: 36px;  left: 52px;  animation-delay: 0s;    }
-    .dpx:nth-child(2) { width: 40px; height: 12px; top: 72px;  right: 38px; animation-delay: .5s;   }
-    .dpx:nth-child(3) { width: 22px; height: 14px; top: 136px; left: 88px;  animation-delay: 1s;    }
-    .dpx:nth-child(4) { width: 32px; height: 12px; top: 190px; right: 55px; animation-delay: 1.4s;  }
-    .dpx:nth-child(5) { width: 18px; height: 14px; top: 234px; left: 42px;  animation-delay: 1.9s;  }
-    @keyframes dpx {
-      0%,100% { opacity: .35; }
-      50% { opacity: 1; box-shadow: 0 0 10px rgba(255,68,102,.45); }
-    }
-    /* scan line */
-    .scan {
-      position: absolute; left: 0; right: 0; height: 1.5px;
-      background: linear-gradient(90deg, transparent 0%, var(--accent) 25%, rgba(0,229,255,.9) 50%, var(--accent) 75%, transparent 100%);
-      box-shadow: 0 0 10px var(--accent), 0 0 3px rgba(255,255,255,.6);
-      animation: sweep 3.8s ease-in-out infinite; pointer-events: none;
-    }
-    @keyframes sweep {
-      0%   { top: 0%;   opacity: 0; }
-      4%   { opacity: 1; }
-      92%  { opacity: 1; }
-      100% { top: 100%; opacity: 0; }
-    }
-    /* floating panel */
-    .panel {
-      position: absolute; right: -24px; bottom: -18px; width: 214px;
-      border: 1px solid #26263a; border-radius: 12px;
-      background: #0e0e1a; box-shadow: var(--shadow); overflow: hidden;
-      animation: panelIn .7s .35s ease both;
-    }
-    @keyframes panelIn {
-      from { opacity: 0; transform: translate(10px, 14px); }
-      to   { opacity: 1; transform: translate(0, 0); }
-    }
-    .pan-head {
-      display: flex; align-items: center; gap: 7px;
-      padding: 9px 11px; border-bottom: 1px solid #1e1e2e;
-      background: #121220;
-    }
-    .pan-head img { width: 13px; height: 13px; border-radius: 3px; }
-    .pan-head strong { font-family: var(--mono); font-size: 11px; color: var(--text); font-weight: 700; }
-    .pan-head span { margin-left: auto; color: var(--muted); font-size: 12px; }
-    .pan-sec { padding: 9px 11px; border-bottom: 1px solid #1e1e2e; }
-    .pan-sec:last-child { border-bottom: 0; }
-    .pan-lbl { font-family: var(--mono); font-size: 9px; font-weight: 700; letter-spacing: .1em; color: var(--muted); margin-bottom: 7px; }
-    .pan-row {
-      display: flex; align-items: center; gap: 6px; padding: 5px 7px;
-      border-radius: 6px; font-family: var(--mono); font-size: 10px;
-    }
-    .pan-row.sel { background: rgba(0,229,255,.09); outline: 1px solid rgba(0,229,255,.28); }
-    .pan-thumb { width: 15px; height: 15px; border-radius: 3px; background: linear-gradient(135deg, #00e5ff, #0055c8); flex-shrink: 0; }
-    .pan-nm { flex: 1; color: var(--text); font-weight: 500; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-    .pan-ic { color: var(--muted); font-size: 9px; }
-    .pan-slider { height: 3px; background: #1e1e2e; border-radius: 2px; margin: 8px 0 4px; position: relative; }
-    .pan-slider::before { content: ''; position: absolute; left: 0; inset-block: 0; width: 68%; background: var(--accent); border-radius: 2px; }
-    .pan-slider::after  { content: ''; position: absolute; top: 50%; left: 68%; width: 9px; height: 9px; background: #fff; border-radius: 50%; transform: translate(-50%,-50%); box-shadow: 0 1px 4px rgba(0,0,0,.5); }
-    .pan-chips { display: flex; gap: 4px; flex-wrap: wrap; }
-    .pan-chip { padding: 2px 7px; border-radius: 4px; border: 1px solid #262640; color: var(--muted); font-family: var(--mono); font-size: 9px; }
-    .pan-chip.on { background: rgba(0,229,255,.09); border-color: rgba(0,229,255,.38); color: var(--accent); }
-
-    /* ── FEATURES ───────────────────────────── */
-    .section { padding: 80px 0; }
-    .sec-tag {
-      font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .12em;
-      color: var(--accent); margin-bottom: 12px;
-    }
-    h2.sec-title {
-      font-family: var(--display); font-weight: 800;
-      font-size: clamp(26px, 3vw, 38px); letter-spacing: -.022em; line-height: 1.12;
-      margin-bottom: 12px;
-    }
-    .sec-sub { color: var(--muted-2); max-width: 580px; font-size: 15px; margin-bottom: 36px; }
-
-    .feat-grid {
-      display: grid;
-      grid-template-columns: 1.55fr 1fr;
-      grid-template-rows: auto auto auto;
-      gap: 12px;
-    }
-    .feat-card {
-      border: 1px solid var(--border); border-radius: 14px; padding: 26px;
-      background: var(--surface);
-      transition: border-color .2s, transform .2s, box-shadow .2s;
-    }
-    .feat-card:hover {
-      border-color: var(--border-2); transform: translateY(-2px);
-      box-shadow: 0 16px 40px rgba(0,0,0,.35);
-    }
-    .feat-card.wide { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
-    .feat-card.tall { grid-row: span 2; }
-    .glyph {
-      width: 34px; height: 34px; border-radius: 9px;
-      background: var(--accent-dim); border: 1px solid rgba(0,229,255,.18);
-      display: grid; place-items: center; color: var(--accent);
-      font-family: var(--mono); font-size: 14px; margin-bottom: 15px; font-weight: 700;
-    }
-    .feat-card h3 { font-family: var(--display); font-size: 15.5px; font-weight: 700; margin-bottom: 8px; }
-    .feat-card p  { color: var(--muted-2); font-size: 13.5px; line-height: 1.72; }
-
-    .blend-pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
-    .bpill { padding: 4px 9px; border-radius: 5px; border: 1px solid var(--border-2); color: var(--muted-2); font-family: var(--mono); font-size: 11px; }
-    .bpill.hi { background: var(--accent-dim); border-color: rgba(0,229,255,.35); color: var(--accent); }
-
-    /* ── HOW IT WORKS ───────────────────────── */
-    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; counter-reset: s; }
-    .step {
-      border: 1px solid var(--border); border-radius: 14px; padding: 26px;
-      background: var(--surface); counter-increment: s;
-      transition: border-color .2s, transform .2s;
-    }
-    .step:hover { border-color: var(--border-2); transform: translateY(-2px); }
-    .step-num {
-      font-family: var(--mono); font-size: 28px; font-weight: 700;
-      color: var(--accent); opacity: .5; margin-bottom: 14px; line-height: 1; display: block;
-    }
-    .step h3 { font-family: var(--display); font-size: 15.5px; font-weight: 700; margin-bottom: 8px; }
-    .step p  { color: var(--muted-2); font-size: 13.5px; line-height: 1.72; }
-
-    /* ── SPECS ──────────────────────────────── */
-    .spec-table {
-      width: 100%; border-collapse: collapse;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 14px; overflow: hidden;
-    }
-    .spec-table th, .spec-table td { padding: 13px 18px; text-align: left; border-top: 1px solid var(--border); font-size: 14px; vertical-align: top; }
-    .spec-table thead th { background: var(--surface-2); border-top: 0; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; color: var(--muted); }
-    .spec-table tbody td:first-child { color: var(--text); font-weight: 600; white-space: nowrap; font-family: var(--mono); font-size: 12px; }
-    .spec-table td { color: var(--muted-2); }
-    code { font-family: var(--mono); font-size: 12px; color: var(--muted-2); }
-
-    /* ── FAQ ────────────────────────────────── */
-    .faq-list { display: grid; gap: 8px; }
-    details.q {
-      border: 1px solid var(--border); border-radius: 12px;
-      background: var(--surface); overflow: hidden;
-      transition: border-color .15s;
-    }
-    details.q[open] { border-color: var(--border-2); }
-    details.q summary {
-      list-style: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding: 16px 20px; font-weight: 600; font-size: 14.5px;
-      transition: background .14s;
-    }
-    details.q summary:hover { background: var(--surface-2); }
-    details.q summary::after { content: '+'; font-family: var(--mono); font-weight: 700; font-size: 18px; color: var(--accent); flex-shrink: 0; }
-    details.q[open] summary::after { content: '−'; }
-    details.q .a { padding: 0 20px 16px; color: var(--muted-2); font-size: 14px; line-height: 1.75; }
-    details.q .a p { margin-bottom: 8px; }
-    details.q .a p:last-child { margin-bottom: 0; }
-    a.il { color: var(--accent); font-weight: 600; text-underline-offset: 3px; text-decoration-thickness: .08em; }
-
-    /* ── PRIVACY BAND ───────────────────────── */
-    .priv {
-      border: 1px solid rgba(0,229,255,.2); border-radius: 16px; padding: 36px;
-      background: linear-gradient(135deg, rgba(0,229,255,.06) 0%, rgba(0,70,180,.04) 100%);
-      display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap;
-      margin-top: 72px;
-    }
-    .priv h2 { font-family: var(--display); font-size: 21px; font-weight: 800; margin-bottom: 8px; }
-    .priv p  { color: var(--muted-2); max-width: 580px; font-size: 14.5px; }
-
-    /* ── FOOTER ─────────────────────────────── */
-    .site-footer {
-      border-top: 1px solid var(--border); padding: 24px 0;
-    }
-    .footer-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .footer-links { display: flex; gap: 14px; }
-    .footer-links a { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; transition: color .14s; }
-    .footer-links a:hover { color: var(--accent); }
-    .footer-copy { font-family: var(--mono); font-size: 12px; color: var(--muted); }
-
-    /* ── SCROLL REVEAL ──────────────────────── */
-    .rv { opacity: 0; transform: translateY(22px); transition: opacity .58s ease, transform .58s ease; }
-    .rv.visible { opacity: 1; transform: none; }
-    .d1 { transition-delay: .08s; }
-    .d2 { transition-delay: .16s; }
-    .d3 { transition-delay: .24s; }
-    .d4 { transition-delay: .32s; }
-
-    /* ── ANIMATIONS ─────────────────────────── */
-    @keyframes up {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: none; }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    /* ── RESPONSIVE ─────────────────────────── */
-    @media (max-width: 920px) {
-      .hero { grid-template-columns: 1fr; padding: 54px 0 62px; gap: 44px; }
-      .diff-wrap { order: -1; }
-      .panel { right: 0; }
-      .feat-grid { grid-template-columns: 1fr; }
-      .feat-card.wide { grid-template-columns: 1fr; }
-      .feat-card.tall { grid-row: auto; }
-      .steps { grid-template-columns: 1fr; }
-      .site-nav { display: none; }
-    }
-    @media (max-width: 540px) {
-      .cta-row { flex-direction: column; }
-      .priv { flex-direction: column; }
-    }
-  </style>
+  <link rel="stylesheet" href="axis-rigid.css" />
 </head>
 <body>
 
@@ -548,10 +129,13 @@
         <a href="manual.html" data-nav="manual">Manual</a>
         <a href="privacy.html" data-nav="privacy">Privacy</a>
       </nav>
-      <nav class="lang-switch" aria-label="Language">
-        <button type="button" data-lang-button="en" aria-pressed="true">EN</button>
-        <button type="button" data-lang-button="ja" aria-pressed="false">JA</button>
-      </nav>
+      <div class="header-cta">
+        <nav class="lang-switch" aria-label="Language">
+          <button type="button" data-lang-button="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang-button="ja" aria-pressed="false">JA</button>
+        </nav>
+        <a class="btn btn-primary btn-sm" data-nav="install" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome</a>
+      </div>
     </div>
   </header>
 
@@ -564,7 +148,7 @@
         <!-- HERO -->
         <section class="hero">
           <div class="hero-text">
-            <p class="tag"><span class="tag-dot"></span>FREE CHROME EXTENSION · v1.0.7</p>
+            <p class="tag">Free · Chrome Extension</p>
             <h1>
               Pixel-perfect<br>
               <span class="hl">overlay comparison</span><br>
@@ -574,7 +158,7 @@
               DiffPixel is a free Chrome extension that overlays local reference images — design mockups, screenshots — on any web page, so designers and developers can compare the design and the live implementation pixel by pixel.
             </p>
             <div class="cta-row">
-              <a class="btn btn-primary" href="https://github.com/RitaStella1128/DiffPixel" rel="noopener">↓ Get DiffPixel</a>
+              <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome — it's free</a>
               <a class="btn btn-ghost"   href="manual.html">Read the manual</a>
             </div>
             <div class="badges">
@@ -584,66 +168,9 @@
             </div>
           </div>
 
-          <div class="diff-wrap">
-            <div class="browser">
-              <div class="browser-bar">
-                <span class="b-dot"></span><span class="b-dot"></span><span class="b-dot"></span>
-                <span class="b-url">localhost:3000 / home</span>
-              </div>
-              <div class="browser-body">
-                <div class="wf wf-h"></div>
-                <div class="wf wf-s"></div>
-                <div class="wf wf-s2"></div>
-                <div class="wf wf-block"></div>
-                <div class="wf wf-r"></div>
-                <div class="wf wf-r2"></div>
-                <div class="wf wf-block" style="height:60px"></div>
-                <div class="wf wf-r3"></div>
-                <div class="wf wf-r2"></div>
-                <div class="overlay-ring">
-                  <span class="overlay-badge">design.png · 68%</span>
-                </div>
-                <div class="dpx"></div>
-                <div class="dpx"></div>
-                <div class="dpx"></div>
-                <div class="dpx"></div>
-                <div class="dpx"></div>
-                <div class="scan"></div>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="pan-head">
-                <img src="icons/icon32.png" alt="" />
-                <strong>DiffPixel</strong>
-                <span>⊡ ✕</span>
-              </div>
-              <div class="pan-sec">
-                <div class="pan-lbl">LAYERS</div>
-                <div class="pan-row sel">
-                  <span class="pan-thumb"></span>
-                  <span class="pan-nm">design.png</span>
-                  <span class="pan-ic">👁 🔒</span>
-                </div>
-                <div class="pan-row">
-                  <span class="pan-thumb" style="opacity:.4"></span>
-                  <span class="pan-nm" style="color:var(--muted)">header-v3.png</span>
-                  <span class="pan-ic">👁</span>
-                </div>
-              </div>
-              <div class="pan-sec">
-                <div class="pan-lbl">OPACITY · 68%</div>
-                <div class="pan-slider"></div>
-              </div>
-              <div class="pan-sec">
-                <div class="pan-lbl">BLEND</div>
-                <div class="pan-chips">
-                  <span class="pan-chip">Normal</span>
-                  <span class="pan-chip on">Difference</span>
-                  <span class="pan-chip">Multiply</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <figure class="hero-media">
+            <img src="hero-panel.png" alt="DiffPixel panel overlaying a reference image on a live web page, with X/Y pixel offsets and Difference blend mode highlighting mismatches" width="1200" height="800" loading="eager" decoding="async" />
+          </figure>
         </section>
       </div>
 
@@ -657,14 +184,14 @@
         <div class="feat-grid">
           <div class="feat-card wide rv d1">
             <div>
-              <div class="glyph">▤</div>
+              <div class="glyph" aria-hidden="true">▤</div>
               <h3>Multiple image layers</h3>
               <p>Stack several reference images at once. Reorder, lock, hide, rename, and remove layers from the panel. Add files by picker, drag &amp; drop, or paste from clipboard.</p>
             </div>
             <div>
-              <div class="glyph">◑</div>
-              <h3>8 blend modes</h3>
-              <p>Every mode you need for visual comparison in one place. Difference mode makes every mismatched pixel glow.</p>
+              <div class="glyph" aria-hidden="true">◑</div>
+              <h3>Find every mismatch instantly</h3>
+              <p>Switch to <strong>Difference</strong> and identical pixels turn black — every mismatch lights up, so sub-pixel drift is obvious in seconds. Eight blend modes in all.</p>
               <div class="blend-pills">
                 <span class="bpill">Normal</span>
                 <span class="bpill">Invert</span>
@@ -675,25 +202,26 @@
                 <span class="bpill">Hard Light</span>
                 <span class="bpill hi">Exclusion</span>
               </div>
+              <figure class="feat-media"><img src="diff-result.png" alt="Difference blend mode result: matching pixels render black while mismatched areas glow" width="600" height="360" loading="lazy" decoding="async" /></figure>
             </div>
           </div>
           <div class="feat-card rv d1">
-            <div class="glyph">✛</div>
-            <h3>Pixel-precise controls</h3>
-            <p>Tune opacity, X/Y position, and scale numerically or with arrow keys. Reset, Center, and Fit-Width buttons align a layer in one click.</p>
+            <div class="glyph" aria-hidden="true">✛</div>
+            <h3>Align to the exact pixel</h3>
+            <p>Nudge X/Y and scale with arrow keys or exact values until the overlay lines up perfectly. Reset, Center, and Fit-Width snap a layer into place in one click.</p>
           </div>
           <div class="feat-card rv d2">
-            <div class="glyph">▦</div>
+            <div class="glyph" aria-hidden="true">▦</div>
             <h3>Grid overlay</h3>
             <p>Toggle a configurable pixel grid to verify spacing, alignment, and visual rhythm against your design system.</p>
           </div>
           <div class="feat-card rv d2">
-            <div class="glyph">⌨</div>
+            <div class="glyph" aria-hidden="true">⌨</div>
             <h3>Keyboard shortcuts</h3>
             <p>Nudge layers by 1px or 10px, cycle blend modes, adjust opacity and scale — all without touching the mouse.</p>
           </div>
           <div class="feat-card rv d3">
-            <div class="glyph">☾</div>
+            <div class="glyph" aria-hidden="true">☾</div>
             <h3>Themes &amp; languages</h3>
             <p>Dark and light panel themes. English and Japanese UI. Per-site visibility that survives page reloads.</p>
           </div>
@@ -709,16 +237,19 @@
         </div>
         <div class="steps">
           <div class="step rv d1">
+            <figure class="step-media"><img src="step-1.png" alt="Clicking the DiffPixel toolbar icon opens the floating panel inside the page" width="600" height="360" loading="lazy" decoding="async" /></figure>
             <span class="step-num">01</span>
             <h3>Open the panel</h3>
             <p>Open the page you want to inspect and click the DiffPixel icon in Chrome. The floating panel appears inside the page.</p>
           </div>
           <div class="step rv d2">
+            <figure class="step-media"><img src="step-2.png" alt="Adding a reference image to the panel by drag-and-drop, file picker, or paste" width="600" height="360" loading="lazy" decoding="async" /></figure>
             <span class="step-num">02</span>
             <h3>Add a reference image</h3>
             <p>Click <strong>Add</strong>, drag &amp; drop an image onto the panel, or paste one from the clipboard.</p>
           </div>
           <div class="step rv d3">
+            <figure class="step-media"><img src="diff-result.png" alt="Difference blend mode: identical pixels turn black while mismatches glow in colour" width="600" height="360" loading="lazy" decoding="async" /></figure>
             <span class="step-num">03</span>
             <h3>Compare &amp; fix</h3>
             <p>Align with X/Y and scale, lower the opacity or switch to <strong>Difference</strong>, and spot every mismatch. Your setup is restored after reloads.</p>
@@ -755,7 +286,7 @@
           <p class="sec-sub">Quick answers about DiffPixel.</p>
         </div>
         <div class="faq-list">
-          <details class="q rv" open>
+          <details class="q rv">
             <summary>What is DiffPixel?</summary>
             <div class="a"><p>DiffPixel is a free Chrome extension for designers and developers. It overlays local reference images (design mockups, screenshots) on the current web page in a floating panel, so you can compare the design and the live implementation pixel by pixel using layers, blend modes, opacity, position, scale, and a grid.</p></div>
           </details>
@@ -780,7 +311,9 @@
             <div class="a"><p>Open the page, click the DiffPixel icon in Chrome, then add a reference image via the Add button, drag and drop, or paste. Align with the X/Y and scale controls, lower the opacity or switch to the Difference blend mode, and inspect mismatches. Settings are restored automatically after reloads. The <a class="il" href="manual.html">user manual</a> covers every control and shortcut in detail.</p></div>
           </details>
         </div>
+      </div>
 
+      <div class="wrap section">
         <div class="priv rv">
           <div>
             <h2>Private by design</h2>
@@ -799,7 +332,7 @@
       <div class="wrap">
         <section class="hero">
           <div class="hero-text">
-            <p class="tag"><span class="tag-dot"></span>無料 CHROME 拡張機能 · v1.0.7</p>
+            <p class="tag">無料 · Chrome 拡張機能</p>
             <h1>
               ブラウザ上で<br>
               <span class="hl">ピクセル単位の</span><br>
@@ -809,7 +342,7 @@
               DiffPixel は、デザインカンプやスクリーンショットなどのローカル参照画像を任意のWebページに重ねて表示できる無料の Chrome 拡張機能です。デザイナーとエンジニアが、デザインと実装をピクセル単位で比較できます。
             </p>
             <div class="cta-row">
-              <a class="btn btn-primary" href="https://github.com/RitaStella1128/DiffPixel" rel="noopener">↓ DiffPixel を入手</a>
+              <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Chrome に追加 — 無料</a>
               <a class="btn btn-ghost"   href="manual.html#ja">マニュアルを読む</a>
             </div>
             <div class="badges">
@@ -819,66 +352,9 @@
             </div>
           </div>
 
-          <div class="diff-wrap">
-            <div class="browser">
-              <div class="browser-bar">
-                <span class="b-dot"></span><span class="b-dot"></span><span class="b-dot"></span>
-                <span class="b-url">localhost:3000 / home</span>
-              </div>
-              <div class="browser-body">
-                <div class="wf wf-h"></div>
-                <div class="wf wf-s"></div>
-                <div class="wf wf-s2"></div>
-                <div class="wf wf-block"></div>
-                <div class="wf wf-r"></div>
-                <div class="wf wf-r2"></div>
-                <div class="wf wf-block" style="height:60px"></div>
-                <div class="wf wf-r3"></div>
-                <div class="wf wf-r2"></div>
-                <div class="overlay-ring">
-                  <span class="overlay-badge">design.png · 68%</span>
-                </div>
-                <div class="dpx"></div>
-                <div class="dpx"></div>
-                <div class="dpx"></div>
-                <div class="dpx"></div>
-                <div class="dpx"></div>
-                <div class="scan"></div>
-              </div>
-            </div>
-            <div class="panel">
-              <div class="pan-head">
-                <img src="icons/icon32.png" alt="" />
-                <strong>DiffPixel</strong>
-                <span>⊡ ✕</span>
-              </div>
-              <div class="pan-sec">
-                <div class="pan-lbl">レイヤー</div>
-                <div class="pan-row sel">
-                  <span class="pan-thumb"></span>
-                  <span class="pan-nm">design.png</span>
-                  <span class="pan-ic">👁 🔒</span>
-                </div>
-                <div class="pan-row">
-                  <span class="pan-thumb" style="opacity:.4"></span>
-                  <span class="pan-nm" style="color:var(--muted)">header-v3.png</span>
-                  <span class="pan-ic">👁</span>
-                </div>
-              </div>
-              <div class="pan-sec">
-                <div class="pan-lbl">不透明度 · 68%</div>
-                <div class="pan-slider"></div>
-              </div>
-              <div class="pan-sec">
-                <div class="pan-lbl">合成モード</div>
-                <div class="pan-chips">
-                  <span class="pan-chip">通常</span>
-                  <span class="pan-chip on">差分</span>
-                  <span class="pan-chip">乗算</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          <figure class="hero-media">
+            <img src="hero-panel.png" alt="参照画像を実装ページに重ねた DiffPixel パネル。X/Yのピクセルずれと差分モードで不一致をハイライト" width="1200" height="800" loading="eager" decoding="async" />
+          </figure>
         </section>
       </div>
 
@@ -891,14 +367,14 @@
         <div class="feat-grid">
           <div class="feat-card wide rv d1">
             <div>
-              <div class="glyph">▤</div>
+              <div class="glyph" aria-hidden="true">▤</div>
               <h3>複数の画像レイヤー</h3>
               <p>複数の参照画像を同時に重ねられます。並び替え、固定、表示切替、名前変更、削除に対応。ファイル選択、ドラッグ&amp;ドロップ、貼り付けで追加できます。</p>
             </div>
             <div>
-              <div class="glyph">◑</div>
-              <h3>8種類の合成モード</h3>
-              <p>視覚比較に必要なすべてのモードを搭載。差分モードなら、ずれたピクセルが一目で分かります。</p>
+              <div class="glyph" aria-hidden="true">◑</div>
+              <h3>ずれを一瞬で発見</h3>
+              <p><strong>差分</strong>モードに切り替えると、一致したピクセルは黒くなり、ずれた箇所だけが光ります。サブピクセルのずれも数秒で発見。合成モードは全8種類。</p>
               <div class="blend-pills">
                 <span class="bpill">通常</span>
                 <span class="bpill">反転</span>
@@ -909,25 +385,26 @@
                 <span class="bpill">ハードライト</span>
                 <span class="bpill hi">除外</span>
               </div>
+              <figure class="feat-media"><img src="diff-result.png" alt="差分モードの結果：一致したピクセルは黒く、ずれた箇所だけが光る" width="600" height="360" loading="lazy" decoding="async" /></figure>
             </div>
           </div>
           <div class="feat-card rv d1">
-            <div class="glyph">✛</div>
-            <h3>ピクセル単位の調整</h3>
-            <p>不透明度、X/Y位置、スケールを数値や矢印キーで微調整。リセット・中央・幅合わせボタンでワンクリック整列。</p>
+            <div class="glyph" aria-hidden="true">✛</div>
+            <h3>1px単位で完璧に整列</h3>
+            <p>矢印キーや数値でX/Y・スケールを微調整し、オーバーレイをぴったり合わせます。リセット・中央・幅合わせでワンクリック整列。</p>
           </div>
           <div class="feat-card rv d2">
-            <div class="glyph">▦</div>
+            <div class="glyph" aria-hidden="true">▦</div>
             <h3>グリッドオーバーレイ</h3>
             <p>ピクセル数を指定できるグリッドで、余白・整列・リズムをデザインシステムに沿って検証できます。</p>
           </div>
           <div class="feat-card rv d2">
-            <div class="glyph">⌨</div>
+            <div class="glyph" aria-hidden="true">⌨</div>
             <h3>キーボードショートカット</h3>
             <p>1px/10px移動、合成モード切替、不透明度・スケール調整、グリッド切替まで、キーボードだけで操作できます。</p>
           </div>
           <div class="feat-card rv d3">
-            <div class="glyph">☾</div>
+            <div class="glyph" aria-hidden="true">☾</div>
             <h3>テーマと言語</h3>
             <p>ダーク/ライトテーマ、英語/日本語UI、リロード後も維持されるサイト単位の表示設定に対応。</p>
           </div>
@@ -942,16 +419,19 @@
         </div>
         <div class="steps">
           <div class="step rv d1">
+            <figure class="step-media"><img src="step-1.png" alt="Chrome の DiffPixel アイコンをクリックすると、ページ内にフローティングパネルが開く" width="600" height="360" loading="lazy" decoding="async" /></figure>
             <span class="step-num">01</span>
             <h3>パネルを開く</h3>
             <p>確認したいページを開き、Chrome の DiffPixel アイコンをクリックします。ページ内にフローティングパネルが表示されます。</p>
           </div>
           <div class="step rv d2">
+            <figure class="step-media"><img src="step-2.png" alt="ドラッグ&amp;ドロップ・ファイル選択・貼り付けで参照画像をパネルに追加" width="600" height="360" loading="lazy" decoding="async" /></figure>
             <span class="step-num">02</span>
             <h3>参照画像を追加</h3>
             <p><strong>追加</strong>ボタン、パネルへのドラッグ&amp;ドロップ、またはクリップボードからの貼り付けで画像を追加します。</p>
           </div>
           <div class="step rv d3">
+            <figure class="step-media"><img src="diff-result.png" alt="差分モード：一致したピクセルは黒くなり、ずれた箇所だけが色で光る" width="600" height="360" loading="lazy" decoding="async" /></figure>
             <span class="step-num">03</span>
             <h3>比較して修正</h3>
             <p>X/Yとスケールで位置を合わせ、不透明度を下げるか<strong>差分</strong>モードに切り替えて、ずれを確認します。設定はリロード後も復元されます。</p>
@@ -986,7 +466,7 @@
           <p class="sec-sub">DiffPixel についての簡単なQ&amp;A。</p>
         </div>
         <div class="faq-list">
-          <details class="q rv" open>
+          <details class="q rv">
             <summary>DiffPixel とは何ですか?</summary>
             <div class="a"><p>DiffPixel は、デザイナーと開発者向けの無料 Chrome 拡張機能です。デザインカンプやスクリーンショットなどのローカル参照画像を、ページ内のフローティングパネルから現在のWebページに重ねて表示し、レイヤー、合成モード、不透明度、位置、スケール、グリッドを使ってデザインと実装をピクセル単位で比較できます。</p></div>
           </details>
@@ -1011,7 +491,9 @@
             <div class="a"><p>ページを開いて Chrome の DiffPixel アイコンをクリックし、追加ボタン・ドラッグ&amp;ドロップ・貼り付けのいずれかで参照画像を追加します。X/Yとスケールで位置を合わせ、不透明度を下げるか差分モードに切り替えて、ずれを確認してください。設定はリロード後に自動復元されます。詳しくは<a class="il" href="manual.html#ja">操作マニュアル</a>をご覧ください。</p></div>
           </details>
         </div>
+      </div>
 
+      <div class="wrap section">
         <div class="priv rv">
           <div>
             <h2>プライバシー第一の設計</h2>
@@ -1041,8 +523,8 @@
     const btns   = [...document.querySelectorAll('[data-lang-button]')];
     const panels = [...document.querySelectorAll('[data-lang-panel]')];
     const navLabels = {
-      en: { features:'Features', how:'How it works', faq:'FAQ', manual:'Manual', privacy:'Privacy' },
-      ja: { features:'機能', how:'使い方', faq:'FAQ', manual:'マニュアル', privacy:'プライバシー' }
+      en: { features:'Features', how:'How it works', faq:'FAQ', manual:'Manual', privacy:'Privacy', install:'Add to Chrome' },
+      ja: { features:'機能', how:'使い方', faq:'FAQ', manual:'マニュアル', privacy:'プライバシー', install:'Chrome に追加' }
     };
     const footerLabels = {
       en: { manual:'Manual', privacy:'Privacy Policy' },

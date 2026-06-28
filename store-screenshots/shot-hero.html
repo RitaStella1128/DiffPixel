@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>DiffPixel hero shot — AXIS-RIGID</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;border-radius:0!important;box-shadow:none!important;}
+  :root{
+    --bg:#0a0a12; --surface:#15151f; --surface-2:#1d1d2b; --surface-3:#262638;
+    --line:#2a2e40; --line-strong:#3a3f57; --cyan:#00d4ff; --cyan-dim:#0e2733;
+    --diff:#ff4d6a; --diff-dim:#35131d; --text:#f1f3fa; --muted:#9aa3bb; --ink:#04141c;
+    --mono:"JetBrains Mono","SFMono-Regular",Consolas,monospace;
+    --ui:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+  }
+  body{width:1200px;height:800px;overflow:hidden;background:var(--bg);position:relative;font-family:var(--ui);color:var(--text);}
+  /* axis grid */
+  .grid{position:absolute;inset:0;
+    background-image:linear-gradient(rgba(0,212,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.045) 1px,transparent 1px);
+    background-size:40px 40px;}
+  .stage{position:absolute;inset:0;}
+
+  /* ── Live page wireframe ── */
+  .page{position:absolute;left:72px;top:120px;width:620px;height:560px;background:var(--surface);border:4px solid var(--line-strong);}
+  .page-bar{height:44px;border-bottom:4px solid var(--line-strong);display:flex;align-items:center;gap:9px;padding:0 18px;background:var(--surface-2);}
+  .dot{width:11px;height:11px;background:var(--line-strong);}
+  .page-tag{margin-left:14px;width:200px;height:12px;background:var(--surface-3);}
+  .page-body{padding:34px;}
+  .wblock{background:var(--surface-2);border:2px solid var(--line);}
+  .wline{background:var(--surface-3);height:12px;}
+  .row{display:flex;gap:20px;}
+
+  /* ── Design overlay (the reference, offset) ── */
+  .overlay{position:absolute;left:88px;top:138px;width:560px;}/* offset +16/+18 from page-body origin */
+  .oblock{border:3px solid var(--cyan);background:rgba(0,212,255,.06);}
+  .oline{height:12px;background:rgba(0,212,255,.20);}
+
+  /* diff markers */
+  .mark{position:absolute;display:flex;align-items:center;gap:6px;}
+  .mchip{width:14px;height:14px;background:var(--diff);}
+  .mlabel{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--diff);background:var(--diff-dim);border:2px solid var(--diff);padding:2px 7px;white-space:nowrap;}
+
+  /* legend */
+  .legend{position:absolute;left:72px;top:680px;display:flex;gap:24px;align-items:center;}
+  .lg{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;color:var(--muted);}
+  .sw{width:22px;height:8px;}
+
+  /* ── DiffPixel panel (flat) ── */
+  .panel{position:absolute;right:64px;top:96px;width:332px;background:var(--surface);border:4px solid var(--cyan);font-size:11px;}
+  .p-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:4px solid var(--line-strong);background:var(--surface-2);}
+  .p-logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:15px;letter-spacing:-.01em;}
+  .p-logo .ico{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+  .p-logo .ico i{width:7px;height:7px;background:var(--cyan);display:block;}
+  .p-status{display:flex;align-items:center;justify-content:space-between;padding:10px 15px;border-bottom:2px solid var(--line);}
+  .p-conn{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:var(--muted);}
+  .p-conn .live{width:8px;height:8px;background:#00e5a0;}
+  .p-tog{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--muted);}
+  .p-tog .sw{width:30px;height:16px;background:var(--cyan);position:relative;}
+  .p-tog .sw i{position:absolute;width:10px;height:10px;background:var(--ink);top:3px;right:3px;}
+
+  .p-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
+  .p-sechead{display:flex;align-items:center;justify-content:space-between;padding:11px 15px 8px;}
+  .p-add{width:22px;height:22px;background:var(--surface-3);border:2px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--muted);line-height:1;}
+
+  .lyr{display:flex;align-items:center;gap:10px;padding:8px 15px;}
+  .lyr.active{background:var(--cyan-dim);border-top:2px solid var(--cyan);border-bottom:2px solid var(--cyan);}
+  .lyr.off{opacity:.45;}
+  .th{width:30px;height:22px;background:var(--surface-3);border:2px solid var(--line-strong);flex:none;}
+  .th.cy{background:#0b6f86;border-color:var(--cyan);}
+  .lyr-info{flex:1;min-width:0;}
+  .lyr-name{font-size:12px;font-weight:600;color:var(--text);}
+  .lyr-name.dim{color:var(--muted);}
+  .lyr-meta{font-family:var(--mono);font-size:9px;color:#5a6178;margin-top:2px;}
+  .eye{width:18px;height:14px;border:2px solid var(--muted);flex:none;}
+  .eye.cy{border-color:var(--cyan);}
+
+  .ctl{border-top:4px solid var(--line-strong);padding:11px 15px 14px;}
+  .ctl-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+  .ctl-row:last-child{margin-bottom:0;}
+  .ck{font-family:var(--mono);font-size:10px;color:var(--muted);width:42px;flex:none;}
+  .field{flex:1;height:20px;background:var(--surface-2);border:2px solid var(--line-strong);display:flex;align-items:center;padding:0 8px;font-family:var(--mono);font-size:10px;color:var(--text);}
+  .field.c{justify-content:center;}
+  .val{width:34px;height:20px;background:var(--surface-2);border:2px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--text);}
+  .stepb{width:18px;height:20px;background:var(--surface-3);border:2px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);flex:none;}
+  .bar{flex:1;height:6px;background:var(--surface-3);position:relative;}
+  .bar i{position:absolute;left:0;top:0;height:100%;width:50%;background:var(--cyan);}
+  .bar b{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:var(--cyan);}
+  .triple{display:flex;gap:6px;}
+  .triple .field{justify-content:center;}
+  .blend{flex:1;height:22px;background:var(--cyan-dim);border:2px solid var(--cyan);display:flex;align-items:center;justify-content:space-between;padding:0 9px;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--cyan);}
+  .flags{display:flex;gap:6px;}
+  .flag{flex:1;height:24px;background:var(--surface-2);border:2px solid var(--line-strong);display:flex;align-items:center;justify-content:center;gap:5px;font-family:var(--mono);font-size:9px;color:var(--muted);}
+  .flag.rm{border-color:rgba(255,77,106,.5);color:var(--diff);}
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="stage">
+
+    <!-- live page -->
+    <div class="page">
+      <div class="page-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="page-tag"></span></div>
+      <div class="page-body">
+        <div class="wblock" style="width:240px;height:34px;margin-bottom:24px;"></div>
+        <div class="wline" style="width:78%;margin-bottom:12px;"></div>
+        <div class="wline" style="width:64%;margin-bottom:12px;"></div>
+        <div class="wline" style="width:70%;margin-bottom:34px;"></div>
+        <div class="row">
+          <div class="wblock" style="width:150px;height:150px;"></div>
+          <div style="flex:1;">
+            <div class="wline" style="width:90%;margin-bottom:12px;"></div>
+            <div class="wline" style="width:80%;margin-bottom:12px;"></div>
+            <div class="wblock" style="width:130px;height:40px;margin-top:20px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- design overlay, offset to reveal mismatch -->
+    <div class="overlay">
+      <div class="oblock" style="width:240px;height:34px;margin-bottom:24px;"></div>
+      <div class="oline" style="width:78%;margin-bottom:12px;"></div>
+      <div class="oline" style="width:64%;margin-bottom:12px;"></div>
+      <div class="oline" style="width:70%;margin-bottom:34px;"></div>
+      <div class="row">
+        <div class="oblock" style="width:150px;height:150px;"></div>
+        <div style="flex:1;">
+          <div class="oline" style="width:90%;margin-bottom:12px;"></div>
+          <div class="oline" style="width:80%;margin-bottom:12px;"></div>
+          <div class="oblock" style="width:130px;height:40px;margin-top:20px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- diff markers -->
+    <div class="mark" style="left:300px;top:150px;"><span class="mchip"></span><span class="mlabel">+16px X</span></div>
+    <div class="mark" style="left:118px;top:430px;"><span class="mchip"></span><span class="mlabel">+18px Y</span></div>
+
+    <!-- legend -->
+    <div class="legend">
+      <div class="lg"><span class="sw" style="background:var(--line-strong);"></span>Live page</div>
+      <div class="lg"><span class="sw" style="background:var(--cyan);"></span>Reference</div>
+      <div class="lg"><span class="sw" style="background:var(--diff);"></span>Mismatch</div>
+    </div>
+
+    <!-- panel -->
+    <div class="panel">
+      <div class="p-head">
+        <div class="p-logo"><span class="ico"><i></i><i></i><i></i><i></i></span>DiffPixel</div>
+      </div>
+      <div class="p-status">
+        <div class="p-conn"><span class="live"></span>Connected</div>
+        <div class="p-tog">Overlay<span class="sw"><i></i></span></div>
+      </div>
+
+      <div class="p-sechead"><span class="p-label">Layers</span><span class="p-add">+</span></div>
+      <div class="lyr active">
+        <span class="th cy"></span>
+        <div class="lyr-info"><div class="lyr-name">Design_v2.png</div><div class="lyr-meta">50% · 16,18 · ×1.00</div></div>
+        <span class="eye cy"></span>
+      </div>
+      <div class="lyr">
+        <span class="th"></span>
+        <div class="lyr-info"><div class="lyr-name dim">Mockup_old.png</div><div class="lyr-meta">30% · 0,0 · ×1.00</div></div>
+        <span class="eye"></span>
+      </div>
+      <div class="lyr off">
+        <span class="th"></span>
+        <div class="lyr-info"><div class="lyr-name dim">Reference_final.png</div><div class="lyr-meta">75% · 0,0 · ×1.00</div></div>
+        <span class="eye"></span>
+      </div>
+
+      <div class="ctl">
+        <div class="ctl-row"><span class="ck">Opacity</span><span class="bar"><i></i><b></b></span><span class="val">50</span></div>
+        <div class="ctl-row"><span class="ck">X</span><span class="stepb">&#9664;</span><span class="field c">16</span><span class="stepb">&#9654;</span></div>
+        <div class="ctl-row"><span class="ck">Y</span><span class="stepb">&#9664;</span><span class="field c">18</span><span class="stepb">&#9654;</span></div>
+        <div class="ctl-row"><span class="ck">Scale</span><span class="stepb">&#9664;</span><span class="field c">1.00</span><span class="stepb">&#9654;</span></div>
+        <div class="ctl-row triple"><span class="field">Reset</span><span class="field">Center</span><span class="field">Fit W</span></div>
+        <div class="ctl-row"><span class="ck">Blend</span><span class="blend">Difference<span>&#9662;</span></span></div>
+        <div class="ctl-row flags"><span class="flag">Invert</span><span class="flag">Lock</span><span class="flag rm">Remove</span></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;border-radius:0!important;box-shadow:none!important;}
+:root{--bg:#0a0a12;--surface:#15151f;--surface-2:#1d1d2b;--surface-3:#262638;--line:#2a2e40;--line-strong:#3a3f57;--cyan:#00d4ff;--cyan-dim:#0e2733;--green:#00e5a0;--text:#f1f3fa;--muted:#9aa3bb;--ui:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;--mono:"JetBrains Mono",Consolas,monospace;}
+body{width:600px;height:360px;overflow:hidden;background:var(--bg);position:relative;font-family:var(--ui);color:var(--text);}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);background-size:30px 30px;}
+/* browser */
+.win{position:absolute;left:40px;top:40px;width:520px;height:280px;background:var(--surface);border:4px solid var(--line-strong);}
+.bar{height:40px;background:var(--surface-2);border-bottom:4px solid var(--line-strong);display:flex;align-items:center;gap:8px;padding:0 14px;}
+.dot{width:10px;height:10px;background:var(--line-strong);}
+.url{flex:1;height:18px;background:var(--surface-3);border:2px solid var(--line);margin:0 10px;}
+.tool{width:26px;height:26px;border:3px solid var(--cyan);background:var(--cyan-dim);display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:4px;}
+.tool i{background:var(--cyan);display:block;}
+.body{padding:22px;}
+.bl{background:var(--surface-2);border:2px solid var(--line);}
+.ln{height:10px;background:var(--surface-3);}
+/* mini panel appearing */
+.panel{position:absolute;right:60px;bottom:54px;width:190px;background:var(--surface);border:4px solid var(--cyan);}
+.ph{display:flex;align-items:center;gap:7px;padding:9px 11px;background:var(--surface-2);border-bottom:3px solid var(--line-strong);font-weight:800;font-size:13px;}
+.ph .ico{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.ph .ico i{width:6px;height:6px;background:var(--cyan);display:block;}
+.pc{display:flex;align-items:center;gap:7px;padding:9px 11px;font-family:var(--mono);font-size:10px;color:var(--muted);}
+.pc .live{width:7px;height:7px;background:var(--green);}
+/* cursor */
+.cur{position:absolute;left:474px;top:60px;color:#fff;font-size:20px;}
+.cur svg{filter:drop-shadow(0 0 0 #000);}
+.badge{position:absolute;left:430px;top:92px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan);background:var(--cyan-dim);border:2px solid var(--cyan);padding:3px 8px;}
+</style></head><body>
+<div class="grid"></div>
+<div class="win">
+  <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url"></span><span class="tool"><i></i><i></i><i></i><i></i></span></div>
+  <div class="body">
+    <div class="bl" style="width:180px;height:26px;margin-bottom:18px;"></div>
+    <div class="ln" style="width:80%;margin-bottom:10px;"></div>
+    <div class="ln" style="width:66%;margin-bottom:10px;"></div>
+    <div class="ln" style="width:72%;"></div>
+  </div>
+</div>
+<div class="panel">
+  <div class="ph"><span class="ico"><i></i><i></i><i></i><i></i></span>DiffPixel</div>
+  <div class="pc"><span class="live"></span>Connected</div>
+</div>
+<div class="cur"><svg width="22" height="22" viewBox="0 0 22 22" fill="#fff" stroke="#04141c" stroke-width="1"><path d="M3 2l5 16 2.5-6.5L17 9z"/></svg></div>
+</body></html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;border-radius:0!important;box-shadow:none!important;}
+:root{--bg:#0a0a12;--surface:#15151f;--surface-2:#1d1d2b;--surface-3:#262638;--line:#2a2e40;--line-strong:#3a3f57;--cyan:#00d4ff;--cyan-dim:#0e2733;--green:#00e5a0;--text:#f1f3fa;--muted:#9aa3bb;--ui:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;--mono:"JetBrains Mono",Consolas,monospace;}
+body{width:600px;height:360px;overflow:hidden;background:var(--bg);position:relative;font-family:var(--ui);color:var(--text);}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.04) 1px,transparent 1px);background-size:30px 30px;}
+.panel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:300px;background:var(--surface);border:4px solid var(--cyan);}
+.ph{display:flex;align-items:center;gap:8px;padding:11px 13px;background:var(--surface-2);border-bottom:3px solid var(--line-strong);font-weight:800;font-size:14px;}
+.ph .ico{display:grid;grid-template-columns:1fr 1fr;gap:2px;}.ph .ico i{width:7px;height:7px;background:var(--cyan);display:block;}
+.lab{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;padding:11px 13px 8px;}
+.lyr{display:flex;align-items:center;gap:9px;padding:8px 13px;}
+.th{width:28px;height:20px;background:#0b6f86;border:2px solid var(--cyan);flex:none;}
+.nm{font-size:12px;font-weight:600;}
+.mt{font-family:var(--mono);font-size:9px;color:#5a6178;margin-top:2px;}
+.drop{margin:6px 13px 14px;height:92px;border:4px dashed var(--cyan);background:var(--cyan-dim);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.drop .ic{width:30px;height:24px;border:3px solid var(--cyan);position:relative;}
+.drop .ic::after{content:"";position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:9px solid var(--cyan);}
+.drop .t{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan);}
+.drop .s{font-family:var(--mono);font-size:9px;color:var(--muted);}
+.fly{position:absolute;right:64px;top:60px;width:64px;height:48px;background:#0b6f86;border:3px solid var(--cyan);}
+.cur{position:absolute;right:78px;top:96px;}
+.badge{position:absolute;left:34px;top:42px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--cyan);background:var(--cyan-dim);border:2px solid var(--cyan);padding:3px 8px;}
+</style></head><body>
+<div class="grid"></div>
+<div class="fly"></div>
+<div class="cur"><svg width="22" height="22" viewBox="0 0 22 22" fill="#fff" stroke="#04141c" stroke-width="1"><path d="M3 2l5 16 2.5-6.5L17 9z"/></svg></div>
+<div class="panel">
+  <div class="ph"><span class="ico"><i></i><i></i><i></i><i></i></span>DiffPixel</div>
+  <div class="lab">Layers</div>
+  <div class="lyr"><span class="th"></span><div><div class="nm">Design_v2.png</div><div class="mt">just added</div></div></div>
+  <div class="drop"><span class="ic"></span><span class="t">Drop image here</span><span class="s">or click Add / paste</span></div>
+</div>
+</body></html>
