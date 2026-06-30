@@ -3,38 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy - DiffPixel</title>
+  <title>Privacy Policy — DiffPixel</title>
+  <meta name="description" content="DiffPixel does not collect or transmit personal data. Reference images and settings remain in local Chrome storage on your device." />
+  <link rel="canonical" href="https://ritastella1128.github.io/DiffPixel/privacy.html" />
   <link rel="icon" type="image/png" sizes="32x32" href="icons/icon32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="icons/icon16.png" />
   <link rel="apple-touch-icon" href="icons/icon128.png" />
-  <link rel="stylesheet" href="axis-rigid.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="editorial.css?v=3" />
 </head>
-<body>
-  <header>
-    <a class="brand" href="./" aria-label="DiffPixel home">
-      <img src="icons/icon48.png" alt="DiffPixel icon" width="30" height="30" />
-      <span>DiffPixel</span>
-    </a>
-    <nav class="lang-switch" aria-label="Language">
-      <button type="button" data-lang-button="en" aria-pressed="true">English</button>
-      <button type="button" data-lang-button="ja" aria-pressed="false">日本語</button>
-    </nav>
+<body data-title-en="Privacy Policy — DiffPixel" data-title-ja="プライバシーポリシー — DiffPixel">
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="./" aria-label="DiffPixel home">
+        <img src="icons/icon48.png" alt="" width="28" height="28" />
+        <span>DiffPixel</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="./" data-en="Home" data-ja="ホーム">Home</a>
+        <a href="manual.html" data-en="Manual" data-ja="マニュアル" data-en-href="manual.html" data-ja-href="manual.html#ja">Manual</a>
+        <a href="privacy.html" aria-current="page" data-en="Privacy" data-ja="プライバシー">Privacy</a>
+      </nav>
+      <div class="header-tools">
+        <nav class="lang-switch" aria-label="Language">
+          <button type="button" data-lang-button="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang-button="ja" aria-pressed="false">JA</button>
+        </nav>
+        <a class="header-cta" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener" data-en="Add to Chrome" data-ja="Chrome に追加">Add to Chrome</a>
+      </div>
+    </div>
   </header>
 
   <main>
-    <article class="hero">
-      <div data-lang-panel="en" class="active">
-        <h1>Privacy Policy</h1>
-        <p class="meta">Last updated: June 8, 2026 / DiffPixel Chrome Extension</p>
-        <p class="summary">DiffPixel does not collect, transmit, sell, or share personal data. Reference images and settings stay on your device.</p>
+    <div data-lang-panel="en" class="active">
+      <section class="shell editorial-hero privacy-hero" aria-labelledby="en-privacy-title">
+        <div>
+          <p class="eyebrow">Privacy policy / 02</p>
+          <h1 id="en-privacy-title">Nothing leaves your device.</h1>
+          <p class="hero-lead">DiffPixel does not collect, transmit, sell, or share personal data. Reference images and settings stay with you.</p>
+          <div class="hero-meta" aria-label="Policy metadata">
+            <span>Updated 2026.06.08</span><span>Version 1.0.7</span><span>Public policy</span>
+          </div>
+        </div>
+        <div class="privacy-statement" aria-label="Local only">
+          <strong>Local</strong>
+          <strong>Only</strong>
+        </div>
+      </section>
 
-        <div class="content">
-          <section>
-            <h2>1. Overview</h2>
-            <p>DiffPixel is a visual comparison extension for designers and developers. It lets you place local reference images over the current browser page and adjust layers, opacity, position, scale, blend modes, and a grid.</p>
-          </section>
-          <section>
-            <h2>2. Data We Do Not Collect</h2>
+      <section class="status-list" aria-label="Privacy summary">
+        <div><span>01 / Collection</span><strong>None</strong></div>
+        <div><span>02 / Tracking</span><strong>None</strong></div>
+        <div><span>03 / Storage</span><strong>On device</strong></div>
+      </section>
+
+      <div class="chapter-nav-wrap">
+        <nav class="shell chapter-nav" aria-label="Privacy policy sections">
+          <a href="#en-overview">01 Overview</a>
+          <a href="#en-no-collection">02 Collection</a>
+          <a href="#en-storage">03 Storage</a>
+          <a href="#en-permissions">04 Permissions</a>
+          <a href="#en-network">05 Network</a>
+          <a href="#en-control">06 Control</a>
+          <a href="#en-contact">07 Contact</a>
+        </nav>
+      </div>
+
+      <article class="shell editorial-flow">
+        <section class="chapter" id="en-overview">
+          <div class="chapter-index">01 / Overview</div>
+          <div class="chapter-body">
+            <h2>Built for visual comparison.</h2>
+            <p>DiffPixel is a visual comparison extension for designers and developers. It places local reference images over the current browser page and provides controls for layers, opacity, position, scale, blend modes, and a grid.</p>
+          </div>
+        </section>
+
+        <section class="chapter" id="en-no-collection">
+          <div class="chapter-index">02 / Collection</div>
+          <div class="chapter-body">
+            <h2>Data we do not collect.</h2>
             <p>DiffPixel does not collect, store on external servers, transmit, sell, or share:</p>
             <ul>
               <li>Personal information such as name, email address, or IP address.</li>
@@ -42,98 +91,187 @@
               <li>Uploaded or pasted reference images.</li>
               <li>Saved layer settings or visual comparison data.</li>
             </ul>
-          </section>
-          <section>
-            <h2>3. Data Stored Locally</h2>
+          </div>
+        </section>
+
+        <section class="chapter" id="en-storage">
+          <div class="chapter-index">03 / Storage</div>
+          <div class="chapter-body">
+            <h2>Stored on your device.</h2>
             <p>The extension may store reference images, layer names, position, opacity, scale, blend mode, grid settings, panel position, theme, language preference, and site-level panel visibility in Chrome storage on your device.</p>
             <p>This local storage is used only to restore your visual comparison setup and improve day-to-day usability.</p>
-          </section>
-          <section>
-            <h2>4. Permissions</h2>
-            <p>DiffPixel uses Chrome extension permissions to inject its local content script and CSS, display the in-page floating panel, overlay user-provided reference images, and save local settings.</p>
-            <p>Host access for HTTP, HTTPS, and local file pages is required because DiffPixel is designed to work on user-selected pages, and those pages cannot be known in advance. Local file pages also require the user to enable Chrome's file URL access setting for the extension. Host access is used to inject the local overlay and restore the panel after reloads on pages where the user has enabled DiffPixel.</p>
-          </section>
-          <section>
-            <h2>5. Network Use and Remote Code</h2>
-            <p>DiffPixel does not use analytics, advertising networks, tracking scripts, external APIs, remote fonts, or remote code. The extension's scripts and styles are packaged with the extension.</p>
-          </section>
-          <section>
-            <h2>6. User Control</h2>
+          </div>
+        </section>
+
+        <section class="chapter" id="en-permissions">
+          <div class="chapter-index">04 / Permissions</div>
+          <div class="chapter-body">
+            <h2>Access with one purpose.</h2>
+            <p>DiffPixel uses Chrome extension permissions to inject its packaged content script and CSS, display the in-page floating panel, overlay user-provided reference images, and save local settings.</p>
+            <p>Host access for HTTP, HTTPS, and local file pages is required because DiffPixel works on pages selected by the user, which cannot be known in advance. Local file pages also require the user to enable Chrome's file URL access setting. Host access is used to display the local overlay and restore the panel on pages where DiffPixel has been enabled.</p>
+          </div>
+        </section>
+
+        <section class="chapter" id="en-network">
+          <div class="chapter-index">05 / Network</div>
+          <div class="chapter-body">
+            <h2>No remote code.</h2>
+            <p>DiffPixel does not use analytics, advertising networks, tracking scripts, external APIs, remote fonts, or remote code. The extension's scripts, styles, and assets are packaged with the extension.</p>
+          </div>
+        </section>
+
+        <section class="chapter" id="en-control">
+          <div class="chapter-index">06 / Control</div>
+          <div class="chapter-body">
+            <h2>Your data, your control.</h2>
             <p>You can remove saved data by clearing the extension's stored settings in Chrome, removing layers in the panel, or uninstalling the extension.</p>
-          </section>
-          <section>
-            <h2>7. Contact</h2>
-            <p>For questions about this policy, please contact the repository owner through the public GitHub repository.</p>
-          </section>
+          </div>
+        </section>
+
+        <section class="chapter" id="en-contact">
+          <div class="chapter-index">07 / Contact</div>
+          <div class="chapter-body">
+            <h2>Questions are welcome.</h2>
+            <p>For questions about this policy, contact the repository owner through the <a href="https://github.com/RitaStella1128/DiffPixel">public GitHub repository</a>.</p>
+          </div>
+        </section>
+      </article>
+
+      <section class="shell final-cta">
+        <p class="eyebrow">Private by design</p>
+        <h2>Compare without uploading.</h2>
+        <div class="cta-row">
+          <a class="button" href="./">Explore DiffPixel</a>
+          <a class="button secondary" href="manual.html">Read the manual</a>
         </div>
+      </section>
+    </div>
+
+    <div data-lang-panel="ja" lang="ja">
+      <section class="shell editorial-hero privacy-hero" aria-labelledby="ja-privacy-title">
+        <div>
+          <p class="eyebrow">プライバシーポリシー / 02</p>
+          <h1 id="ja-privacy-title">何も端末の外へ出さない。</h1>
+          <p class="hero-lead">DiffPixelは個人データを収集、送信、販売、共有しません。参照画像と設定はユーザーの端末内に留まります。</p>
+          <div class="hero-meta" aria-label="ポリシー情報">
+            <span>更新 2026.06.08</span><span>バージョン 1.0.7</span><span>公開ポリシー</span>
+          </div>
+        </div>
+        <div class="privacy-statement" aria-label="ローカルのみ">
+          <strong>Local</strong>
+          <strong>Only</strong>
+        </div>
+      </section>
+
+      <section class="status-list" aria-label="プライバシー概要">
+        <div><span>01 / データ収集</span><strong>なし</strong></div>
+        <div><span>02 / トラッキング</span><strong>なし</strong></div>
+        <div><span>03 / 保存場所</span><strong>端末内</strong></div>
+      </section>
+
+      <div class="chapter-nav-wrap">
+        <nav class="shell chapter-nav" aria-label="プライバシーポリシーの項目">
+          <a href="#ja-overview">01 概要</a>
+          <a href="#ja-no-collection">02 収集</a>
+          <a href="#ja-storage">03 保存</a>
+          <a href="#ja-permissions">04 権限</a>
+          <a href="#ja-network">05 通信</a>
+          <a href="#ja-control">06 管理</a>
+          <a href="#ja-contact">07 連絡先</a>
+        </nav>
       </div>
 
-      <div data-lang-panel="ja" lang="ja">
-        <h1>プライバシーポリシー</h1>
-        <p class="meta">最終更新日: 2026年6月8日 / DiffPixel Chrome 拡張機能</p>
-        <p class="summary">DiffPixel は個人データを収集、送信、販売、共有しません。参照画像と設定はユーザーの端末内に保存されます。</p>
+      <article class="shell editorial-flow">
+        <section class="chapter" id="ja-overview">
+          <div class="chapter-index">01 / 概要</div>
+          <div class="chapter-body">
+            <h2>視覚比較のためのツール。</h2>
+            <p>DiffPixelは、デザイナーや開発者がブラウザ上で視覚比較を行うための拡張機能です。現在のページ上にローカルの参照画像を重ね、レイヤー、不透明度、位置、スケール、合成モード、グリッドを調整できます。</p>
+          </div>
+        </section>
 
-        <div class="content">
-          <section>
-            <h2>1. 概要</h2>
-            <p>DiffPixel は、デザイナーや開発者がブラウザ上で視覚比較を行うための拡張機能です。現在のページ上にローカルの参照画像を重ね、レイヤー、不透明度、位置、スケール、合成モード、グリッドを調整できます。</p>
-          </section>
-          <section>
-            <h2>2. 収集しないデータ</h2>
-            <p>DiffPixel は、以下のデータを収集、外部サーバー保存、送信、販売、共有しません。</p>
+        <section class="chapter" id="ja-no-collection">
+          <div class="chapter-index">02 / 収集</div>
+          <div class="chapter-body">
+            <h2>収集しないデータ。</h2>
+            <p>DiffPixelは、以下のデータを収集、外部サーバー保存、送信、販売、共有しません。</p>
             <ul>
               <li>氏名、メールアドレス、IPアドレスなどの個人情報。</li>
               <li>閲覧履歴、ページ内容、フォーム入力、認証情報、キーストローク。</li>
               <li>アップロードまたは貼り付けた参照画像。</li>
               <li>保存されたレイヤー設定や視覚比較データ。</li>
             </ul>
-          </section>
-          <section>
-            <h2>3. 端末内に保存されるデータ</h2>
-            <p>拡張機能は、参照画像、レイヤー名、位置、不透明度、スケール、合成モード、グリッド設定、パネル位置、テーマ、言語設定、サイト単位のパネル表示状態を Chrome ストレージに保存する場合があります。</p>
-            <p>これらの保存データは、視覚比較の状態を復元し、日常的に使いやすくするためだけに使用されます。</p>
-          </section>
-          <section>
-            <h2>4. 権限</h2>
-            <p>DiffPixel は、ローカルの content script と CSS をページに挿入し、ページ内フローティングパネルを表示し、ユーザーが追加した参照画像を重ね、ローカル設定を保存するために Chrome 拡張機能の権限を使用します。</p>
-            <p>DiffPixel はユーザーが選んだページ上で動作することを目的としており、対象ページを事前に固定できないため、HTTP、HTTPS、ローカルファイルページへのホストアクセスが必要です。ローカルファイルページでは、Chrome の拡張機能詳細でファイル URL アクセスをユーザーが有効にする必要があります。ホストアクセスはローカルのオーバーレイを挿入し、DiffPixel が有効なページでリロード後にパネルを復元するために使用します。</p>
-          </section>
-          <section>
-            <h2>5. ネットワーク利用とリモートコード</h2>
-            <p>DiffPixel は、分析、広告ネットワーク、トラッキングスクリプト、外部API、リモートフォント、リモートコードを使用しません。拡張機能のスクリプトとスタイルは拡張機能内に同梱されています。</p>
-          </section>
-          <section>
-            <h2>6. ユーザーによる管理</h2>
-            <p>保存データは、Chrome の拡張機能設定から保存内容を削除する、パネル内でレイヤーを削除する、または拡張機能をアンインストールすることで削除できます。</p>
-          </section>
-          <section>
-            <h2>7. お問い合わせ</h2>
-            <p>本ポリシーに関する質問は、公開 GitHub リポジトリの管理者までお問い合わせください。</p>
-          </section>
+          </div>
+        </section>
+
+        <section class="chapter" id="ja-storage">
+          <div class="chapter-index">03 / 保存</div>
+          <div class="chapter-body">
+            <h2>端末内に保存。</h2>
+            <p>拡張機能は、参照画像、レイヤー名、位置、不透明度、スケール、合成モード、グリッド設定、パネル位置、テーマ、言語設定、サイト単位のパネル表示状態を端末内のChromeストレージに保存する場合があります。</p>
+            <p>これらのデータは、視覚比較の状態を復元し、日常的に使いやすくするためだけに使用されます。</p>
+          </div>
+        </section>
+
+        <section class="chapter" id="ja-permissions">
+          <div class="chapter-index">04 / 権限</div>
+          <div class="chapter-body">
+            <h2>目的を限定したアクセス。</h2>
+            <p>DiffPixelは、同梱されたcontent scriptとCSSをページへ挿入し、フローティングパネルを表示し、ユーザーが追加した参照画像を重ね、ローカル設定を保存するためにChrome拡張機能の権限を使用します。</p>
+            <p>ユーザーが選んだページ上で動作し、対象を事前に固定できないため、HTTP、HTTPS、ローカルファイルページへのホストアクセスが必要です。ローカルファイルでは、Chromeの拡張機能詳細でファイルURLアクセスを有効にする必要があります。ホストアクセスはローカルオーバーレイの表示と、有効なページでのパネル復元に使用します。</p>
+          </div>
+        </section>
+
+        <section class="chapter" id="ja-network">
+          <div class="chapter-index">05 / 通信</div>
+          <div class="chapter-body">
+            <h2>リモートコードなし。</h2>
+            <p>DiffPixelは、分析、広告ネットワーク、トラッキングスクリプト、外部API、リモートフォント、リモートコードを使用しません。拡張機能のスクリプト、スタイル、アセットは拡張機能内に同梱されています。</p>
+          </div>
+        </section>
+
+        <section class="chapter" id="ja-control">
+          <div class="chapter-index">06 / 管理</div>
+          <div class="chapter-body">
+            <h2>データを自分で管理する。</h2>
+            <p>保存データは、Chromeの拡張機能設定から保存内容を削除する、パネル内でレイヤーを削除する、または拡張機能をアンインストールすることで削除できます。</p>
+          </div>
+        </section>
+
+        <section class="chapter" id="ja-contact">
+          <div class="chapter-index">07 / 連絡先</div>
+          <div class="chapter-body">
+            <h2>質問を受け付けています。</h2>
+            <p>本ポリシーに関する質問は、<a href="https://github.com/RitaStella1128/DiffPixel">公開GitHubリポジトリ</a>の管理者までお問い合わせください。</p>
+          </div>
+        </section>
+      </article>
+
+      <section class="shell final-cta">
+        <p class="eyebrow">プライバシー第一</p>
+        <h2>アップロードせずに比較。</h2>
+        <div class="cta-row">
+          <a class="button" href="./#ja">DiffPixelを見る</a>
+          <a class="button secondary" href="manual.html#ja">マニュアルを読む</a>
         </div>
-      </div>
-    </article>
+      </section>
+    </div>
   </main>
 
-  <footer>
-    <p>© 2026 DiffPixel. This page is provided for Chrome Web Store and GitHub Pages publication.</p>
+  <footer class="site-footer">
+    <div class="shell">
+      <p class="footer-wordmark">DiffPixel</p>
+      <div class="footer-meta">
+        <div class="footer-links">
+          <a href="./" data-en="Home" data-ja="ホーム">Home</a>
+          <a href="manual.html" data-en="Manual" data-ja="マニュアル" data-en-href="manual.html" data-ja-href="manual.html#ja">Manual</a>
+          <a href="https://github.com/RitaStella1128/DiffPixel" rel="noopener">GitHub</a>
+        </div>
+        <span>© 2026 DiffPixel / Privacy policy</span>
+      </div>
+    </div>
   </footer>
 
-  <script>
-    const buttons = [...document.querySelectorAll('[data-lang-button]')];
-    const panels = [...document.querySelectorAll('[data-lang-panel]')];
-    function setLang(lang) {
-      document.documentElement.lang = lang;
-      buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.langButton === lang)));
-      panels.forEach(panel => panel.classList.toggle('active', panel.dataset.langPanel === lang));
-      history.replaceState(null, '', `#${lang}`);
-    }
-    buttons.forEach(button => button.addEventListener('click', () => setLang(button.dataset.langButton)));
-    const hashLang = location.hash.replace('#', '');
-    const initial = hashLang === 'en' || hashLang === 'ja'
-      ? hashLang
-      : (navigator.language.toLowerCase().startsWith('ja') ? 'ja' : 'en');
-    setLang(initial);
-  </script>
+  <script src="editorial.js"></script>
 </body>
 </html>

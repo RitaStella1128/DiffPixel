@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DiffPixel home capture fixture</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; min-height: 100%; margin: 0; }
+    body {
+      overflow: hidden;
+      background: #080910;
+      color: #f4f6fb;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .capture-stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      min-width: 1100px;
+      min-height: 700px;
+      background:
+        linear-gradient(rgba(0, 215, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 215, 255, .035) 1px, transparent 1px),
+        #080910;
+      background-size: 48px 48px;
+    }
+    .capture-meta {
+      position: absolute;
+      top: 38px;
+      left: 80px;
+      display: flex;
+      gap: 22px;
+      color: #7c869f;
+      font: 700 11px/1.2 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .capture-meta strong { color: #00d7ff; }
+    .live-frame {
+      position: absolute;
+      top: 130px;
+      left: 80px;
+      width: 960px;
+      height: 640px;
+      margin: 0;
+      border: 1px solid #3e465e;
+      background: #11131d;
+    }
+    .live-frame img { display: block; width: 960px; height: 640px; }
+    .capture-legend {
+      position: absolute;
+      left: 80px;
+      bottom: 38px;
+      display: flex;
+      gap: 28px;
+      color: #7c869f;
+      font: 700 10px/1.2 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .capture-legend span::before {
+      display: inline-block;
+      width: 22px;
+      height: 5px;
+      margin-right: 8px;
+      background: #454c66;
+      content: "";
+      vertical-align: middle;
+    }
+    .capture-legend span:nth-child(2)::before { background: #00d7ff; }
+    .capture-legend span:nth-child(3)::before { background: #ff456d; }
+  </style>
+  <script>
+    (() => {
+      const captureState = new URLSearchParams(location.search).get('state') || 'align';
+      const host = location.hostname || 'capture';
+      const prefix = `dp_${host}`;
+      const layerId = 'dp-demo001';
+      const hasLayer = captureState !== 'add';
+      const isDifference = captureState === 'difference';
+      const layer = {
+        id: layerId,
+        name: 'reference-home.png',
+        opacity: isDifference ? 1 : .55,
+        x: 92,
+        y: 138,
+        scale: 1,
+        blendMode: isDifference ? 'difference' : 'normal',
+        visible: true,
+        invert: false,
+        locked: false
+      };
+      const values = {
+        [`${prefix}_state`]: {
+          enabled: true,
+          activeLayerId: hasLayer ? layerId : null,
+          grid: { enabled: false, size: 8, color: 'rgba(0,212,255,0.25)' },
+          layerDefaults: { opacity: .55, blendMode: isDifference ? 'difference' : 'normal' },
+          layers: hasLayer ? [layer] : []
+        },
+        [`${prefix}_images`]: hasLayer ? { [layerId]: '/docs/hero-axis-rigid.png' } : {},
+        [`${prefix}_panel_visible`]: true,
+        dp_theme: 'dark',
+        dp_lang: 'en',
+        dp_panel_pos: { x: 1046, y: 90 }
+      };
+
+      window.chrome = {
+        runtime: {
+          id: 'diffpixel-capture',
+          getURL: path => `/${path}`,
+          sendMessage: () => Promise.resolve({ ok: true }),
+          onMessage: { addListener() {} }
+        },
+        storage: {
+          local: {
+            async get(keys) {
+              const result = {};
+              (Array.isArray(keys) ? keys : Object.keys(values)).forEach(key => {
+                if (Object.hasOwn(values, key)) result[key] = values[key];
+              });
+              return result;
+            },
+            async set(next) { Object.assign(values, next); }
+          },
+          onChanged: { addListener() {} }
+        },
+        i18n: {
+          getUILanguage: () => 'en',
+          getMessage: key => key
+        }
+      };
+      window.__captureState = captureState;
+    })();
+  </script>
+</head>
+<body>
+  <main class="capture-stage">
+    <div class="capture-meta"><strong>DiffPixel / Live session</strong><span>Viewport 1440 × 900</span><span data-state-label></span></div>
+    <figure class="live-frame"><img src="../docs/hero-axis-rigid.png" alt="Demo page used for the DiffPixel capture" /></figure>
+    <div class="capture-legend" aria-hidden="true"><span>Live page</span><span>Reference</span><span>Mismatch</span></div>
+  </main>
+  <script>
+    document.querySelector('[data-state-label]').textContent = window.__captureState;
+  </script>
+  <script src="../content/content.js"></script>
+</body>
+</html>
