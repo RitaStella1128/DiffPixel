@@ -12,7 +12,7 @@ Click the extension icon, upload a reference image, and compare it directly on t
 
 Images and settings stay on your device. DiffPixel does not send your uploaded images to a server.
 
-User manual: https://ritastella1128.github.io/DiffPixel/manual.html
+User manual: https://diffpixel.ritastella.com/manual.html
 
 ## Item Introduction and Installation Benefits
 
@@ -94,7 +94,7 @@ DiffPixelは、Webページがデザインやスクリーンショットと合�
 
 画像と設定は端末内に保存されます。アップロードした画像がサーバーへ送信されることはありません。
 
-使い方マニュアル: https://ritastella1128.github.io/DiffPixel/manual.html
+使い方マニュアル: https://diffpixel.ritastella.com/manual.html
 
 ## Item Introduction and Installation Benefits
 

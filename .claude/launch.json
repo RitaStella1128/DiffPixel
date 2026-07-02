@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "docs-site",
-      "runtimeExecutable": "python",
+      "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "4173", "--directory", "docs"],
       "port": 4173
     },

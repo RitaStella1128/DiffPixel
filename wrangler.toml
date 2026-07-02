@@ -1,0 +1,20 @@
+# Cloudflare Pages configuration for the DiffPixel service site.
+# This deploys the static site in docs/ (top page, manual, privacy policy).
+# The Chrome extension itself (manifest.json, background/, content/) is not
+# part of this deployment.
+#
+# CLI deploy:   npx wrangler pages deploy docs --project-name=diffpixel
+# Local dev:    npx wrangler pages dev docs
+#
+# If deploying via the Cloudflare dashboard's Git integration instead, use
+# these project settings (this file is not read by the dashboard build):
+#   Framework preset:      None
+#   Build command:         (leave empty — static files, no build step)
+#   Build output directory: docs
+#   Root directory:         /
+
+name = "diffpixel"
+pages_build_output_dir = "docs"
+
+[vars]
+ENVIRONMENT = "production"

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 - 2026-07-03
+
+- Added file URL support to the panel's site-matching logic, so the floating panel can be restored and toggled correctly on `file://` pages (previously only `http`/`https` pages were recognized).
+- Restyled the in-page floating panel with higher-contrast colors, squared corners, and a heavier accent border, in both light and dark themes.
+- Regenerated the Chrome Web Store release ZIP as `dist/DiffPixel-1.1.0.zip`.
+
 ## 1.0.3 - 2026-06-08
 
 - Changed the toolbar icon toggle to save DiffPixel panel visibility per domain.
