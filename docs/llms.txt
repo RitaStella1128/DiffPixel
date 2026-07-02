@@ -10,9 +10,9 @@ Key facts:
 
 ## Docs
 
-- [Home](https://ritastella1128.github.io/DiffPixel/): overview, features, how it works, FAQ (English/Japanese)
-- [User Manual](https://ritastella1128.github.io/DiffPixel/manual.html): opening the panel, adding reference images, adjusting layers, keyboard shortcuts, saved settings (English/Japanese)
-- [Privacy Policy](https://ritastella1128.github.io/DiffPixel/privacy.html): data handling, permissions, local storage details (English/Japanese)
+- [Home](https://diffpixel.ritastella.com/): overview, features, how it works, FAQ (English/Japanese)
+- [User Manual](https://diffpixel.ritastella.com/manual.html): opening the panel, adding reference images, adjusting layers, keyboard shortcuts, saved settings (English/Japanese)
+- [Privacy Policy](https://diffpixel.ritastella.com/privacy.html): data handling, permissions, local storage details (English/Japanese)
 
 ## Source
 

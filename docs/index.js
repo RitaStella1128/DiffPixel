@@ -7,7 +7,7 @@
   const panels = [...document.querySelectorAll('[data-lang-panel]')];
   const languageButtons = [...document.querySelectorAll('[data-lang-button]')];
   const headerNavLinks = [...document.querySelectorAll('.site-nav [data-section-key]')];
-  const headerInstall = document.querySelector('.header-install');
+  const headerInstall = document.querySelector('.header-cta');
   const metaDescription = document.querySelector('meta[name="description"]');
 
   const copy = {
@@ -104,7 +104,8 @@
         const target = document.getElementById(sectionId(language, key));
         if (!target) return;
         const headerOffset = header ? header.offsetHeight + 18 : 18;
-        window.scrollTo({ top: Math.max(0, target.offsetTop - headerOffset), behavior: 'auto' });
+        const top = Math.max(0, target.offsetTop - headerOffset);
+        window.scrollTo({ top, behavior: 'auto' });
       });
     }
   }
@@ -158,10 +159,12 @@
 
     const frames = [...panel.querySelectorAll('.workflow-frame[data-workflow-state]')];
     const progress = [...panel.querySelectorAll('.workflow-progress span')];
+    const hudStates = [...panel.querySelectorAll('.workflow-hud [data-hud-state]')];
     const index = frames.findIndex((frame) => frame.dataset.workflowState === state);
 
     frames.forEach((frame) => frame.classList.toggle('active', frame.dataset.workflowState === state));
     progress.forEach((item, itemIndex) => item.classList.toggle('active', itemIndex === index));
+    hudStates.forEach((item) => item.classList.toggle('active', item.dataset.hudState === state));
   }
 
   const workflowSteps = [...document.querySelectorAll('.workflow-step[data-workflow-state]')];

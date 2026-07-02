@@ -5,16 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Manual — DiffPixel</title>
   <meta name="description" content="Learn how to use DiffPixel to add reference images, align layers, compare pixels, use blend modes, and verify web implementations directly in Chrome." />
-  <link rel="canonical" href="https://ritastella1128.github.io/DiffPixel/manual.html" />
+  <link rel="canonical" href="https://diffpixel.ritastella.com/manual.html" />
   <link rel="icon" type="image/png" sizes="32x32" href="icons/icon32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="icons/icon16.png" />
   <link rel="apple-touch-icon" href="icons/icon128.png" />
+  <link rel="preload" as="font" type="font/woff2" href="fonts/syne-variable.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="fonts/jetbrains-mono-variable.woff2" crossorigin />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="editorial.css?v=3" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="base.css?v=3" />
+  <link rel="stylesheet" href="reference.css?v=1" />
 </head>
 <body data-title-en="User Manual — DiffPixel" data-title-ja="操作マニュアル — DiffPixel">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <span class="ruler ruler-top" aria-hidden="true"></span>
+  <span class="ruler ruler-left" aria-hidden="true"></span>
+
   <header class="site-header">
     <div class="shell header-inner">
       <a class="brand" href="./" aria-label="DiffPixel home">
@@ -26,302 +35,233 @@
         <a href="manual.html" aria-current="page" data-en="Manual" data-ja="マニュアル">Manual</a>
         <a href="privacy.html" data-en="Privacy" data-ja="プライバシー" data-en-href="privacy.html" data-ja-href="privacy.html#ja">Privacy</a>
       </nav>
-      <div class="header-tools">
+      <div class="header-actions">
         <nav class="lang-switch" aria-label="Language">
           <button type="button" data-lang-button="en" aria-pressed="true">EN</button>
           <button type="button" data-lang-button="ja" aria-pressed="false">JA</button>
         </nav>
-        <a class="header-cta" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener" data-en="Add to Chrome" data-ja="Chrome に追加">Add to Chrome</a>
+        <a class="btn header-cta" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener" data-en="Add to Chrome" data-ja="Chrome に追加">Add to Chrome</a>
       </div>
     </div>
   </header>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <div data-lang-panel="en" class="active">
-      <section class="shell editorial-hero" aria-labelledby="en-manual-title">
-        <div>
-          <p class="eyebrow">User manual / 01</p>
-          <h1 id="en-manual-title">Compare with confidence.</h1>
-          <p class="hero-lead">From the first reference image to the final pixel check, this is the complete DiffPixel workflow.</p>
-          <div class="hero-meta" aria-label="Manual metadata">
-            <span>06 chapters</span><span>Chrome extension</span><span>Local only</span>
-          </div>
-        </div>
-        <figure class="hero-visual">
-          <img src="hero-panel.png" alt="DiffPixel panel aligning a reference image with a live web page" width="1200" height="800" />
-          <figcaption class="visual-caption"><span>Live page + reference</span><span>Difference mode</span></figcaption>
-        </figure>
-      </section>
+      <article class="shell doc" aria-labelledby="en-manual-title">
+        <header class="doc-head">
+          <p class="eyebrow">User manual</p>
+          <h1 id="en-manual-title">User Manual</h1>
+          <p class="doc-meta">6 chapters · Chrome extension · Local only</p>
+          <p class="doc-lead">From the first reference image to the final pixel check, this is the complete DiffPixel workflow.</p>
+        </header>
 
-      <div class="chapter-nav-wrap">
-        <nav class="shell chapter-nav" aria-label="Manual chapters">
-          <a href="#en-start">01 Start</a>
-          <a href="#en-layers">02 Layers</a>
-          <a href="#en-adjust">03 Adjust</a>
-          <a href="#en-grid">04 Grid</a>
-          <a href="#en-shortcuts">05 Shortcuts</a>
-          <a href="#en-access">06 Access</a>
+        <nav class="doc-toc" aria-label="Chapters in this manual">
+          <a href="#en-start">Open the panel</a>
+          <a href="#en-layers">Add your reference</a>
+          <a href="#en-adjust">Align every pixel</a>
+          <a href="#en-grid">Measure the rhythm</a>
+          <a href="#en-shortcuts">Keyboard shortcuts</a>
+          <a href="#en-access">Return to your setup</a>
         </nav>
-      </div>
 
-      <article class="shell editorial-flow">
-        <section class="chapter" id="en-start">
-          <div class="chapter-index">01 / Start</div>
-          <div class="chapter-body">
-            <h2>Open the panel.</h2>
-            <ol>
-              <li>Open the web page you want to inspect.</li>
-              <li>Click the DiffPixel extension icon in Chrome.</li>
-              <li>The floating panel appears inside the page.</li>
-              <li>Click the icon again to hide or show DiffPixel for that site.</li>
-            </ol>
-            <p class="note">Chrome internal pages and other restricted browser pages cannot run extensions.</p>
-          </div>
-          <figure class="chapter-media">
+        <section id="en-start">
+          <h2>Open the panel</h2>
+          <ol>
+            <li>Open the web page you want to inspect.</li>
+            <li>Click the DiffPixel extension icon in Chrome.</li>
+            <li>The floating panel appears inside the page.</li>
+            <li>Click the icon again to hide or show DiffPixel for that site.</li>
+          </ol>
+          <p class="doc-note">Chrome internal pages and other restricted browser pages cannot run extensions.</p>
+          <figure class="doc-media">
             <img src="step-1.png" alt="Opening the DiffPixel floating panel from the Chrome toolbar" width="1200" height="720" loading="lazy" />
             <figcaption>Step 01 — Open DiffPixel on the page you want to inspect</figcaption>
           </figure>
         </section>
 
-        <section class="chapter" id="en-layers">
-          <div class="chapter-index">02 / Layers</div>
-          <div class="chapter-body">
-            <h2>Add your reference.</h2>
-            <ul>
-              <li>Click <strong>Add</strong> to choose one or more image files.</li>
-              <li>Drag and drop images directly onto the panel.</li>
-              <li>Copy an image and paste it on the page, or click <strong>Paste</strong>.</li>
-            </ul>
-            <h3>Layer list</h3>
-            <p>Reorder, lock, hide, rename, select, or remove each layer. Use <strong>Clear all</strong> to remove every layer saved for the current site.</p>
-          </div>
-          <figure class="chapter-media">
+        <section id="en-layers">
+          <h2>Add your reference</h2>
+          <ul>
+            <li>Click <strong>Add</strong> to choose one or more image files.</li>
+            <li>Drag and drop images directly onto the panel.</li>
+            <li>Copy an image and paste it on the page, or click <strong>Paste</strong>.</li>
+          </ul>
+          <h3>Layer list</h3>
+          <p>Reorder, lock, hide, rename, select, or remove each layer. Use <strong>Clear all</strong> to remove every layer saved for the current site.</p>
+          <figure class="doc-media">
             <img src="step-2.png" alt="Adding a reference image to DiffPixel by file picker, drag and drop, or paste" width="1200" height="720" loading="lazy" />
             <figcaption>Step 02 — Add files without sending them to a server</figcaption>
           </figure>
         </section>
 
-        <section class="chapter" id="en-adjust">
-          <div class="chapter-index">03 / Adjust</div>
-          <div class="chapter-body">
-            <h2>Align every pixel.</h2>
-            <ul>
-              <li><strong>Name:</strong> rename the selected layer.</li>
-              <li><strong>Blend:</strong> choose Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, or Exclusion. Use <strong>Apply to all</strong> to update every layer.</li>
-              <li><strong>Opacity:</strong> adjust transparency with the slider or percentage input.</li>
-              <li><strong>X / Y:</strong> move the selected layer by exact pixels.</li>
-              <li><strong>Scale:</strong> use the controls, presets, or input field.</li>
-              <li><strong>Reset / Center / Fit W:</strong> restore, center, or fit the selected layer.</li>
-            </ul>
-          </div>
-          <figure class="chapter-media">
+        <section id="en-adjust">
+          <h2>Align every pixel</h2>
+          <ul>
+            <li><strong>Name:</strong> rename the selected layer.</li>
+            <li><strong>Blend:</strong> choose Normal, Invert, Difference, Multiply, Screen, Overlay, Hard Light, or Exclusion. Use <strong>Apply to all</strong> to update every layer.</li>
+            <li><strong>Opacity:</strong> adjust transparency with the slider or percentage input.</li>
+            <li><strong>X / Y:</strong> move the selected layer by exact pixels.</li>
+            <li><strong>Scale:</strong> use the controls, presets, or input field.</li>
+            <li><strong>Reset / Center / Fit W:</strong> restore, center, or fit the selected layer.</li>
+          </ul>
+          <figure class="doc-media">
             <img src="diff-result.png" alt="Difference blend mode showing mismatched pixels in color" width="1200" height="720" loading="lazy" />
             <figcaption>Difference mode — matching pixels disappear, mismatches remain</figcaption>
           </figure>
         </section>
 
-        <section class="chapter" id="en-grid">
-          <div class="chapter-index">04 / Grid</div>
-          <div class="chapter-body">
-            <h2>Measure the rhythm.</h2>
-            <p>Turn on <strong>Grid</strong> to check spacing and alignment. Set the pixel size before enabling it, then compare the live page against the intended layout system.</p>
-            <p>Use the sun or moon button to switch between light and dark panel themes. The language menu offers Auto, English, and Japanese.</p>
-          </div>
+        <section id="en-grid">
+          <h2>Measure the rhythm</h2>
+          <p>Turn on <strong>Grid</strong> to check spacing and alignment. Set the pixel size before enabling it, then compare the live page against the intended layout system.</p>
+          <p>Use the sun or moon button to switch between light and dark panel themes. The language menu offers Auto, English, and Japanese.</p>
         </section>
 
-        <section class="chapter" id="en-shortcuts">
-          <div class="chapter-index">05 / Keys</div>
-          <div class="chapter-body">
-            <h2>Stay on the keyboard.</h2>
-            <table class="shortcut-table">
-              <thead><tr><th>Action</th><th>Shortcut</th></tr></thead>
-              <tbody>
-                <tr><td>Move selected layer by 1px</td><td><kbd>Arrow</kbd></td></tr>
-                <tr><td>Move selected layer by 10px</td><td><kbd>Shift</kbd> + <kbd>Arrow</kbd></td></tr>
-                <tr><td>Switch selected layer</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> / <kbd>K</kbd></td></tr>
-                <tr><td>Change blend mode</td><td><kbd>Alt</kbd> + <kbd>B</kbd>, then <kbd>;</kbd> / <kbd>-</kbd></td></tr>
-                <tr><td>Adjust opacity</td><td><kbd>Alt</kbd> + <kbd>A</kbd>, then <kbd>;</kbd> / <kbd>-</kbd></td></tr>
-                <tr><td>Toggle grid</td><td><kbd>Alt</kbd> + <kbd>G</kbd></td></tr>
-                <tr><td>Toggle layer visibility</td><td><kbd>Alt</kbd> + <kbd>H</kbd></td></tr>
-                <tr><td>Toggle layer lock</td><td><kbd>Alt</kbd> + <kbd>L</kbd></td></tr>
-                <tr><td>Scale to 0.50x / 2.00x</td><td><kbd>Alt</kbd> + <kbd>,</kbd> / <kbd>Alt</kbd> + <kbd>.</kbd></td></tr>
-                <tr><td>Adjust scale by 0.1</td><td><kbd>Alt</kbd> + <kbd>;</kbd> / <kbd>Alt</kbd> + <kbd>-</kbd></td></tr>
-                <tr><td>Reset / Center / Fit width</td><td><kbd>Alt</kbd> + <kbd>0</kbd> / <kbd>C</kbd> / <kbd>W</kbd></td></tr>
-              </tbody>
-            </table>
-          </div>
+        <section id="en-shortcuts">
+          <h2>Keyboard shortcuts</h2>
+          <table class="doc-table">
+            <thead><tr><th>Action</th><th>Shortcut</th></tr></thead>
+            <tbody>
+              <tr><td>Move selected layer by 1px</td><td><kbd>Arrow</kbd></td></tr>
+              <tr><td>Move selected layer by 10px</td><td><kbd>Shift</kbd> + <kbd>Arrow</kbd></td></tr>
+              <tr><td>Switch selected layer</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> / <kbd>K</kbd></td></tr>
+              <tr><td>Change blend mode</td><td><kbd>Alt</kbd> + <kbd>B</kbd>, then <kbd>;</kbd> / <kbd>-</kbd></td></tr>
+              <tr><td>Adjust opacity</td><td><kbd>Alt</kbd> + <kbd>A</kbd>, then <kbd>;</kbd> / <kbd>-</kbd></td></tr>
+              <tr><td>Toggle grid</td><td><kbd>Alt</kbd> + <kbd>G</kbd></td></tr>
+              <tr><td>Toggle layer visibility</td><td><kbd>Alt</kbd> + <kbd>H</kbd></td></tr>
+              <tr><td>Toggle layer lock</td><td><kbd>Alt</kbd> + <kbd>L</kbd></td></tr>
+              <tr><td>Scale to 0.50x / 2.00x</td><td><kbd>Alt</kbd> + <kbd>,</kbd> / <kbd>Alt</kbd> + <kbd>.</kbd></td></tr>
+              <tr><td>Adjust scale by 0.1</td><td><kbd>Alt</kbd> + <kbd>;</kbd> / <kbd>Alt</kbd> + <kbd>-</kbd></td></tr>
+              <tr><td>Reset / Center / Fit width</td><td><kbd>Alt</kbd> + <kbd>0</kbd> / <kbd>C</kbd> / <kbd>W</kbd></td></tr>
+            </tbody>
+          </table>
         </section>
 
-        <section class="chapter" id="en-access">
-          <div class="chapter-index">06 / Access</div>
-          <div class="chapter-body">
-            <h2>Return to your setup.</h2>
-            <p>DiffPixel saves layer settings, panel settings, and site-level visibility locally on your device. When enabled, the panel returns after reloads and on other pages from the same host.</p>
-            <p>For local <code>file://</code> pages, enable <strong>Allow access to file URLs</strong> on the extension details page in Chrome.</p>
-          </div>
+        <section id="en-access">
+          <h2>Return to your setup</h2>
+          <p>DiffPixel saves layer settings, panel settings, and site-level visibility locally on your device. When enabled, the panel returns after reloads and on other pages from the same host.</p>
+          <p>For local <code>file://</code> pages, enable <strong>Allow access to file URLs</strong> on the extension details page in Chrome.</p>
         </section>
+
+        <p class="doc-links"><a href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome</a> &nbsp;·&nbsp; <a href="./">Back to overview</a></p>
       </article>
-
-      <section class="shell final-cta">
-        <p class="eyebrow">Ready to compare?</p>
-        <h2>Find the pixel that drifted.</h2>
-        <div class="cta-row">
-          <a class="button" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome</a>
-          <a class="button secondary" href="./">Back to overview</a>
-        </div>
-      </section>
     </div>
 
     <div data-lang-panel="ja" lang="ja">
-      <section class="shell editorial-hero" aria-labelledby="ja-manual-title">
-        <div>
-          <p class="eyebrow">操作マニュアル / 01</p>
-          <h1 id="ja-manual-title">確信を持って比較する。</h1>
-          <p class="hero-lead">最初の参照画像から最後の1px確認まで、DiffPixelのワークフローを順番に説明します。</p>
-          <div class="hero-meta" aria-label="マニュアル情報">
-            <span>全06章</span><span>Chrome 拡張機能</span><span>ローカル動作</span>
-          </div>
-        </div>
-        <figure class="hero-visual">
-          <img src="hero-panel.png" alt="参照画像と実装ページを整列するDiffPixelパネル" width="1200" height="800" />
-          <figcaption class="visual-caption"><span>実装ページ + 参照画像</span><span>差分モード</span></figcaption>
-        </figure>
-      </section>
+      <article class="shell doc" aria-labelledby="ja-manual-title">
+        <header class="doc-head">
+          <p class="eyebrow">操作マニュアル</p>
+          <h1 id="ja-manual-title">操作マニュアル</h1>
+          <p class="doc-meta">全6章 · Chrome 拡張機能 · ローカル動作</p>
+          <p class="doc-lead">最初の参照画像から最後の1px確認まで、DiffPixelのワークフローを順番に説明します。</p>
+        </header>
 
-      <div class="chapter-nav-wrap">
-        <nav class="shell chapter-nav" aria-label="マニュアルの章">
-          <a href="#ja-start">01 開始</a>
-          <a href="#ja-layers">02 レイヤー</a>
-          <a href="#ja-adjust">03 調整</a>
-          <a href="#ja-grid">04 グリッド</a>
-          <a href="#ja-shortcuts">05 キー操作</a>
-          <a href="#ja-access">06 アクセス</a>
+        <nav class="doc-toc" aria-label="マニュアルの章">
+          <a href="#ja-start">パネルを開く</a>
+          <a href="#ja-layers">参照画像を追加する</a>
+          <a href="#ja-adjust">1pxずつ整列する</a>
+          <a href="#ja-grid">リズムを測る</a>
+          <a href="#ja-shortcuts">キーボードショートカット</a>
+          <a href="#ja-access">同じ状態へ戻る</a>
         </nav>
-      </div>
 
-      <article class="shell editorial-flow">
-        <section class="chapter" id="ja-start">
-          <div class="chapter-index">01 / 開始</div>
-          <div class="chapter-body">
-            <h2>パネルを開く。</h2>
-            <ol>
-              <li>確認したいWebページを開きます。</li>
-              <li>Chrome の DiffPixel 拡張機能アイコンをクリックします。</li>
-              <li>ページ内にフローティングパネルが表示されます。</li>
-              <li>もう一度クリックすると、そのサイトでの表示を切り替えられます。</li>
-            </ol>
-            <p class="note">Chromeの内部ページや制限されたページでは、ブラウザの仕様により拡張機能を実行できません。</p>
-          </div>
-          <figure class="chapter-media">
+        <section id="ja-start">
+          <h2>パネルを開く</h2>
+          <ol>
+            <li>確認したいWebページを開きます。</li>
+            <li>Chrome の DiffPixel 拡張機能アイコンをクリックします。</li>
+            <li>ページ内にフローティングパネルが表示されます。</li>
+            <li>もう一度クリックすると、そのサイトでの表示を切り替えられます。</li>
+          </ol>
+          <p class="doc-note">Chromeの内部ページや制限されたページでは、ブラウザの仕様により拡張機能を実行できません。</p>
+          <figure class="doc-media">
             <img src="step-1.png" alt="ChromeツールバーからDiffPixelパネルを開く" width="1200" height="720" loading="lazy" />
             <figcaption>ステップ01 — 確認したいページでDiffPixelを開く</figcaption>
           </figure>
         </section>
 
-        <section class="chapter" id="ja-layers">
-          <div class="chapter-index">02 / レイヤー</div>
-          <div class="chapter-body">
-            <h2>参照画像を追加する。</h2>
-            <ul>
-              <li><strong>追加</strong>から画像ファイルを選択します。</li>
-              <li>画像をパネルへ直接ドラッグ&amp;ドロップします。</li>
-              <li>画像をコピーしてページ上で貼り付けるか、<strong>貼り付け</strong>を押します。</li>
-            </ul>
-            <h3>レイヤー一覧</h3>
-            <p>各レイヤーの並び替え、固定、表示切替、名前変更、選択、削除ができます。<strong>全削除</strong>で現在のサイトに保存されたレイヤーをまとめて削除できます。</p>
-          </div>
-          <figure class="chapter-media">
+        <section id="ja-layers">
+          <h2>参照画像を追加する</h2>
+          <ul>
+            <li><strong>追加</strong>から画像ファイルを選択します。</li>
+            <li>画像をパネルへ直接ドラッグ&amp;ドロップします。</li>
+            <li>画像をコピーしてページ上で貼り付けるか、<strong>貼り付け</strong>を押します。</li>
+          </ul>
+          <h3>レイヤー一覧</h3>
+          <p>各レイヤーの並び替え、固定、表示切替、名前変更、選択、削除ができます。<strong>全削除</strong>で現在のサイトに保存されたレイヤーをまとめて削除できます。</p>
+          <figure class="doc-media">
             <img src="step-2.png" alt="ファイル選択、ドラッグ、貼り付けで参照画像を追加" width="1200" height="720" loading="lazy" />
             <figcaption>ステップ02 — サーバーへ送信せず参照画像を追加</figcaption>
           </figure>
         </section>
 
-        <section class="chapter" id="ja-adjust">
-          <div class="chapter-index">03 / 調整</div>
-          <div class="chapter-body">
-            <h2>1pxずつ整列する。</h2>
-            <ul>
-              <li><strong>名前:</strong> 選択中のレイヤー名を変更します。</li>
-              <li><strong>合成:</strong> 通常、反転、差分、乗算、スクリーン、オーバーレイ、ハードライト、除外を選べます。<strong>すべてに適用</strong>で全レイヤーへ反映します。</li>
-              <li><strong>不透明度:</strong> スライダーまたは数値入力で調整します。</li>
-              <li><strong>X / Y:</strong> 選択レイヤーをピクセル単位で動かします。</li>
-              <li><strong>スケール:</strong> 操作ボタン、プリセット、入力欄で倍率を変更します。</li>
-              <li><strong>リセット / 中央 / 幅に合わせる:</strong> 位置や倍率を素早く整えます。</li>
-            </ul>
-          </div>
-          <figure class="chapter-media">
+        <section id="ja-adjust">
+          <h2>1pxずつ整列する</h2>
+          <ul>
+            <li><strong>名前:</strong> 選択中のレイヤー名を変更します。</li>
+            <li><strong>合成:</strong> 通常、反転、差分、乗算、スクリーン、オーバーレイ、ハードライト、除外を選べます。<strong>すべてに適用</strong>で全レイヤーへ反映します。</li>
+            <li><strong>不透明度:</strong> スライダーまたは数値入力で調整します。</li>
+            <li><strong>X / Y:</strong> 選択レイヤーをピクセル単位で動かします。</li>
+            <li><strong>スケール:</strong> 操作ボタン、プリセット、入力欄で倍率を変更します。</li>
+            <li><strong>リセット / 中央 / 幅に合わせる:</strong> 位置や倍率を素早く整えます。</li>
+          </ul>
+          <figure class="doc-media">
             <img src="diff-result.png" alt="ずれたピクセルを色で表示する差分モード" width="1200" height="720" loading="lazy" />
             <figcaption>差分モード — 一致部分は消え、ずれだけが残る</figcaption>
           </figure>
         </section>
 
-        <section class="chapter" id="ja-grid">
-          <div class="chapter-index">04 / グリッド</div>
-          <div class="chapter-body">
-            <h2>リズムを測る。</h2>
-            <p><strong>グリッド</strong>をオンにすると、余白と整列を確認できます。有効にする前にピクセルサイズを設定し、実装ページをレイアウトシステムと比較します。</p>
-            <p>太陽/月ボタンでライト/ダークテーマを切り替えられます。言語メニューでは自動、英語、日本語を選択できます。</p>
-          </div>
+        <section id="ja-grid">
+          <h2>リズムを測る</h2>
+          <p><strong>グリッド</strong>をオンにすると、余白と整列を確認できます。有効にする前にピクセルサイズを設定し、実装ページをレイアウトシステムと比較します。</p>
+          <p>太陽/月ボタンでライト/ダークテーマを切り替えられます。言語メニューでは自動、英語、日本語を選択できます。</p>
         </section>
 
-        <section class="chapter" id="ja-shortcuts">
-          <div class="chapter-index">05 / キー操作</div>
-          <div class="chapter-body">
-            <h2>キーボードから離れない。</h2>
-            <table class="shortcut-table">
-              <thead><tr><th>操作</th><th>ショートカット</th></tr></thead>
-              <tbody>
-                <tr><td>選択中のレイヤーを1px移動</td><td><kbd>矢印キー</kbd></td></tr>
-                <tr><td>選択中のレイヤーを10px移動</td><td><kbd>Shift</kbd> + <kbd>矢印キー</kbd></td></tr>
-                <tr><td>選択レイヤーを切り替え</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> / <kbd>K</kbd></td></tr>
-                <tr><td>合成モードを切り替え</td><td><kbd>Alt</kbd> + <kbd>B</kbd> の後に <kbd>;</kbd> / <kbd>-</kbd></td></tr>
-                <tr><td>不透明度を調整</td><td><kbd>Alt</kbd> + <kbd>A</kbd> の後に <kbd>;</kbd> / <kbd>-</kbd></td></tr>
-                <tr><td>グリッド切り替え</td><td><kbd>Alt</kbd> + <kbd>G</kbd></td></tr>
-                <tr><td>レイヤー表示/非表示</td><td><kbd>Alt</kbd> + <kbd>H</kbd></td></tr>
-                <tr><td>レイヤー固定/解除</td><td><kbd>Alt</kbd> + <kbd>L</kbd></td></tr>
-                <tr><td>0.50x / 2.00x に変更</td><td><kbd>Alt</kbd> + <kbd>,</kbd> / <kbd>Alt</kbd> + <kbd>.</kbd></td></tr>
-                <tr><td>スケールを0.1ずつ調整</td><td><kbd>Alt</kbd> + <kbd>;</kbd> / <kbd>Alt</kbd> + <kbd>-</kbd></td></tr>
-                <tr><td>リセット / 中央 / 幅に合わせる</td><td><kbd>Alt</kbd> + <kbd>0</kbd> / <kbd>C</kbd> / <kbd>W</kbd></td></tr>
-              </tbody>
-            </table>
-          </div>
+        <section id="ja-shortcuts">
+          <h2>キーボードショートカット</h2>
+          <table class="doc-table">
+            <thead><tr><th>操作</th><th>ショートカット</th></tr></thead>
+            <tbody>
+              <tr><td>選択中のレイヤーを1px移動</td><td><kbd>矢印キー</kbd></td></tr>
+              <tr><td>選択中のレイヤーを10px移動</td><td><kbd>Shift</kbd> + <kbd>矢印キー</kbd></td></tr>
+              <tr><td>選択レイヤーを切り替え</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> / <kbd>K</kbd></td></tr>
+              <tr><td>合成モードを切り替え</td><td><kbd>Alt</kbd> + <kbd>B</kbd> の後に <kbd>;</kbd> / <kbd>-</kbd></td></tr>
+              <tr><td>不透明度を調整</td><td><kbd>Alt</kbd> + <kbd>A</kbd> の後に <kbd>;</kbd> / <kbd>-</kbd></td></tr>
+              <tr><td>グリッド切り替え</td><td><kbd>Alt</kbd> + <kbd>G</kbd></td></tr>
+              <tr><td>レイヤー表示/非表示</td><td><kbd>Alt</kbd> + <kbd>H</kbd></td></tr>
+              <tr><td>レイヤー固定/解除</td><td><kbd>Alt</kbd> + <kbd>L</kbd></td></tr>
+              <tr><td>0.50x / 2.00x に変更</td><td><kbd>Alt</kbd> + <kbd>,</kbd> / <kbd>Alt</kbd> + <kbd>.</kbd></td></tr>
+              <tr><td>スケールを0.1ずつ調整</td><td><kbd>Alt</kbd> + <kbd>;</kbd> / <kbd>Alt</kbd> + <kbd>-</kbd></td></tr>
+              <tr><td>リセット / 中央 / 幅に合わせる</td><td><kbd>Alt</kbd> + <kbd>0</kbd> / <kbd>C</kbd> / <kbd>W</kbd></td></tr>
+            </tbody>
+          </table>
         </section>
 
-        <section class="chapter" id="ja-access">
-          <div class="chapter-index">06 / アクセス</div>
-          <div class="chapter-body">
-            <h2>同じ状態へ戻る。</h2>
-            <p>DiffPixelは、レイヤー設定、パネル設定、サイト単位の表示状態を端末内に保存します。有効なサイトでは、リロード後や同じホストの別ページでもパネルが復元されます。</p>
-            <p>ローカルの <code>file://</code> ページでは、Chromeの拡張機能詳細で<strong>ファイルのURLへのアクセスを許可する</strong>を有効にしてください。</p>
-          </div>
+        <section id="ja-access">
+          <h2>同じ状態へ戻る</h2>
+          <p>DiffPixelは、レイヤー設定、パネル設定、サイト単位の表示状態を端末内に保存します。有効なサイトでは、リロード後や同じホストの別ページでもパネルが復元されます。</p>
+          <p>ローカルの <code>file://</code> ページでは、Chromeの拡張機能詳細で<strong>ファイルのURLへのアクセスを許可する</strong>を有効にしてください。</p>
         </section>
+
+        <p class="doc-links"><a href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Chrome に追加</a> &nbsp;·&nbsp; <a href="./#ja">概要へ戻る</a></p>
       </article>
-
-      <section class="shell final-cta">
-        <p class="eyebrow">比較を始めますか？</p>
-        <h2>ずれた1pxを見つける。</h2>
-        <div class="cta-row">
-          <a class="button" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Chrome に追加</a>
-          <a class="button secondary" href="./#ja">概要へ戻る</a>
-        </div>
-      </section>
     </div>
   </main>
 
-  <footer class="site-footer">
+  <footer class="site-footer diff-seam" data-seam="FOOTER">
     <div class="shell">
-      <p class="footer-wordmark">DiffPixel</p>
       <div class="footer-meta">
-        <div class="footer-links">
+        <nav class="footer-links" aria-label="Footer">
           <a href="./" data-en="Home" data-ja="ホーム">Home</a>
           <a href="privacy.html" data-en="Privacy" data-ja="プライバシー" data-en-href="privacy.html" data-ja-href="privacy.html#ja">Privacy</a>
           <a href="https://github.com/RitaStella1128/DiffPixel" rel="noopener">GitHub</a>
-        </div>
-        <span>© 2026 DiffPixel / User manual</span>
+          <a href="https://ritastella.com" rel="noopener" data-en="Portfolio" data-ja="ポートフォリオ">Portfolio</a>
+        </nav>
+        <div class="footer-info"><span>© 2026 DiffPixel / User manual</span></div>
       </div>
+      <p class="footer-wordmark">DiffPixel</p>
     </div>
   </footer>
 
-  <script src="editorial.js"></script>
+  <script src="editorial.js?v=2"></script>
 </body>
 </html>
