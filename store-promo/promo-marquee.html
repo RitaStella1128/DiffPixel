@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>DiffPixel — Store slide 1</title>
+<title>DiffPixel — Marquee promo tile 1400×560</title>
 <script>
   document.documentElement.lang =
     new URLSearchParams(location.search).get('lang') === 'ja' ? 'ja' : 'en';
 </script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=block" rel="stylesheet" />
-<link rel="stylesheet" href="register.css" />
+<link rel="stylesheet" href="../store-screenshots/register.css" />
 <style>
-  body { width: 1280px; height: 800px; }
+  body { width: 1400px; height: 560px; }
 
   .stage {
     position: relative;
@@ -19,20 +19,35 @@
     display: flex;
     align-items: center;
     height: 100%;
-    padding-left: 84px;
+    padding-left: 76px;
   }
 
-  .copy { width: 470px; flex-shrink: 0; }
-  .copy .eyebrow { margin-bottom: 30px; }
+  .copy { width: 520px; flex-shrink: 0; }
 
-  h1 { font-size: 76px; margin-bottom: 30px; }
-  html[lang="ja"] h1 { font-size: 62px; }
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .brand-row img { width: 26px; height: 26px; }
+
+  .brand-row span {
+    font-family: "Syne", system-ui, sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -.03em;
+  }
+
+  h1 { font-size: 64px; margin-bottom: 24px; }
+  html[lang="ja"] h1 { font-size: 54px; }
 
   .lead {
-    max-width: 400px;
-    margin-bottom: 40px;
+    max-width: 430px;
+    margin-bottom: 30px;
     color: var(--muted);
-    font-size: 17px;
+    font-size: 16px;
   }
 
   .visual {
@@ -44,25 +59,13 @@
   .instrument-frame {
     position: absolute;
     top: 50%;
-    right: 56px;
-    left: 40px;
+    right: 48px;
+    left: 60px;
     aspect-ratio: 1440 / 900;
     transform: translateY(-50%);
   }
 
   .frame-tag { top: -1px; right: -1px; }
-
-  .footer-line {
-    position: absolute;
-    bottom: 34px;
-    left: 84px;
-    color: var(--quiet);
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-  }
 </style>
 </head>
 <body>
@@ -72,10 +75,12 @@
 
   <div class="stage">
     <div class="copy">
-      <p class="eyebrow" data-lang="en">Visual QA / Chrome extension</p>
-      <p class="eyebrow" data-lang="ja">ビジュアルQA / Chrome 拡張機能</p>
+      <div class="brand-row">
+        <img src="../docs/icons/icon48.png" alt="" />
+        <span>DiffPixel</span>
+      </div>
 
-      <h1 class="drift-title" data-lang="en" data-drift-text="See the&#10;pixel&#10;that&#10;drifted.">See the<br /><span class="accent">pixel</span><br />that<br />drifted.</h1>
+      <h1 class="drift-title" data-lang="en" data-drift-text="See the&#10;pixel that&#10;drifted.">See the<br /><span class="accent">pixel</span> that<br />drifted.</h1>
       <h1 class="drift-title" data-lang="ja" data-drift-text="1pxのズレが、&#10;見える。"><span class="accent">1px</span>のズレが、<br />見える。</h1>
 
       <p class="lead" data-lang="en">Overlay the reference. Align the page. Fix the difference—without leaving Chrome.</p>
@@ -89,15 +94,12 @@
       <figure class="instrument-frame">
         <span class="reg-mark tl"></span><span class="reg-mark tr"></span>
         <span class="reg-mark bl"></span><span class="reg-mark br"></span>
-        <span class="frame-tag" data-lang="en">Live session</span>
-        <span class="frame-tag" data-lang="ja">実際のセッション</span>
-        <img src="../docs/home-align.webp" alt="" />
+        <span class="frame-tag" data-lang="en">Difference mode</span>
+        <span class="frame-tag" data-lang="ja">差分モード</span>
+        <img src="../docs/home-difference.webp" alt="" />
       </figure>
     </div>
   </div>
-
-  <p class="footer-line" data-lang="en">DiffPixel v1.1 — Free Chrome extension</p>
-  <p class="footer-line" data-lang="ja">DiffPixel v1.1 — 無料 Chrome 拡張機能</p>
 
   <div class="canvas-grain"></div>
 </body>
