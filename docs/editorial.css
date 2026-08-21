@@ -93,8 +93,7 @@ img { display: block; max-width: 100%; }
 
 .site-header.scrolled {
   border-color: var(--line);
-  background: rgba(8, 9, 16, .94);
-  backdrop-filter: blur(18px);
+  background: var(--bg);
 }
 
 .header-inner {
@@ -362,8 +361,7 @@ h1 {
   top: 82px;
   z-index: 60;
   border-block: 1px solid var(--line);
-  background: rgba(8, 9, 16, .94);
-  backdrop-filter: blur(16px);
+  background: var(--bg);
 }
 
 .chapter-nav {
