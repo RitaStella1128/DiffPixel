@@ -25,6 +25,8 @@
       btnClearAll: 'Clear all', btnApplyBlendAll: 'Apply to all',
       clearAllTitle: 'Remove all layers', applyBlendAllTitle: 'Apply current blend mode to all layers',
       clearAllConfirm: 'Remove all DiffPixel layers on this site?',
+      hideAllLayers: 'Hide all', showAllLayers: 'Show all',
+      hideAllLayersTitle: 'Hide all layers', showAllLayersTitle: 'Show all layers',
       btnScaleHalf: 'Scale 0.5x', btnScaleDouble: 'Scale 2x',
       visShow: 'Show layer', visHide: 'Hide layer', dropHint: 'Drop image to add layer',
       layerDefault: 'Layer', layerNamePlaceholder: 'Layer name', toggleTheme: 'Toggle light / dark theme',
@@ -57,6 +59,8 @@
       btnClearAll: '全削除', btnApplyBlendAll: 'すべてに適用',
       clearAllTitle: 'すべてのレイヤーを削除', applyBlendAllTitle: '現在の合成をすべてのレイヤーに適用',
       clearAllConfirm: 'このサイトのDiffPixelレイヤーをすべて削除しますか？',
+      hideAllLayers: 'すべて非表示', showAllLayers: 'すべて表示',
+      hideAllLayersTitle: 'すべてのレイヤーを非表示', showAllLayersTitle: 'すべてのレイヤーを表示',
       btnScaleHalf: '0.5倍', btnScaleDouble: '2倍',
       visShow: 'レイヤーを表示', visHide: 'レイヤーを非表示', dropHint: '画像をドロップして追加',
       layerDefault: 'レイヤー', layerNamePlaceholder: 'レイヤー名', toggleTheme: 'ライト / ダークテーマを切り替え',
@@ -247,6 +251,8 @@
     return 'dp-' + Array.from(arr, b => b.toString(36).padStart(2, '0')).join('').slice(0, 9);
   }
 
+  const STATE_WRITER_ID = `${Date.now().toString(36)}-${genId()}`;
+
   function normalizeScale(value, fallback = 1) {
     const n = Number(value);
     const base = Number.isFinite(n) ? n : fallback;
@@ -343,6 +349,61 @@
   let activeShortcutMode = null;
   let _saveTimer = null;
   let _saveSeq = 0;
+  let _stateVersionSeq = 0;
+  let latestStateVersion = null;
+  let pendingStateVersion = null;
+  let _writeQueue = Promise.resolve();
+
+  function normalizeStateVersion(version) {
+    if (!version || typeof version !== 'object') return null;
+    const at = Number(version.at);
+    const seq = Number(version.seq);
+    const writer = typeof version.writer === 'string' ? version.writer : '';
+    if (!Number.isFinite(at) || !Number.isFinite(seq) || !writer) return null;
+    return { at, seq, writer };
+  }
+
+  function compareStateVersions(left, right) {
+    const a = normalizeStateVersion(left);
+    const b = normalizeStateVersion(right);
+    if (!a && !b) return 0;
+    if (!a) return -1;
+    if (!b) return 1;
+    if (a.at !== b.at) return a.at - b.at;
+    if (a.writer === b.writer) return a.seq - b.seq;
+    return a.writer.localeCompare(b.writer);
+  }
+
+  function latestKnownStateVersion() {
+    return compareStateVersions(pendingStateVersion, latestStateVersion) > 0
+      ? pendingStateVersion
+      : latestStateVersion;
+  }
+
+  function nextStateVersion() {
+    const version = { at: Date.now(), seq: ++_stateVersionSeq, writer: STATE_WRITER_ID };
+    pendingStateVersion = version;
+    return version;
+  }
+
+  function snapshotState(version) {
+    const imgs = {};
+    layerMeta.forEach(meta => {
+      const data = imageData.get(meta.id);
+      if (data) imgs[meta.id] = data;
+    });
+    return {
+      [K.STATE]: {
+        enabled: globalEnabled,
+        activeLayerId,
+        grid: { ...gridConfig },
+        layerDefaults: { ...layerDefaults },
+        layers: layerMeta.map(meta => ({ ...meta })),
+        version: { ...version },
+      },
+      [K.IMAGES]: imgs,
+    };
+  }
 
   function normalizeTheme(theme) {
     if (theme === true) return 'light';
@@ -490,8 +551,19 @@
     })();
   }
 
+  function destroyOverlayDOM() {
+    layerDOM.forEach(layer => layer.destroy());
+    layerDOM.clear();
+    (containerEl ?? document.getElementById('dp-root'))?.remove();
+    (gridEl ?? document.getElementById('dp-grid'))?.remove();
+    document.getElementById(BASE_STYLE_ID)?.remove();
+    containerEl = null;
+    gridEl = null;
+  }
+
   /* ── Overlay management ──────────────────── */
   function refreshLayers() {
+    if (!containerEl) return;
     /* Remove stale */
     layerDOM.forEach((layer, id) => {
       if (!getMeta(id)) { layer.destroy(); layerDOM.delete(id); }
@@ -716,6 +788,19 @@
     return true;
   }
 
+  function areAllLayersVisible() {
+    return layerMeta.length > 0 && layerMeta.every(meta => meta.visible);
+  }
+
+  function setAllLayerVisibility(visible) {
+    if (!layerMeta.length) return false;
+    layerMeta.forEach(meta => {
+      meta.visible = !!visible;
+      layerDOM.get(meta.id)?.applyStyle(meta);
+    });
+    return true;
+  }
+
   function applyGrid(cfg) {
     Object.assign(gridConfig, sanitizeGrid(cfg));
     if (!gridEl) return;
@@ -731,6 +816,7 @@
   /* ── Storage: save ───────────────────────── */
   function debounceSave(immediate = false) {
     const seq = ++_saveSeq;
+    nextStateVersion();
     clearTimeout(_saveTimer);
     _saveTimer = setTimeout(() => {
       saveToStorage(seq).catch(error => {
@@ -741,13 +827,17 @@
 
   async function saveToStorage(seq = _saveSeq) {
     if (seq !== _saveSeq) return;
-    const imgs = {};
-    layerMeta.forEach(m => { const d = imageData.get(m.id); if (d) imgs[m.id] = d; });
-    if (seq !== _saveSeq) return;
-    await safeStorageSet({
-      [K.STATE]:  { enabled: globalEnabled, activeLayerId, grid: gridConfig, layerDefaults, layers: layerMeta },
-      [K.IMAGES]: imgs,
-    });
+    const version = pendingStateVersion ?? nextStateVersion();
+    const payload = snapshotState(version);
+    latestStateVersion = version;
+    if (pendingStateVersion === version) pendingStateVersion = null;
+    _writeQueue = _writeQueue
+      .catch(() => {})
+      .then(async () => {
+        if (seq !== _saveSeq) return;
+        await safeStorageSet(payload);
+      });
+    await _writeQueue;
   }
 
   /* ── Storage: load ───────────────────────── */
@@ -762,6 +852,8 @@
       const s = res[K.STATE];
       globalEnabled = s.enabled ?? false;
       activeLayerId = s.activeLayerId ?? null;
+      latestStateVersion = normalizeStateVersion(s.version);
+      pendingStateVersion = null;
       if (s.grid) Object.assign(gridConfig, sanitizeGrid(s.grid));
       if (s.layerDefaults && typeof s.layerDefaults === 'object') {
         layerDefaults.opacity = typeof s.layerDefaults.opacity === 'number' ? Math.min(1, Math.max(0, s.layerDefaults.opacity)) : layerDefaults.opacity;
@@ -930,7 +1022,7 @@
     .dp-sec:last-child { border-bottom: none; }
     .dp-shead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
     .dp-slabel { font-size: 9px; font-weight: 700; letter-spacing: .1em; color: var(--tx3); text-transform: uppercase; }
-    .dp-layer-tools { display: flex; align-items: center; gap: 5px; }
+    .dp-layer-tools { display: flex; align-items: center; justify-content: flex-end; gap: 5px; flex-wrap: wrap; min-width: 0; }
 
     /* Add button */
     .dp-addbtn {
@@ -942,6 +1034,7 @@
     }
     .dp-addbtn:hover { background: var(--active-bg); border-color: var(--active-brd); color: var(--active-fg); }
     .dp-addbtn:active { background: var(--brd-hi); color: var(--bg); }
+    .dp-addbtn:disabled { cursor: default; opacity: .45; }
     .dp-addbtn input {
       position: absolute; width: 1px; height: 1px; margin: 0; padding: 0;
       opacity: 0; pointer-events: none;
@@ -951,6 +1044,8 @@
     .dp-pastebtn:hover { background: var(--active-bg); color: var(--active-fg); }
     .dp-clearbtn { min-width: 0; padding: 0 8px; background: var(--dng-bg); border-color: var(--dng); color: var(--dng); }
     .dp-clearbtn:hover { background: var(--dng); border-color: var(--dng); color: var(--dng-fg); }
+    .dp-visallbtn { min-width: 0; padding: 0 7px; background: var(--surf2); color: var(--tx2); border-color: var(--brd); }
+    .dp-visallbtn:hover { background: var(--active-bg); border-color: var(--active-brd); color: var(--active-fg); }
     .dp-applyall {
       margin-left: 4px; min-width: 80px; height: 28px; padding: 0 8px;
       background: var(--surf2); border: var(--line) solid var(--brd); border-radius: 0;
@@ -1127,6 +1222,7 @@
     const xRightTitle = t('xIncrementTitle');
     const yUpTitle = t('yDecrementTitle');
     const yDownTitle = t('yIncrementTitle');
+    const allVisibilityTitle = t(areAllLayersVisible() ? 'hideAllLayersTitle' : 'showAllLayersTitle');
     const logoURL = extensionAsset('icons/icon32.png');
     const logoFallback = `<svg class="dp-logo-fallback" viewBox="0 0 22 22" fill="none" aria-hidden="true">
       <rect x="1" y="1" width="9" height="9" rx="2" fill="var(--acc)" stroke="#04121a" stroke-width="1.3"/>
@@ -1174,6 +1270,9 @@
           <div class="dp-shead">
             <span class="dp-slabel">${t('sectionLayers')}</span>
             <div class="dp-layer-tools">
+              <button type="button" class="dp-addbtn dp-visallbtn" id="dp-vis-all" title="${allVisibilityTitle}" aria-label="${allVisibilityTitle}">
+                <span id="dp-vis-all-label">${t(areAllLayersVisible() ? 'hideAllLayers' : 'showAllLayers')}</span>
+              </button>
               <button type="button" class="dp-addbtn dp-clearbtn" id="dp-clear-all" title="${t('clearAllTitle')}" aria-label="${t('clearAllTitle')}">
                 <span>${t('btnClearAll')}</span>
               </button>
@@ -1264,6 +1363,7 @@
       this.host = null; this.shadow = null; this.root = null;
       this._px = 0; this._py = 0; this._dragging = false;
       this._ox = 0; this._oy = 0; this._collapsed = false;
+      this._dragCleanup = null;
       this._visible = true;
       this._onPaste = e => this._handlePaste(e);
       this._onResize = () => this._setPos(this._px, this._py);
@@ -1271,16 +1371,26 @@
 
     show(persist = true) {
       this._visible = true;
-      if (this.host) this.host.style.display = '';
       if (persist) setPanelVisiblePreference(true);
-      refreshOverlayVisibility();
+      else panelVisiblePref = true;
+      ensureDOM();
+      if (!this.host || !this.host.isConnected) {
+        this.mount({ x: this._px, y: this._py });
+      } else {
+        this.host.style.display = '';
+      }
+      refreshLayers();
+      applyGrid(gridConfig);
+      setEnabled(globalEnabled);
+      this.renderAll();
     }
 
     hide(persist = true) {
       this._visible = false;
-      if (this.host) this.host.style.display = 'none';
       if (persist) setPanelVisiblePreference(false);
-      refreshOverlayVisibility();
+      else panelVisiblePref = false;
+      this.destroy();
+      destroyOverlayDOM();
     }
 
     toggle() {
@@ -1355,14 +1465,19 @@
     }
 
     /* ── Render ── */
-    renderAll() { this.renderEnable(); this.renderLayers(); this.renderControls(); this.renderGrid(); }
+    renderAll() {
+      if (!this.shadow) return;
+      this.renderEnable(); this.renderLayers(); this.renderControls(); this.renderGrid();
+    }
 
     renderEnable() {
+      if (!this.shadow) return;
       const cb = this.shadow.getElementById('dp-en');
       if (cb) cb.checked = globalEnabled;
     }
 
     renderLayers() {
+      if (!this.shadow) return;
       const list  = this.shadow.getElementById('dp-ll');
       const empty = this.shadow.getElementById('dp-empty');
       if (!list || !empty) return;
@@ -1370,6 +1485,16 @@
       empty.style.display = layerMeta.length === 0 ? '' : 'none';
       empty.setAttribute('aria-hidden', String(layerMeta.length !== 0));
       const hasLayers = layerMeta.length > 0;
+      const allVisible = areAllLayersVisible();
+      const visibilityAll = this.shadow.getElementById('dp-vis-all');
+      const visibilityLabel = this.shadow.getElementById('dp-vis-all-label');
+      const visibilityTitle = t(allVisible ? 'hideAllLayersTitle' : 'showAllLayersTitle');
+      if (visibilityAll) {
+        visibilityAll.disabled = !hasLayers;
+        visibilityAll.title = visibilityTitle;
+        visibilityAll.setAttribute('aria-label', visibilityTitle);
+      }
+      if (visibilityLabel) visibilityLabel.textContent = t(allVisible ? 'hideAllLayers' : 'showAllLayers');
       const clearAll = this.shadow.getElementById('dp-clear-all');
       if (clearAll) clearAll.disabled = !hasLayers;
       const blendAll = this.shadow.getElementById('dp-blend-all');
@@ -1498,6 +1623,7 @@
     }
 
     renderControls() {
+      if (!this.shadow) return;
       const meta = getActiveMeta();
       const ctrl = this.shadow.getElementById('dp-ctrl');
       if (!ctrl) return;
@@ -1516,6 +1642,7 @@
     }
 
     renderGrid() {
+      if (!this.shadow) return;
       const btn  = this.shadow.getElementById('dp-grid');
       const wrap = this.shadow.getElementById('dp-gsize');
       const inp  = this.shadow.getElementById('dp-gnum');
@@ -1560,10 +1687,14 @@
         this._oy = e.clientY - this._py;
         const onMove = e => { if (this._dragging) this._setPos(e.clientX - this._ox, e.clientY - this._oy); };
         const onUp   = () => {
+          this._dragCleanup?.();
+          queueStorageSet({ [K.PANEL_POS]: { x: this._px, y: this._py } });
+        };
+        this._dragCleanup = () => {
           this._dragging = false;
           document.removeEventListener('pointermove', onMove, { capture: true });
           document.removeEventListener('pointerup',   onUp,   { capture: true });
-          queueStorageSet({ [K.PANEL_POS]: { x: this._px, y: this._py } });
+          this._dragCleanup = null;
         };
         document.addEventListener('pointermove', onMove, { capture: true, passive: true });
         document.addEventListener('pointerup',   onUp,   { capture: true });
@@ -1641,6 +1772,12 @@
         this._pasteFromClipboard().catch(error => {
           if (!isExtensionContextInvalidError(error)) console.warn('[DiffPixel] Failed to paste image from clipboard', error);
         });
+      });
+      g('dp-vis-all')?.addEventListener('click', () => {
+        const nextVisible = !areAllLayersVisible();
+        if (!setAllLayerVisibility(nextVisible)) return;
+        this.renderLayers();
+        debounceSave(true);
       });
       g('dp-clear-all')?.addEventListener('click', () => {
         if (!layerMeta.length) return;
@@ -1859,7 +1996,9 @@
           layerMeta.push(meta);
           activeLayerId = id;
           setEnabled(true);
-          const l = new Layer(id); layerDOM.set(id, l); l.mount(containerEl, meta);
+          if (containerEl) {
+            const l = new Layer(id); layerDOM.set(id, l); l.mount(containerEl, meta);
+          }
           this.renderAll(); debounceSave(true);
         };
         reader.readAsDataURL(file);
@@ -1867,9 +2006,14 @@
     }
 
     destroy() {
+      this._dragCleanup?.();
       document.removeEventListener('paste', this._onPaste, { capture: true });
       window.removeEventListener('resize', this._onResize);
       this.host?.remove();
+      this.host = null;
+      this.shadow = null;
+      this.root = null;
+      this._quickActionHanders = null;
     }
   }
 
@@ -1901,7 +2045,7 @@
       case 'PING': reply({ ok: true }); break;
 
       case 'GET_PANEL_STATUS':
-        reply({ ok: true, visible: !!panel?._visible, mounted: !!panel, preferred: panelVisiblePref });
+        reply({ ok: true, visible: !!panel?._visible, mounted: !!panel?.host?.isConnected, preferred: panelVisiblePref });
         break;
 
       case 'TOGGLE_PANEL':
@@ -1934,7 +2078,9 @@
         const meta = sanitizeMeta({ opacity: layerDefaults.opacity, blendMode: layerDefaults.blendMode, ...l });
         layerMeta.push(meta); activeLayerId = meta.id;
         setEnabled(true);
-        const ld = new Layer(meta.id); layerDOM.set(meta.id, ld); ld.mount(containerEl, meta);
+        if (containerEl) {
+          const ld = new Layer(meta.id); layerDOM.set(meta.id, ld); ld.mount(containerEl, meta);
+        }
         panel?.renderAll(); debounceSave(true); reply({ ok: true }); break;
       }
 
@@ -1991,7 +2137,9 @@
           }
           const meta = sanitizeMeta(l);
           layerMeta.push(meta);
-          const ld = new Layer(meta.id); layerDOM.set(meta.id, ld); ld.mount(containerEl, meta);
+          if (containerEl) {
+            const ld = new Layer(meta.id); layerDOM.set(meta.id, ld); ld.mount(containerEl, meta);
+          }
         });
         applyGrid(gridConfig); setEnabled(globalEnabled); panel?.renderAll();
         reply({ ok: true }); break;
@@ -2009,46 +2157,47 @@
   /* ── Cross-tab sync via storage.onChanged ── */
   if (canUseExtensionApi()) {
     try {
-      chrome.storage.onChanged.addListener((changes, area) => {
+    chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== 'local') return;
 
-    if (changes[K.IMAGES]) {
+    let acceptedStateChange = false;
+    if (changes[K.STATE]) {
+      const s = changes[K.STATE].newValue;
+      const incomingVersion = normalizeStateVersion(s?.version);
+      const knownVersion = latestKnownStateVersion();
+      if (s && typeof s === 'object' && (!knownVersion || compareStateVersions(incomingVersion, knownVersion) > 0)) {
+        clearTimeout(_saveTimer);
+        _saveSeq++;
+        pendingStateVersion = null;
+        latestStateVersion = incomingVersion;
+        globalEnabled = typeof s.enabled === 'boolean' ? s.enabled : globalEnabled;
+        activeLayerId = typeof s.activeLayerId === 'string' ? s.activeLayerId : activeLayerId;
+        if (s.grid && typeof s.grid === 'object') Object.assign(gridConfig, sanitizeGrid(s.grid));
+        if (s.layerDefaults && typeof s.layerDefaults === 'object') {
+          layerDefaults.opacity = typeof s.layerDefaults.opacity === 'number' ? Math.min(1, Math.max(0, s.layerDefaults.opacity)) : layerDefaults.opacity;
+          layerDefaults.blendMode = VALID_BLEND.has(s.layerDefaults.blendMode) ? s.layerDefaults.blendMode : layerDefaults.blendMode;
+        }
+
+        /* Sync layers: replace metadata and remount only when DiffPixel DOM is active. */
+        layerDOM.forEach(layer => layer.destroy());
+        layerDOM.clear();
+        const newMeta = (s.layers ?? []).filter(m => m && typeof m.id === 'string').map(sanitizeMeta);
+        layerMeta = newMeta;
+        if (containerEl) newMeta.forEach(meta => {
+          const l = new Layer(meta.id); layerDOM.set(meta.id, l); l.mount(containerEl, meta);
+        });
+
+        applyGrid(gridConfig); setEnabled(globalEnabled);
+        panel?.renderAll();
+        acceptedStateChange = true;
+      }
+    }
+
+    if (changes[K.IMAGES] && (!changes[K.STATE] || acceptedStateChange)) {
       const imgs = changes[K.IMAGES].newValue ?? {};
       imageData.clear();
       Object.entries(imgs).forEach(([id, d]) => imageData.set(id, d));
-    }
-
-    if (changes[K.STATE]) {
-      const s = changes[K.STATE].newValue;
-      if (!s || typeof s !== 'object') return;
-      globalEnabled = typeof s.enabled === 'boolean' ? s.enabled : globalEnabled;
-      activeLayerId = typeof s.activeLayerId === 'string' ? s.activeLayerId : activeLayerId;
-      if (s.grid && typeof s.grid === 'object') Object.assign(gridConfig, sanitizeGrid(s.grid));
-      if (s.layerDefaults && typeof s.layerDefaults === 'object') {
-        layerDefaults.opacity = typeof s.layerDefaults.opacity === 'number' ? Math.min(1, Math.max(0, s.layerDefaults.opacity)) : layerDefaults.opacity;
-        layerDefaults.blendMode = VALID_BLEND.has(s.layerDefaults.blendMode) ? s.layerDefaults.blendMode : layerDefaults.blendMode;
-      }
-
-      /* Sync layers: remove deleted, add new */
-      const newMeta = (s.layers ?? []).filter(m => m && typeof m.id === 'string').map(sanitizeMeta);
-      [...layerDOM.keys()].forEach(id => {
-        if (!newMeta.find(m => m.id === id)) destroyLayer(id);
-      });
-      [...imageData.keys()].forEach(id => {
-        if (!newMeta.find(m => m.id === id)) imageData.delete(id);
-      });
-      layerMeta = newMeta;
-      newMeta.forEach(meta => {
-        if (!layerDOM.has(meta.id)) {
-          const l = new Layer(meta.id); layerDOM.set(meta.id, l); l.mount(containerEl, meta);
-        } else {
-          layerDOM.get(meta.id)?.applyStyle(meta);
-          layerDOM.get(meta.id)?.updateImage();
-        }
-      });
-
-      applyGrid(gridConfig); setEnabled(globalEnabled);
-      panel?.renderAll();
+      layerDOM.forEach(layer => layer.updateImage());
     }
 
     if (changes[K.THEME]) {
@@ -2067,7 +2216,6 @@
         createAndShowPanel(false).then(() => panel?.renderAll());
       } else {
         panel?.hide(false);
-        refreshOverlayVisibility();
       }
     }
       });
@@ -2078,7 +2226,7 @@
 
   /* ── Keyboard shortcuts ──────────────────── */
   document.addEventListener('keydown', e => {
-    if (!globalEnabled || !activeLayerId) return;
+    if (!globalEnabled || !activeLayerId || !isDiffPixelVisible()) return;
     const ae = document.activeElement;
     if (ae?.tagName === 'INPUT' || ae?.tagName === 'TEXTAREA' || ae?.isContentEditable) return;
     if (panel?.host?.contains(ae)) return;
@@ -2127,11 +2275,9 @@
   /* ── Init ────────────────────────────────── */
   async function init() {
     document.getElementById('dp-panel-host')?.remove();
-    ensureDOM();
+    destroyOverlayDOM();
     await loadFromStorage();
-    refreshLayers(); applyGrid(gridConfig); setEnabled(globalEnabled);
     if (panelVisiblePref) await createAndShowPanel(false);
-    panel?.renderAll();
   }
 
   init();
