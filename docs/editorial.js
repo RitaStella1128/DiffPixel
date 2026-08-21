@@ -6,31 +6,6 @@
   const panels = [...document.querySelectorAll('[data-lang-panel]')];
   const localizedElements = [...document.querySelectorAll('[data-en][data-ja]')];
   const localizedLinks = [...document.querySelectorAll('[data-en-href][data-ja-href]')];
-  const header = document.querySelector('.site-header');
-  let chapterObserver;
-
-  function updateChapterObserver(language) {
-    if (chapterObserver) chapterObserver.disconnect();
-    if (!('IntersectionObserver' in window)) return;
-
-    const activePanel = document.querySelector(`[data-lang-panel="${language}"]`);
-    if (!activePanel) return;
-
-    const chapters = [...activePanel.querySelectorAll('.chapter[id]')];
-    chapterObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        document.querySelectorAll('.chapter-nav a').forEach((link) => {
-          const isCurrent = link.getAttribute('href') === `#${entry.target.id}`;
-          if (isCurrent) link.setAttribute('aria-current', 'location');
-          else link.removeAttribute('aria-current');
-        });
-      });
-    }, { rootMargin: '-28% 0px -58% 0px', threshold: 0 });
-
-    chapters.forEach((chapter) => chapterObserver.observe(chapter));
-  }
-
   function setLanguage(language, updateHash) {
     document.documentElement.lang = language;
 
@@ -56,7 +31,6 @@
       document.title = language === 'ja' ? document.body.dataset.titleJa : document.body.dataset.titleEn;
     }
 
-    updateChapterObserver(language);
     if (updateHash) history.replaceState(null, '', `#${language}`);
   }
 
@@ -73,10 +47,4 @@
 
   setLanguage(initialLanguage, false);
 
-  function updateHeader() {
-    if (header) header.classList.toggle('scrolled', window.scrollY > 16);
-  }
-
-  updateHeader();
-  window.addEventListener('scroll', updateHeader, { passive: true });
 })();

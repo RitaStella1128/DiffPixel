@@ -73,8 +73,8 @@ html[lang="ja"] {
 html {
   background: var(--bg);
   overflow-x: clip;
-  overscroll-behavior-y: none;
-  scroll-behavior: smooth;
+  overscroll-behavior-y: auto;
+  scroll-behavior: auto;
   scroll-padding-top: calc(var(--header-h) + 24px);
 }
 
@@ -204,13 +204,7 @@ body::before {
   position: fixed;
   inset: 0 0 auto;
   z-index: 100;
-  border-bottom: 1px solid transparent;
-  background: linear-gradient(to bottom, rgba(8, 9, 16, .92), rgba(8, 9, 16, 0));
-  transition: background-color .2s ease, border-color .2s ease;
-}
-
-.site-header.scrolled {
-  border-color: var(--line);
+  border-bottom: 1px solid var(--line);
   background: var(--bg);
 }
 
@@ -497,28 +491,6 @@ body::before {
   content: attr(data-seam);
 }
 
-/* ---------- Drift title: ghost layer that snaps into register ---------- */
-
-.drift-title {
-  position: relative;
-  isolation: isolate;
-}
-
-.drift-title::before {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--cyan);
-  content: attr(data-drift-text);
-  opacity: .5;
-  transform: translate(7px, -7px);
-  transition: transform .9s cubic-bezier(.16, 1, .3, 1), opacity .7s ease;
-  pointer-events: none;
-}
-
-.drift-title.is-snapped::before { transform: translate(0, 0); opacity: 0; }
-
 /* ---------- Footer ---------- */
 
 /* The wordmark is sized off the footer shell's own measured width (via
@@ -572,36 +544,6 @@ body::before {
 .footer-links,
 .footer-info { display: flex; flex-wrap: wrap; gap: 18px 26px; }
 
-/* ---------- Motion system pre-states ----------
-   Content is fully visible by default (no-JS, reduced-motion, script failure).
-   motion.js adds html.has-motion ONLY when motion is allowed, and removes it
-   again if the animation stack fails to load. */
-
-/* nowrap keeps chars from soft-wrapping inside a word (inline-block chars
-   are otherwise treated as individual break opportunities). */
-.split-heading .word { display: inline-block; white-space: nowrap; }
-.split-heading .char { display: inline-block; }
-
-html.has-motion .split-heading .char {
-  opacity: 0;
-  transform: translate(.12em, .38em);
-}
-
-html.has-motion .split-heading.chars-in .char {
-  opacity: 1;
-  transform: none;
-}
-
-html.has-motion [data-reveal] {
-  opacity: 0;
-  transform: translateY(26px);
-}
-
-html.has-motion [data-reveal].is-in {
-  opacity: 1;
-  transform: none;
-}
-
 /* Cross-document fade between Home / Manual / Privacy (progressive). */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
@@ -614,12 +556,7 @@ html.has-motion [data-reveal].is-in {
 :focus-visible { outline: 3px solid var(--cyan); outline-offset: 4px; }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
-  .drift-title::before { transform: translate(0, 0); opacity: 0; }
-  /* Belt and braces: even if has-motion is present, nothing may stay hidden. */
-  html.has-motion .split-heading .char,
-  html.has-motion [data-reveal] { opacity: 1; transform: none; }
 }
 
 @media (max-width: 700px) {

@@ -174,69 +174,20 @@ h1 span { color: var(--cyan); }
 .section-heading h2 { max-width: 10ch; }
 
 .workflow-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, .75fr);
-  gap: clamp(48px, 8vw, 132px);
+  display: block;
 }
 
 .workflow-steps,
 .workflow-step,
 .step-copy { min-width: 0; }
 
-.step-copy { width: 100%; flex: 1; }
-
-.workflow-hud {
-  display: none;
-  gap: 18px;
-  margin-bottom: 36px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--line);
-}
-
-/* Inactive states use --quiet at full opacity: 4.8:1 on --bg (AA). */
-.workflow-hud span { color: var(--quiet); transition: color .2s ease; }
-.workflow-hud span.active { color: var(--cyan); }
-
-.workflow-stage {
-  position: sticky;
-  top: calc(var(--header-h) + 30px);
-  height: calc(100svh - var(--header-h) - 60px);
-  align-self: start;
-  display: flex;
-  align-items: center;
-}
-
-.workflow-frame {
-  position: absolute;
-  width: 100%;
-  margin: 0;
-  overflow: hidden;
-  aspect-ratio: 16 / 10;
-  border: 1px solid var(--line-strong);
-  background: var(--surface);
-  opacity: 0;
-  clip-path: inset(0 0 100% 0);
-  transition: opacity .35s ease, clip-path .55s cubic-bezier(.2, .8, .2, 1);
-}
-
-.workflow-frame.active { z-index: 2; opacity: 1; clip-path: inset(0); }
-.workflow-frame img { width: 100%; height: 100%; object-fit: cover; }
-
-.workflow-progress {
-  position: absolute;
-  right: -26px;
-  display: grid;
-  gap: 10px;
-}
-
-.workflow-progress span { width: 5px; height: 44px; background: var(--line); transition: background-color .2s ease; }
-.workflow-progress span.active { background: var(--cyan); }
-
 .workflow-step {
-  min-height: 92svh;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   align-items: center;
-  padding-block: 80px;
+  gap: clamp(48px, 6vw, 100px);
+  padding-block: 84px;
+  border-top: 1px solid var(--line);
 }
 
 .step-number {
@@ -265,7 +216,12 @@ h1 span { color: var(--cyan); }
   font-size: clamp(16px, 1.35vw, 20px);
 }
 
-.workflow-mobile-image { display: none; }
+.workflow-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line-strong);
+}
 
 .capabilities { padding-block: clamp(84px, 7vw, 110px); }
 
@@ -388,34 +344,6 @@ h1 span { color: var(--cyan); }
   padding-block: 80px 0px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .workflow-layout { grid-template-columns: 1fr; }
-  .workflow-stage { display: none; }
-  .workflow-hud { display: flex; }
-  .workflow-step {
-    min-height: auto;
-    display: grid;
-    gap: 38px;
-    padding-block: 84px;
-    border-top: 1px solid var(--line);
-  }
-  .workflow-mobile-image {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--line-strong);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) and (min-width: 1101px) {
-  .workflow-hud { display: none; }
-  .workflow-step {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    align-items: center;
-    gap: clamp(48px, 6vw, 100px);
-  }
-}
-
 @media (max-width: 1100px) {
   :root { --shell: min(100% - 40px, 880px); }
   .home-hero,
@@ -423,11 +351,8 @@ h1 span { color: var(--cyan); }
   .privacy-stage-inner { grid-template-columns: 1fr; gap: 60px; min-height: auto; }
   .home-hero { padding-top: calc(var(--header-h) + 74px); padding-bottom: 90px; }
   h1, [data-lang-panel="ja"] h1 { max-width: 9ch; }
-  .workflow-layout { grid-template-columns: 1fr; }
-  .workflow-stage { display: none; }
-  .workflow-hud { display: flex; }
-  .workflow-step { min-height: auto; display: grid; gap: 38px; padding-block: 84px; border-top: 1px solid var(--line); }
-  .workflow-mobile-image { display: block; width: 100%; height: auto; border: 1px solid var(--line-strong); }
+  .workflow-step { grid-template-columns: 1fr; gap: 38px; }
+  html[lang="ja"] .workflow-step h3 { max-width: none; }
   .workflow-step h3 { max-width: 12ch; }
   .capabilities-copy, .privacy-copy { max-width: 680px; }
   .capability-index { grid-template-columns: repeat(2, 1fr); }
@@ -457,6 +382,10 @@ h1 span { color: var(--cyan); }
     font-size: clamp(44px, 12vw, 56px);
     line-height: .94;
     letter-spacing: -.035em;
+    line-break: strict;
+    text-wrap: balance;
+  }
+  html[lang="ja"] .workflow-step h3 {
     line-break: strict;
     text-wrap: balance;
   }
