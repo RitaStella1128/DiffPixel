@@ -29,9 +29,9 @@ DiffPixel runs locally in Chrome.
 
 Uploaded images and overlay settings are stored on the user's device through Chrome storage. The extension does not send uploaded images, page data, or settings to an external server.
 
-The public privacy policy is available at [https://ritastella1128.github.io/DiffPixel/privacy.html](https://ritastella1128.github.io/DiffPixel/privacy.html) with English and Japanese switching on the same page. A plain-text copy is also available in [PRIVACY.md](PRIVACY.md).
+The public privacy policy is available at [https://diffpixel.ritastella.com/privacy.html](https://diffpixel.ritastella.com/privacy.html) with English and Japanese switching on the same page. A plain-text copy is also available in [PRIVACY.md](PRIVACY.md).
 
-The public user manual is available at [https://ritastella1128.github.io/DiffPixel/manual.html](https://ritastella1128.github.io/DiffPixel/manual.html).
+The public user manual is available at [https://diffpixel.ritastella.com/manual.html](https://diffpixel.ritastella.com/manual.html).
 
 ## Installation For Development
 
@@ -76,6 +76,12 @@ DiffPixel uses a small set of Chrome extension permissions:
 - `host_permissions` for `http://*/*`, `https://*/*`, and `file:///*` to inject the local overlay into user-selected websites, support local files when Chrome file URL access is enabled, and restore DiffPixel after reloads on enabled sites.
 
 ## Release Log
+
+### 1.1.0
+
+- Added file URL support to the panel's site-matching logic, so the floating panel can be restored and toggled correctly on `file://` pages (previously only `http`/`https` pages were recognized).
+- Restyled the in-page floating panel with higher-contrast colors, squared corners, and a heavier accent border, in both light and dark themes.
+- Regenerated the Chrome Web Store release ZIP as `dist/DiffPixel-1.1.0.zip`.
 
 ### 1.0.7
 

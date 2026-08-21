@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>DiffPixel — Promo tile 440×280</title>
+<script>
+  document.documentElement.lang =
+    new URLSearchParams(location.search).get('lang') === 'ja' ? 'ja' : 'en';
+</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=block" rel="stylesheet" />
+<link rel="stylesheet" href="../store-screenshots/register.css" />
+<style>
+  :root { --tick: 44px; }
+  body { width: 440px; height: 280px; }
+
+  .stage {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 30px 32px 26px;
+  }
+
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .brand-row img { width: 24px; height: 24px; }
+
+  .brand-row span {
+    font-family: "Syne", system-ui, sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -.03em;
+  }
+
+  .title {
+    font-size: 39px;
+    line-height: .96;
+    letter-spacing: -.045em;
+  }
+
+  html[lang="ja"] .title { font-size: 33px; line-height: 1.18; letter-spacing: -.01em; }
+
+  .meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+
+  .meta-row::before {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: var(--cyan);
+    content: "";
+  }
+
+  .hud-meta { font-size: 8.5px; gap: 6px 14px; }
+</style>
+</head>
+<body>
+  <div class="canvas-grid"></div>
+  <span class="ruler-top"></span>
+  <span class="ruler-left"></span>
+
+  <div class="stage">
+    <div class="brand-row">
+      <img src="../docs/icons/icon48.png" alt="" />
+      <span>DiffPixel</span>
+    </div>
+
+    <h1 class="title drift-title" data-lang="en" data-drift-text="See the pixel&#10;that drifted.">See the <span class="accent">pixel</span><br />that drifted.</h1>
+    <h1 class="title drift-title" data-lang="ja" data-drift-text="1pxのズレが、&#10;見える。"><span class="accent">1px</span>のズレが、<br />見える。</h1>
+
+    <div class="meta-row">
+      <div class="hud-meta" data-lang="en"><span>Free</span><span>Local only</span></div>
+      <div class="hud-meta" data-lang="ja"><span>無料</span><span>ローカル動作</span></div>
+      <div class="hud-meta"><span>Visual QA</span></div>
+    </div>
+  </div>
+
+  <div class="canvas-grain"></div>
+</body>
+</html>

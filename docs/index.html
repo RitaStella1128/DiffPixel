@@ -5,25 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DiffPixel — See the pixel that drifted.</title>
   <meta name="description" content="Overlay a reference image, align the page, and reveal every visual difference without leaving Chrome. DiffPixel is free, private, and local-only." />
-  <link rel="canonical" href="https://ritastella1128.github.io/DiffPixel/" />
+  <link rel="canonical" href="https://diffpixel.ritastella.com/" />
   <link rel="icon" type="image/png" sizes="32x32" href="icons/icon32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="icons/icon16.png" />
   <link rel="apple-touch-icon" href="icons/icon128.png" />
-  <link rel="preload" as="image" href="home-align.webp" type="image/webp" />
-  <link rel="preload" as="image" href="home-difference.webp" type="image/webp" />
+  <link rel="preload" as="font" type="font/woff2" href="fonts/syne-variable.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="fonts/jetbrains-mono-variable.woff2" crossorigin />
+  <link rel="preload" as="image" href="home-align.webp" imagesrcset="home-align-720.webp 720w, home-align.webp 1440w" imagesizes="(max-width: 1100px) 100vw, 56vw" type="image/webp" />
+  <link rel="preload" as="image" href="home-difference.webp" imagesrcset="home-difference-720.webp 720w, home-difference.webp 1440w" imagesizes="(max-width: 1100px) 100vw, 56vw" type="image/webp" />
 
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="DiffPixel" />
   <meta property="og:title" content="DiffPixel — See the pixel that drifted." />
   <meta property="og:description" content="Overlay the reference. Align the page. Fix the difference—without leaving Chrome." />
-  <meta property="og:url" content="https://ritastella1128.github.io/DiffPixel/" />
-  <meta property="og:image" content="https://ritastella1128.github.io/DiffPixel/home-align.webp" />
+  <meta property="og:url" content="https://diffpixel.ritastella.com/" />
+  <meta property="og:image" content="https://diffpixel.ritastella.com/home-align.webp" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:locale:alternate" content="ja_JP" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="DiffPixel — See the pixel that drifted." />
   <meta name="twitter:description" content="Overlay the reference. Align the page. Fix the difference—without leaving Chrome." />
-  <meta name="twitter:image" content="https://ritastella1128.github.io/DiffPixel/home-align.webp" />
+  <meta name="twitter:image" content="https://diffpixel.ritastella.com/home-align.webp" />
 
   <script type="application/ld+json">
   {
@@ -31,31 +33,31 @@
     "@graph": [
       {
         "@type": "WebSite",
-        "@id": "https://ritastella1128.github.io/DiffPixel/#website",
-        "url": "https://ritastella1128.github.io/DiffPixel/",
+        "@id": "https://diffpixel.ritastella.com/#website",
+        "url": "https://diffpixel.ritastella.com/",
         "name": "DiffPixel",
         "inLanguage": ["en", "ja"]
       },
       {
         "@type": "WebPage",
-        "@id": "https://ritastella1128.github.io/DiffPixel/#webpage",
-        "url": "https://ritastella1128.github.io/DiffPixel/",
+        "@id": "https://diffpixel.ritastella.com/#webpage",
+        "url": "https://diffpixel.ritastella.com/",
         "name": "DiffPixel — See the pixel that drifted.",
-        "isPartOf": { "@id": "https://ritastella1128.github.io/DiffPixel/#website" },
-        "about": { "@id": "https://ritastella1128.github.io/DiffPixel/#app" },
+        "isPartOf": { "@id": "https://diffpixel.ritastella.com/#website" },
+        "about": { "@id": "https://diffpixel.ritastella.com/#app" },
         "inLanguage": ["en", "ja"]
       },
       {
         "@type": "SoftwareApplication",
-        "@id": "https://ritastella1128.github.io/DiffPixel/#app",
+        "@id": "https://diffpixel.ritastella.com/#app",
         "name": "DiffPixel",
         "applicationCategory": "DeveloperApplication",
         "applicationSubCategory": "Browser Extension",
         "operatingSystem": "Google Chrome",
-        "softwareVersion": "1.0.7",
-        "url": "https://ritastella1128.github.io/DiffPixel/",
+        "softwareVersion": "1.1.0",
+        "url": "https://diffpixel.ritastella.com/",
         "downloadUrl": "https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh",
-        "image": "https://ritastella1128.github.io/DiffPixel/home-align.webp",
+        "image": "https://diffpixel.ritastella.com/home-align.webp",
         "description": "DiffPixel overlays local reference images on live web pages so designers and developers can align and compare implementations pixel by pixel. Images and settings remain on the user's device.",
         "featureList": [
           "Multiple local reference image layers",
@@ -74,10 +76,17 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="home.css?v=7" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&display=swap" rel="stylesheet" /></noscript>
+  <link rel="stylesheet" href="base.css?v=4" />
+  <link rel="stylesheet" href="home.css?v=8" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <span class="ruler ruler-top" aria-hidden="true"></span>
+  <span class="ruler ruler-left" aria-hidden="true"></span>
+
   <header class="site-header">
     <div class="shell header-inner">
       <a class="brand" href="./" aria-label="DiffPixel home">
@@ -93,26 +102,26 @@
           <button type="button" data-lang-button="en" aria-pressed="true">EN</button>
           <button type="button" data-lang-button="ja" aria-pressed="false">JA</button>
         </nav>
-        <a class="header-install" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome</a>
+        <a class="btn header-cta" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome</a>
       </div>
     </div>
   </header>
 
-  <main id="main-content">
+  <main id="main-content" tabindex="-1">
     <div data-lang-panel="en" class="active">
       <section class="home-hero shell" id="demo" data-section-key="demo" aria-labelledby="hero-title-en">
         <div class="hero-copy">
           <p class="eyebrow">Visual QA / Chrome extension</p>
-          <h1 id="hero-title-en">See the <span>pixel</span> that drifted.</h1>
+          <h1 id="hero-title-en" class="drift-title">See the <span>pixel</span> that drifted.</h1>
           <p class="hero-lead">Overlay the reference. Align the page. Fix the difference—without leaving Chrome.</p>
-          <a class="primary-cta" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome <span aria-hidden="true">↗</span></a>
-          <div class="hero-meta" aria-label="Product facts"><span>Free</span><span>No account</span><span>Local only</span></div>
+          <a class="btn btn-lg" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome <span aria-hidden="true">↗</span></a>
+          <div class="hud-meta" aria-label="Product facts"><span>Free</span><span>No account</span><span>Local only</span></div>
         </div>
 
         <figure class="diff-comparison" data-diff-slider style="--split: 50%;">
           <div class="diff-frame">
-            <img class="diff-base" src="home-align.webp" alt="DiffPixel aligning a reference image over a live page" width="1440" height="900" fetchpriority="high" />
-            <div class="diff-overlay"><img src="home-difference.webp" alt="The same DiffPixel session in Difference blend mode" width="1440" height="900" fetchpriority="high" /></div>
+            <img class="diff-base" src="home-align.webp" srcset="home-align-720.webp 720w, home-align.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="DiffPixel aligning a reference image over a live page" width="1440" height="900" fetchpriority="high" />
+            <div class="diff-overlay"><img src="home-difference.webp" srcset="home-difference-720.webp 720w, home-difference.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="The same DiffPixel session in Difference blend mode" width="1440" height="900" fetchpriority="high" /></div>
             <span class="diff-label diff-label-before">Overlay</span>
             <span class="diff-label diff-label-after">Difference</span>
             <input class="diff-range" type="range" min="0" max="100" value="50" step="1" aria-label="Reveal Difference mode" aria-valuenow="50" />
@@ -122,58 +131,73 @@
         </figure>
       </section>
 
-      <section class="workflow" id="workflow" data-section-key="workflow" aria-labelledby="workflow-title-en">
+      <section class="workflow diff-seam" id="workflow" data-section-key="workflow" aria-labelledby="workflow-title-en">
         <div class="shell section-heading">
           <p class="eyebrow">Workflow / 01—03</p>
-          <h2 id="workflow-title-en">Three states.<br />One clear result.</h2>
+          <h2 id="workflow-title-en" class="drift-title">Three states.<br />One clear result.</h2>
         </div>
         <div class="shell workflow-layout">
           <div class="workflow-stage" aria-hidden="true">
-            <figure class="workflow-frame active" data-workflow-state="add"><img src="home-add.webp" alt="" width="1440" height="900" loading="lazy" /></figure>
-            <figure class="workflow-frame" data-workflow-state="align"><img src="home-align.webp" alt="" width="1440" height="900" loading="lazy" /></figure>
-            <figure class="workflow-frame" data-workflow-state="difference"><img src="home-difference.webp" alt="" width="1440" height="900" loading="lazy" /></figure>
+            <figure class="workflow-frame active" data-workflow-state="add"><img src="home-add.webp" srcset="home-add-720.webp 720w, home-add.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="" width="1440" height="900" loading="lazy" /></figure>
+            <figure class="workflow-frame" data-workflow-state="align"><img src="home-align.webp" srcset="home-align-720.webp 720w, home-align.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="" width="1440" height="900" loading="lazy" /></figure>
+            <figure class="workflow-frame" data-workflow-state="difference"><img src="home-difference.webp" srcset="home-difference-720.webp 720w, home-difference.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="" width="1440" height="900" loading="lazy" /></figure>
             <div class="workflow-progress"><span></span><span></span><span></span></div>
           </div>
           <div class="workflow-steps">
+            <div class="workflow-hud hud-meta" aria-hidden="true">
+              <span data-hud-state="add">Add</span><span data-hud-state="align">Align</span><span data-hud-state="difference">Difference</span>
+            </div>
             <article class="workflow-step" data-workflow-state="add">
               <div class="step-copy"><span class="step-number">01 / Add</span><h3>Bring the reference into the page.</h3><p>Choose a file, drop it, or paste it. The image stays on your device and appears exactly where the work happens.</p></div>
-              <img class="workflow-mobile-image" src="home-add.webp" alt="The DiffPixel panel ready to add a local reference image" width="1440" height="900" loading="lazy" />
+              <img class="workflow-mobile-image" src="home-add.webp" srcset="home-add-720.webp 720w, home-add.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="The DiffPixel panel ready to add a local reference image" width="1440" height="900" loading="lazy" />
             </article>
             <article class="workflow-step" data-workflow-state="align">
               <div class="step-copy"><span class="step-number">02 / Align</span><h3>Align it. Down to one pixel.</h3><p>Nudge X and Y, tune scale and opacity, then keep the page visible while the reference settles into place.</p></div>
-              <img class="workflow-mobile-image" src="home-align.webp" alt="DiffPixel aligning a reference with pixel-level controls" width="1440" height="900" loading="lazy" />
+              <img class="workflow-mobile-image" src="home-align.webp" srcset="home-align-720.webp 720w, home-align.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="DiffPixel aligning a reference with pixel-level controls" width="1440" height="900" loading="lazy" />
             </article>
             <article class="workflow-step" data-workflow-state="difference">
               <div class="step-copy"><span class="step-number">03 / Difference</span><h3>Let the difference speak.</h3><p>Switch blend modes. Matching pixels recede; the places that need attention remain unmistakably visible.</p></div>
-              <img class="workflow-mobile-image" src="home-difference.webp" alt="DiffPixel revealing mismatches in Difference mode" width="1440" height="900" loading="lazy" />
+              <img class="workflow-mobile-image" src="home-difference.webp" srcset="home-difference-720.webp 720w, home-difference.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="DiffPixel revealing mismatches in Difference mode" width="1440" height="900" loading="lazy" />
             </article>
           </div>
         </div>
       </section>
 
-      <section class="capabilities shell" id="capabilities" data-section-key="capabilities" aria-labelledby="capabilities-title-en">
-        <div class="capabilities-copy"><p class="eyebrow">Instrument / 08 controls</p><h2 id="capabilities-title-en">One panel.<br />Every check.</h2><p>Enough control to inspect the detail. Little enough interface to stay out of the way.</p></div>
-        <figure class="capabilities-visual"><img src="home-align.webp" alt="The full DiffPixel panel and aligned reference layer" width="1440" height="900" loading="lazy" /></figure>
-        <ol class="capability-index">
-          <li><span>01</span>Layers</li><li><span>02</span>Blend</li><li><span>03</span>Opacity</li><li><span>04</span>X / Y</li>
-          <li><span>05</span>Scale</li><li><span>06</span>Grid</li><li><span>07</span>Shortcuts</li><li><span>08</span>Themes</li>
-        </ol>
+      <section class="capabilities diff-seam" id="capabilities" data-section-key="capabilities" aria-labelledby="capabilities-title-en">
+        <div class="shell capabilities-inner">
+          <div class="capabilities-copy"><p class="eyebrow">Panel / 08 controls</p><h2 id="capabilities-title-en" class="drift-title">One panel.<br />Every check.</h2><p>Enough control to inspect the detail. Little enough interface to stay out of the way.</p></div>
+          <figure class="capabilities-visual"><img src="home-align.webp" srcset="home-align-720.webp 720w, home-align.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="The full DiffPixel panel and aligned reference layer" width="1440" height="900" loading="lazy" /></figure>
+          <ol class="capability-index">
+            <li><span>01</span>Layers</li><li><span>02</span>Blend</li><li><span>03</span>Opacity</li><li><span>04</span>X / Y</li>
+            <li><span>05</span>Scale</li><li><span>06</span>Grid</li><li><span>07</span>Shortcuts</li><li><span>08</span>Themes</li>
+          </ol>
+        </div>
       </section>
 
-      <section class="privacy-stage shell" id="privacy" data-section-key="privacy" aria-labelledby="privacy-title-en">
-        <div class="privacy-copy"><p class="eyebrow">Privacy / Local by default</p><h2 id="privacy-title-en">Your work stays yours.</h2><p>Reference files and comparison settings stay in Chrome storage on your device.</p><a class="text-link" href="privacy.html">Read the privacy policy <span aria-hidden="true">↗</span></a></div>
-        <div class="privacy-mark" aria-hidden="true"><span>Local</span><strong>Only</strong></div>
-        <dl class="privacy-facts"><div><dt>01 / Upload</dt><dd>None</dd></div><div><dt>02 / Analytics</dt><dd>None</dd></div><div><dt>03 / Storage</dt><dd>On device</dd></div></dl>
+      <section class="privacy-stage diff-seam" id="privacy" data-section-key="privacy" aria-labelledby="privacy-title-en">
+        <div class="shell privacy-stage-inner">
+          <div class="privacy-copy"><p class="eyebrow">Privacy / Local by default</p><h2 id="privacy-title-en" class="drift-title">Your work stays yours.</h2><p>Reference files and comparison settings stay in Chrome storage on your device.</p><a class="text-link" href="privacy.html">Read the privacy policy <span aria-hidden="true">↗</span></a></div>
+          <div class="privacy-mark" aria-hidden="true"><span>Local</span><strong>Only</strong></div>
+          <dl class="privacy-facts"><div><dt>01 / Upload</dt><dd>None</dd></div><div><dt>02 / Analytics</dt><dd>None</dd></div><div><dt>03 / Storage</dt><dd>On device</dd></div></dl>
+        </div>
       </section>
 
-      <section class="closing shell" id="contact" data-section-key="contact" aria-labelledby="closing-title-en">
-        <p class="eyebrow">Available on Chrome Web Store</p>
-        <h2 id="closing-title-en">Ready to<br />compare?</h2>
-        <a class="primary-cta large" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome <span aria-hidden="true">↗</span></a>
+      <section class="closing diff-seam" id="contact" data-section-key="contact" aria-labelledby="closing-title-en">
+        <div class="shell closing-inner">
+          <p class="eyebrow">Available on Chrome Web Store</p>
+          <h2 id="closing-title-en" class="drift-title">Ready to<br />compare?</h2>
+          <a class="btn btn-lg" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Add to Chrome <span aria-hidden="true">↗</span></a>
+        </div>
       </section>
 
-      <footer class="site-footer">
-        <div class="shell"><p class="footer-wordmark">DiffPixel</p><div class="footer-meta"><nav aria-label="Footer"><a href="manual.html">Manual</a><a href="privacy.html">Privacy</a><a href="https://github.com/RitaStella1128/DiffPixel" rel="noopener">GitHub</a></nav><div><span>Version 1.0.7</span><span>Free / Local only</span><span>© 2026 DiffPixel</span></div></div></div>
+      <footer class="site-footer diff-seam">
+        <div class="shell">
+          <div class="footer-meta">
+            <nav class="footer-links" aria-label="Footer"><a href="manual.html">Manual</a><a href="privacy.html">Privacy</a><a href="https://github.com/RitaStella1128/DiffPixel" rel="noopener">GitHub</a><a href="https://ritastella.com" rel="noopener">Portfolio</a></nav>
+            <div class="footer-info"><span>Version 1.1.0</span><span>Free / Local only</span><span>© 2026 DiffPixel</span></div>
+          </div>
+          <p class="footer-wordmark">DiffPixel</p>
+        </div>
       </footer>
     </div>
 
@@ -181,16 +205,16 @@
       <section class="home-hero shell" id="ja-demo" data-section-key="demo" aria-labelledby="hero-title-ja">
         <div class="hero-copy">
           <p class="eyebrow">ビジュアルQA / Chrome 拡張機能</p>
-          <h1 id="hero-title-ja"><span>1px</span>のズレが、見える。</h1>
+          <h1 id="hero-title-ja" class="drift-title"><span>1px</span>のズレが、見える。</h1>
           <p class="hero-lead">参照画像を重ね、位置を合わせ、差分を直す。Chromeを離れずに。</p>
-          <a class="primary-cta" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Chrome に追加 <span aria-hidden="true">↗</span></a>
-          <div class="hero-meta" aria-label="製品情報"><span>無料</span><span>登録不要</span><span>ローカル動作</span></div>
+          <a class="btn btn-lg" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Chrome に追加 <span aria-hidden="true">↗</span></a>
+          <div class="hud-meta" aria-label="製品情報"><span>無料</span><span>登録不要</span><span>ローカル動作</span></div>
         </div>
 
         <figure class="diff-comparison" data-diff-slider style="--split: 50%;">
           <div class="diff-frame">
-            <img class="diff-base" src="home-align.webp" alt="実装ページに参照画像を合わせるDiffPixel" width="1440" height="900" fetchpriority="high" />
-            <div class="diff-overlay"><img src="home-difference.webp" alt="同じ画面を差分モードで表示したDiffPixel" width="1440" height="900" fetchpriority="high" /></div>
+            <img class="diff-base" src="home-align.webp" srcset="home-align-720.webp 720w, home-align.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="実装ページに参照画像を合わせるDiffPixel" width="1440" height="900" fetchpriority="high" />
+            <div class="diff-overlay"><img src="home-difference.webp" srcset="home-difference-720.webp 720w, home-difference.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="同じ画面を差分モードで表示したDiffPixel" width="1440" height="900" fetchpriority="high" /></div>
             <span class="diff-label diff-label-before">重ね合わせ</span>
             <span class="diff-label diff-label-after">差分</span>
             <input class="diff-range" type="range" min="0" max="100" value="50" step="1" aria-label="差分モードを表示" aria-valuenow="50" />
@@ -200,45 +224,61 @@
         </figure>
       </section>
 
-      <section class="workflow" id="ja-workflow" data-section-key="workflow" aria-labelledby="workflow-title-ja">
-        <div class="shell section-heading"><p class="eyebrow">ワークフロー / 01—03</p><h2 id="workflow-title-ja">3つの状態。<br />1つの明確な結果。</h2></div>
+      <section class="workflow diff-seam" id="ja-workflow" data-section-key="workflow" aria-labelledby="workflow-title-ja">
+        <div class="shell section-heading"><p class="eyebrow">ワークフロー / 01—03</p><h2 id="workflow-title-ja" class="drift-title">3つの状態。<br />1つの明確な結果。</h2></div>
         <div class="shell workflow-layout">
           <div class="workflow-stage" aria-hidden="true">
-            <figure class="workflow-frame active" data-workflow-state="add"><img src="home-add.webp" alt="" width="1440" height="900" loading="lazy" /></figure>
-            <figure class="workflow-frame" data-workflow-state="align"><img src="home-align.webp" alt="" width="1440" height="900" loading="lazy" /></figure>
-            <figure class="workflow-frame" data-workflow-state="difference"><img src="home-difference.webp" alt="" width="1440" height="900" loading="lazy" /></figure>
+            <figure class="workflow-frame active" data-workflow-state="add"><img src="home-add.webp" srcset="home-add-720.webp 720w, home-add.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="" width="1440" height="900" loading="lazy" /></figure>
+            <figure class="workflow-frame" data-workflow-state="align"><img src="home-align.webp" srcset="home-align-720.webp 720w, home-align.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="" width="1440" height="900" loading="lazy" /></figure>
+            <figure class="workflow-frame" data-workflow-state="difference"><img src="home-difference.webp" srcset="home-difference-720.webp 720w, home-difference.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="" width="1440" height="900" loading="lazy" /></figure>
             <div class="workflow-progress"><span></span><span></span><span></span></div>
           </div>
           <div class="workflow-steps">
-            <article class="workflow-step" data-workflow-state="add"><div class="step-copy"><span class="step-number">01 / 追加</span><h3>参照画像をページへ。</h3><p>ファイル選択、ドロップ、貼り付け。画像は端末内に留まり、作業しているそのページに表示されます。</p></div><img class="workflow-mobile-image" src="home-add.webp" alt="参照画像を追加できるDiffPixelパネル" width="1440" height="900" loading="lazy" /></article>
-            <article class="workflow-step" data-workflow-state="align"><div class="step-copy"><span class="step-number">02 / 整列</span><h3>1px単位で、合わせる。</h3><p>X・Y、スケール、不透明度を調整。実装ページを見たまま、参照画像を正しい位置へ合わせます。</p></div><img class="workflow-mobile-image" src="home-align.webp" alt="参照画像を1px単位で整列するDiffPixel" width="1440" height="900" loading="lazy" /></article>
-            <article class="workflow-step" data-workflow-state="difference"><div class="step-copy"><span class="step-number">03 / 差分</span><h3>差分だけを、浮かび上がらせる。</h3><p>合成モードを切り替えると、一致部分は後退し、修正すべき箇所だけが明確に残ります。</p></div><img class="workflow-mobile-image" src="home-difference.webp" alt="差分モードでずれを表示するDiffPixel" width="1440" height="900" loading="lazy" /></article>
+            <div class="workflow-hud hud-meta" aria-hidden="true">
+              <span data-hud-state="add">追加</span><span data-hud-state="align">整列</span><span data-hud-state="difference">差分</span>
+            </div>
+            <article class="workflow-step" data-workflow-state="add"><div class="step-copy"><span class="step-number">01 / 追加</span><h3>参照画像をページへ。</h3><p>ファイル選択、ドロップ、貼り付け。画像は端末内に留まり、作業しているそのページに表示されます。</p></div><img class="workflow-mobile-image" src="home-add.webp" srcset="home-add-720.webp 720w, home-add.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="参照画像を追加できるDiffPixelパネル" width="1440" height="900" loading="lazy" /></article>
+            <article class="workflow-step" data-workflow-state="align"><div class="step-copy"><span class="step-number">02 / 整列</span><h3>1px単位で、合わせる。</h3><p>X・Y、スケール、不透明度を調整。実装ページを見たまま、参照画像を正しい位置へ合わせます。</p></div><img class="workflow-mobile-image" src="home-align.webp" srcset="home-align-720.webp 720w, home-align.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="参照画像を1px単位で整列するDiffPixel" width="1440" height="900" loading="lazy" /></article>
+            <article class="workflow-step" data-workflow-state="difference"><div class="step-copy"><span class="step-number">03 / 差分</span><h3>差分だけを、浮かび上がらせる。</h3><p>合成モードを切り替えると、一致部分は後退し、修正すべき箇所だけが明確に残ります。</p></div><img class="workflow-mobile-image" src="home-difference.webp" srcset="home-difference-720.webp 720w, home-difference.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="差分モードでずれを表示するDiffPixel" width="1440" height="900" loading="lazy" /></article>
           </div>
         </div>
       </section>
 
-      <section class="capabilities shell" id="ja-capabilities" data-section-key="capabilities" aria-labelledby="capabilities-title-ja">
-        <div class="capabilities-copy"><p class="eyebrow">ツール / 08 コントロール</p><h2 id="capabilities-title-ja">一つの<br />パネルに、<br />すべての確認。</h2><p>細部を確認できるだけの精度。作業を邪魔しないだけの小さなインターフェース。</p></div>
-        <figure class="capabilities-visual"><img src="home-align.webp" alt="参照画像を整列したDiffPixelの全パネル" width="1440" height="900" loading="lazy" /></figure>
-        <ol class="capability-index"><li><span>01</span>レイヤー</li><li><span>02</span>合成</li><li><span>03</span>不透明度</li><li><span>04</span>X / Y</li><li><span>05</span>スケール</li><li><span>06</span>グリッド</li><li><span>07</span>ショートカット</li><li><span>08</span>テーマ</li></ol>
+      <section class="capabilities diff-seam" id="ja-capabilities" data-section-key="capabilities" aria-labelledby="capabilities-title-ja">
+        <div class="shell capabilities-inner">
+          <div class="capabilities-copy"><p class="eyebrow">ツール / 08 コントロール</p><h2 id="capabilities-title-ja" class="drift-title">一つの<br />パネルに、<br />すべての確認。</h2><p>細部を確認できるだけの精度。作業を邪魔しないだけの小さなインターフェース。</p></div>
+          <figure class="capabilities-visual"><img src="home-align.webp" srcset="home-align-720.webp 720w, home-align.webp 1440w" sizes="(max-width: 1100px) 100vw, 56vw" alt="参照画像を整列したDiffPixelの全パネル" width="1440" height="900" loading="lazy" /></figure>
+          <ol class="capability-index"><li><span>01</span>レイヤー</li><li><span>02</span>合成</li><li><span>03</span>不透明度</li><li><span>04</span>X / Y</li><li><span>05</span>スケール</li><li><span>06</span>グリッド</li><li><span>07</span>ショートカット</li><li><span>08</span>テーマ</li></ol>
+        </div>
       </section>
 
-      <section class="privacy-stage shell" id="ja-privacy" data-section-key="privacy" aria-labelledby="privacy-title-ja">
-        <div class="privacy-copy"><p class="eyebrow">プライバシー / ローカルが標準</p><h2 id="privacy-title-ja">あなたの画像は、<br />あなたの端末に。</h2><p>参照ファイルと比較設定は、端末内のChromeストレージに保存されます。</p><a class="text-link" href="privacy.html#ja">プライバシーポリシー <span aria-hidden="true">↗</span></a></div>
-        <div class="privacy-mark" aria-hidden="true"><span>Local</span><strong>Only</strong></div>
-        <dl class="privacy-facts"><div><dt>01 / アップロード</dt><dd>なし</dd></div><div><dt>02 / アクセス解析</dt><dd>なし</dd></div><div><dt>03 / 保存場所</dt><dd>端末内</dd></div></dl>
+      <section class="privacy-stage diff-seam" id="ja-privacy" data-section-key="privacy" aria-labelledby="privacy-title-ja">
+        <div class="shell privacy-stage-inner">
+          <div class="privacy-copy"><p class="eyebrow">プライバシー / ローカルが標準</p><h2 id="privacy-title-ja" class="drift-title">あなたの画像は、<br />あなたの端末に。</h2><p>参照ファイルと比較設定は、端末内のChromeストレージに保存されます。</p><a class="text-link" href="privacy.html#ja">プライバシーポリシー <span aria-hidden="true">↗</span></a></div>
+          <div class="privacy-mark" aria-hidden="true"><span>Local</span><strong>Only</strong></div>
+          <dl class="privacy-facts"><div><dt>01 / アップロード</dt><dd>なし</dd></div><div><dt>02 / アクセス解析</dt><dd>なし</dd></div><div><dt>03 / 保存場所</dt><dd>端末内</dd></div></dl>
+        </div>
       </section>
 
-      <section class="closing shell" id="ja-contact" data-section-key="contact" aria-labelledby="closing-title-ja">
-        <p class="eyebrow">Chrome ウェブストアで公開中</p><h2 id="closing-title-ja">比較を<br />始めよう。</h2><a class="primary-cta large" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Chrome に追加 <span aria-hidden="true">↗</span></a>
+      <section class="closing diff-seam" id="ja-contact" data-section-key="contact" aria-labelledby="closing-title-ja">
+        <div class="shell closing-inner">
+          <p class="eyebrow">Chrome ウェブストアで公開中</p><h2 id="closing-title-ja" class="drift-title">比較を<br />始めよう。</h2><a class="btn btn-lg" href="https://chromewebstore.google.com/detail/eemgphmnhbckaohalcbcamgbpcpnokfh" rel="noopener">Chrome に追加 <span aria-hidden="true">↗</span></a>
+        </div>
       </section>
 
-      <footer class="site-footer">
-        <div class="shell"><p class="footer-wordmark">DiffPixel</p><div class="footer-meta"><nav aria-label="フッター"><a href="manual.html#ja">マニュアル</a><a href="privacy.html#ja">プライバシー</a><a href="https://github.com/RitaStella1128/DiffPixel" rel="noopener">GitHub</a></nav><div><span>バージョン 1.0.7</span><span>無料 / ローカル動作</span><span>© 2026 DiffPixel</span></div></div></div>
+      <footer class="site-footer diff-seam">
+        <div class="shell">
+          <div class="footer-meta">
+            <nav class="footer-links" aria-label="フッター"><a href="manual.html#ja">マニュアル</a><a href="privacy.html#ja">プライバシー</a><a href="https://github.com/RitaStella1128/DiffPixel" rel="noopener">GitHub</a><a href="https://ritastella.com" rel="noopener">ポートフォリオ</a></nav>
+            <div class="footer-info"><span>バージョン 1.1.0</span><span>無料 / ローカル動作</span><span>© 2026 DiffPixel</span></div>
+          </div>
+          <p class="footer-wordmark">DiffPixel</p>
+        </div>
       </footer>
     </div>
   </main>
 
-  <script src="index.js?v=3"></script>
+  <script src="index.js?v=5"></script>
+  <script src="motion.js?v=2"></script>
 </body>
 </html>
