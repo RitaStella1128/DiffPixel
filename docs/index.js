@@ -152,48 +152,4 @@
     update(range.value);
   });
 
-  function activateWorkflowStep(step) {
-    const panel = step.closest('[data-lang-panel]');
-    const state = step.dataset.workflowState;
-    if (!panel || !state) return;
-
-    const frames = [...panel.querySelectorAll('.workflow-frame[data-workflow-state]')];
-    const progress = [...panel.querySelectorAll('.workflow-progress span')];
-    const hudStates = [...panel.querySelectorAll('.workflow-hud [data-hud-state]')];
-    const index = frames.findIndex((frame) => frame.dataset.workflowState === state);
-
-    frames.forEach((frame) => frame.classList.toggle('active', frame.dataset.workflowState === state));
-    progress.forEach((item, itemIndex) => item.classList.toggle('active', itemIndex === index));
-    hudStates.forEach((item) => item.classList.toggle('active', item.dataset.hudState === state));
-  }
-
-  const workflowSteps = [...document.querySelectorAll('.workflow-step[data-workflow-state]')];
-  panels.forEach((panel) => {
-    const firstStep = panel.querySelector('.workflow-step[data-workflow-state]');
-    if (firstStep) activateWorkflowStep(firstStep);
-  });
-
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if ('IntersectionObserver' in window && window.innerWidth > 1100 && !reducedMotion) {
-    const workflowObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) activateWorkflowStep(entry.target);
-      });
-    }, { rootMargin: '-38% 0px -46% 0px', threshold: 0 });
-
-    workflowSteps.forEach((step) => workflowObserver.observe(step));
-  }
-
-  let headerTicking = false;
-  function updateScrolledHeader() {
-    if (header) header.classList.toggle('scrolled', window.scrollY > 18);
-    headerTicking = false;
-  }
-
-  window.addEventListener('scroll', () => {
-    if (headerTicking) return;
-    headerTicking = true;
-    requestAnimationFrame(updateScrolledHeader);
-  }, { passive: true });
-  updateScrolledHeader();
 })();
